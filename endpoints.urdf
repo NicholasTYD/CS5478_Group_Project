@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
-<robot name="whouse">
-  <link name="whouse_base"/>
+<robot name="struct">
+  <link name="struct_base"/>
 
-  <link name="block_0_1">
+  <link name="block_1_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -25,14 +25,14 @@
   </link>
 
 
-  <joint name="joint_block_0_1" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_1"/>
-    <origin xyz="-15.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_1_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_1_0"/>
+    <origin xyz="-16.0 16.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_4">
+  <link name="block_1_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -55,14 +55,14 @@
   </link>
 
 
-  <joint name="joint_block_0_4" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_4"/>
-    <origin xyz="-12.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_1_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_1_32"/>
+    <origin xyz="16.0 16.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_7">
+  <link name="block_4_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -85,14 +85,14 @@
   </link>
 
 
-  <joint name="joint_block_0_7" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_7"/>
-    <origin xyz="-9.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_4_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_4_0"/>
+    <origin xyz="-16.0 13.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_10">
+  <link name="block_4_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -115,14 +115,14 @@
   </link>
 
 
-  <joint name="joint_block_0_10" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_10"/>
-    <origin xyz="-6.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_4_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_4_32"/>
+    <origin xyz="16.0 13.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_13">
+  <link name="block_7_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -145,14 +145,14 @@
   </link>
 
 
-  <joint name="joint_block_0_13" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_13"/>
-    <origin xyz="-3.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_7_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_0"/>
+    <origin xyz="-16.0 10.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_16">
+  <link name="block_7_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -175,14 +175,14 @@
   </link>
 
 
-  <joint name="joint_block_0_16" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_16"/>
-    <origin xyz="0.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_7_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_32"/>
+    <origin xyz="16.0 10.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_19">
+  <link name="block_10_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -205,14 +205,14 @@
   </link>
 
 
-  <joint name="joint_block_0_19" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_19"/>
-    <origin xyz="3.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_10_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_10_0"/>
+    <origin xyz="-16.0 7.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_22">
+  <link name="block_10_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -235,14 +235,14 @@
   </link>
 
 
-  <joint name="joint_block_0_22" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_22"/>
-    <origin xyz="6.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_10_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_10_32"/>
+    <origin xyz="16.0 7.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_25">
+  <link name="block_13_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -265,14 +265,14 @@
   </link>
 
 
-  <joint name="joint_block_0_25" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_25"/>
-    <origin xyz="9.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_13_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_13_0"/>
+    <origin xyz="-16.0 4.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_28">
+  <link name="block_13_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -295,14 +295,14 @@
   </link>
 
 
-  <joint name="joint_block_0_28" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_28"/>
-    <origin xyz="12.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_13_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_13_32"/>
+    <origin xyz="16.0 4.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_0_31">
+  <link name="block_16_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -325,14 +325,14 @@
   </link>
 
 
-  <joint name="joint_block_0_31" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_0_31"/>
-    <origin xyz="15.0 17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_16_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_16_0"/>
+    <origin xyz="-16.0 1.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_1">
+  <link name="block_16_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -355,14 +355,14 @@
   </link>
 
 
-  <joint name="joint_block_35_1" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_1"/>
-    <origin xyz="-15.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_16_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_16_32"/>
+    <origin xyz="16.0 1.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_4">
+  <link name="block_19_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -385,14 +385,14 @@
   </link>
 
 
-  <joint name="joint_block_35_4" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_4"/>
-    <origin xyz="-12.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_19_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_19_0"/>
+    <origin xyz="-16.0 -1.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_7">
+  <link name="block_19_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -415,14 +415,14 @@
   </link>
 
 
-  <joint name="joint_block_35_7" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_7"/>
-    <origin xyz="-9.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_19_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_19_32"/>
+    <origin xyz="16.0 -1.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_10">
+  <link name="block_22_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -445,14 +445,14 @@
   </link>
 
 
-  <joint name="joint_block_35_10" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_10"/>
-    <origin xyz="-6.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_22_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_22_0"/>
+    <origin xyz="-16.0 -4.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_13">
+  <link name="block_22_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -475,14 +475,14 @@
   </link>
 
 
-  <joint name="joint_block_35_13" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_13"/>
-    <origin xyz="-3.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_22_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_22_32"/>
+    <origin xyz="16.0 -4.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_16">
+  <link name="block_25_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -505,14 +505,14 @@
   </link>
 
 
-  <joint name="joint_block_35_16" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_16"/>
-    <origin xyz="0.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_25_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_25_0"/>
+    <origin xyz="-16.0 -7.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_19">
+  <link name="block_25_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -535,14 +535,14 @@
   </link>
 
 
-  <joint name="joint_block_35_19" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_19"/>
-    <origin xyz="3.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_25_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_25_32"/>
+    <origin xyz="16.0 -7.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_22">
+  <link name="block_28_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -565,14 +565,14 @@
   </link>
 
 
-  <joint name="joint_block_35_22" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_22"/>
-    <origin xyz="6.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_28_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_0"/>
+    <origin xyz="-16.0 -10.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_25">
+  <link name="block_28_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -595,14 +595,14 @@
   </link>
 
 
-  <joint name="joint_block_35_25" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_25"/>
-    <origin xyz="9.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_28_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_32"/>
+    <origin xyz="16.0 -10.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_28">
+  <link name="block_31_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -625,14 +625,14 @@
   </link>
 
 
-  <joint name="joint_block_35_28" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_28"/>
-    <origin xyz="12.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_31_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_31_0"/>
+    <origin xyz="-16.0 -13.5 0.625" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_35_31">
+  <link name="block_31_32">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -655,10 +655,70 @@
   </link>
 
 
-  <joint name="joint_block_35_31" type="fixed">
-    <parent link="whouse_base"/>
-    <child link="block_35_31"/>
-    <origin xyz="15.0 -17.5 0.625" rpy="0 0 0"/>
+  <joint name="joint_block_31_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_31_32"/>
+    <origin xyz="16.0 -13.5 0.625" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_34_0">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1.25"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="1 0 0.5 0.3"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1.25"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_34_0" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_34_0"/>
+    <origin xyz="-16.0 -16.5 0.625" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_34_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1.25"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="1 0 0.5 0.3"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1.25"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_34_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_34_32"/>
+    <origin xyz="16.0 -16.5 0.625" rpy="0 0 0"/>
   </joint>
 
 </robot>

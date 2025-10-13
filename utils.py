@@ -3,6 +3,26 @@ import numpy as np
 import os
 import pybullet as p
 
+def get_default_warehouse_params():
+    rows, cols = 36, 33
+
+    # Setup workstations
+    work_stns = np.zeros([rows, cols])
+    work_stns[1:-1:3,
+              -1] = 1
+    work_stns[1:-1:3,
+              0] = 1
+
+    # Setup shelves
+    shelves = np.zeros([rows, cols])
+    shelves[2:-2:4,
+            2: -1] = 1
+    shelves[2:-2:4,
+            2:-1:11] = 0
+    
+    
+    return rows, cols, work_stns, shelves
+
 def init_scene(rows, cols, work_stn_arr, shelves_arr):
     planeId = p.loadURDF("assets/plane/plane.urdf")
 
@@ -14,50 +34,54 @@ def init_scene(rows, cols, work_stn_arr, shelves_arr):
     whouse_map[:,0] = 1
     whouse_map[:,-1] = 1
 
-    cube_pos = create_whouse_urdf(whouse_map, "wh.urdf")
-    work_stns_pos = create_whouse_urdf(work_stn_arr, "endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.3))
-    shelves_pos = create_whouse_urdf(shelves_arr, "shelves.urdf", grid_z=1, box_color=(0, 0, 0.5, 0.3))
+    cube_pos = create_struct_urdf(whouse_map, "wh.urdf")
+    work_stns_pos = create_struct_urdf(work_stn_arr, "endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.3))
+    shelves_pos = create_struct_urdf(shelves_arr, "shelves.urdf", grid_z=1, box_color=(0, 0, 0.5, 0.3))
     print(cube_pos)
 
     wh = p.loadURDF("wh.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
     endpoints = p.loadURDF("endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
     shelves = p.loadURDF("shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
+    return cube_pos, work_stns_pos, shelves_pos
 
-def create_whouse_urdf(
-    whouse_map,
+
+
+# Code adapted from the default course project
+def create_struct_urdf(
+    struct_map,
     urdf_path: str,
     grid_xy: float = 1.0,
     grid_z: float = 3.0,
-    whouse_center_x: float = 0.0,
-    whouse_center_y: float = 0.0,
-    whouse_center_z: float = 0.0,
+    struct_center_x: float = 0.0,
+    struct_center_y: float = 0.0,
+    struct_center_z: float = 0.0,
     box_color=(1, 1, 1, 1),
 ):
     """
-    Generate a URDF file for a whouse (walls as cubes) that can be loaded in PyBullet.
-    - Single root link 'whouse_base'
+    Generate a URDF file for a struct (walls as cubes) that can be loaded in PyBullet.
+    - Single root link 'struct_base'
     - Each block attached with a fixed joint
     """
 
-    n_rows = len(whouse_map)
-    n_cols = len(whouse_map[0]) if n_rows > 0 else 0
+    n_rows = len(struct_map)
+    n_cols = len(struct_map[0]) if n_rows > 0 else 0
     half_x, half_y, half_z = grid_xy / 2, grid_xy / 2, grid_z / 2
 
     urdf_parts = [
         '<?xml version="1.0" ?>',
-        '<robot name="whouse">',
-        '  <link name="whouse_base"/>',   # single root link
+        '<robot name="struct">',
+        '  <link name="struct_base"/>',   # single root link
     ]
 
     cube_positions = []
 
     for i in range(n_rows):
         for j in range(n_cols):
-            if whouse_map[i][j] == 1:
-                world_x = whouse_center_x + (j - n_cols / 2 + 0.5) * grid_xy
-                world_y = whouse_center_y + (n_rows / 2 - i - 0.5) * grid_xy
-                world_z = whouse_center_z + half_z
+            if struct_map[i][j] == 1:
+                world_x = struct_center_x + (j - n_cols / 2 + 0.5) * grid_xy
+                world_y = struct_center_y + (n_rows / 2 - i - 0.5) * grid_xy
+                world_z = struct_center_z + half_z
 
                 name = f"block_{i}_{j}"
 
@@ -88,7 +112,7 @@ def create_whouse_urdf(
 
                 joint = f"""
   <joint name="joint_{name}" type="fixed">
-    <parent link="whouse_base"/>
+    <parent link="struct_base"/>
     <child link="{name}"/>
     <origin xyz="{world_x} {world_y} {world_z}" rpy="0 0 0"/>
   </joint>
