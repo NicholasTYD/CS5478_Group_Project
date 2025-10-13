@@ -37,14 +37,14 @@ def init_scene(rows, cols, work_stn_arr, shelves_arr):
     whouse_map[:,0] = 1
     whouse_map[:,-1] = 1
 
-    wall_pos = create_struct_urdf(whouse_map, "wh.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
-    work_stns_pos = create_struct_urdf(work_stn_arr, "endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5))
-    shelves_pos = create_struct_urdf(shelves_arr, "shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
+    wall_pos = create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
+    work_stns_pos = create_struct_urdf(work_stn_arr, "assets/warehouse/endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5))
+    shelves_pos = create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
     print(wall_pos)
 
-    wh = p.loadURDF("wh.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-    endpoints = p.loadURDF("endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-    shelves = p.loadURDF("shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+    wh = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+    endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+    shelves = p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
     return wall_pos, work_stns_pos, shelves_pos
 
