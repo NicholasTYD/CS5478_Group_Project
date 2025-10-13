@@ -4,7 +4,8 @@ import os
 import pybullet as p
 
 def get_default_warehouse_params():
-    rows, cols = 36, 33
+    rows, cols = 33, 36
+    # rows, cols = 9, 14
 
     # Setup workstations
     work_stns = np.zeros([rows, cols])
@@ -16,15 +17,17 @@ def get_default_warehouse_params():
     # Setup shelves
     shelves = np.zeros([rows, cols])
     shelves[2:-2:4,
-            2: -1] = 1
+            1: -2] = 1
     shelves[2:-2:4,
-            2:-1:11] = 0
+            1:-2:11] = 0
     
     
     return rows, cols, work_stns, shelves
 
 def init_scene(rows, cols, work_stn_arr, shelves_arr):
-    planeId = p.loadURDF("assets/plane/plane.urdf")
+    # We offset the floor to align with the local coordinates instead of the global coordinates
+    floor_base_pos = [(rows%2+1)/2, (cols%2+1)/2, 0]
+    planeId = p.loadURDF("assets/plane/plane.urdf", basePosition=floor_base_pos)
 
     whouse_map = np.zeros([rows + 2, cols + 2])
 
@@ -34,16 +37,16 @@ def init_scene(rows, cols, work_stn_arr, shelves_arr):
     whouse_map[:,0] = 1
     whouse_map[:,-1] = 1
 
-    cube_pos = create_struct_urdf(whouse_map, "wh.urdf")
-    work_stns_pos = create_struct_urdf(work_stn_arr, "endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.3))
-    shelves_pos = create_struct_urdf(shelves_arr, "shelves.urdf", grid_z=1, box_color=(0, 0, 0.5, 0.3))
-    print(cube_pos)
+    wall_pos = create_struct_urdf(whouse_map, "wh.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
+    work_stns_pos = create_struct_urdf(work_stn_arr, "endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5))
+    shelves_pos = create_struct_urdf(shelves_arr, "shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
+    print(wall_pos)
 
     wh = p.loadURDF("wh.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
     endpoints = p.loadURDF("endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
     shelves = p.loadURDF("shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
-    return cube_pos, work_stns_pos, shelves_pos
+    return wall_pos, work_stns_pos, shelves_pos
 
 
 
@@ -82,6 +85,9 @@ def create_struct_urdf(
                 world_x = struct_center_x + (j - n_cols / 2 + 0.5) * grid_xy
                 world_y = struct_center_y + (n_rows / 2 - i - 0.5) * grid_xy
                 world_z = struct_center_z + half_z
+
+                # print(struct_center_y, (n_rows / 2 - i - 0.5) )
+                # exit()
 
                 name = f"block_{i}_{j}"
 

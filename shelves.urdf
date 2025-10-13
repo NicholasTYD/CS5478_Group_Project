@@ -2,6 +2,36 @@
 <robot name="struct">
   <link name="struct_base"/>
 
+  <link name="block_2_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_2_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_2_2"/>
+    <origin xyz="-15.5 14.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
   <link name="block_2_3">
     <visual>
       <origin xyz="0 0 0"/>
@@ -9,7 +39,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -28,7 +58,7 @@
   <joint name="joint_block_2_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_3"/>
-    <origin xyz="-13.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -39,7 +69,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -58,7 +88,7 @@
   <joint name="joint_block_2_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_4"/>
-    <origin xyz="-12.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -69,7 +99,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -88,7 +118,7 @@
   <joint name="joint_block_2_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_5"/>
-    <origin xyz="-11.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -99,7 +129,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -118,7 +148,7 @@
   <joint name="joint_block_2_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_6"/>
-    <origin xyz="-10.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -129,7 +159,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -148,7 +178,7 @@
   <joint name="joint_block_2_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_7"/>
-    <origin xyz="-9.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -159,7 +189,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -178,7 +208,7 @@
   <joint name="joint_block_2_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_8"/>
-    <origin xyz="-8.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -189,7 +219,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -208,7 +238,7 @@
   <joint name="joint_block_2_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_9"/>
-    <origin xyz="-7.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -219,7 +249,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -238,7 +268,7 @@
   <joint name="joint_block_2_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_10"/>
-    <origin xyz="-6.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -249,7 +279,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -268,18 +298,18 @@
   <joint name="joint_block_2_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_11"/>
-    <origin xyz="-5.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_2_12">
+  <link name="block_2_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -295,10 +325,10 @@
   </link>
 
 
-  <joint name="joint_block_2_12" type="fixed">
+  <joint name="joint_block_2_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_2_12"/>
-    <origin xyz="-4.0 15.5 0.5" rpy="0 0 0"/>
+    <child link="block_2_13"/>
+    <origin xyz="-4.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -309,7 +339,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -328,7 +358,7 @@
   <joint name="joint_block_2_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_14"/>
-    <origin xyz="-2.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -339,7 +369,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -358,7 +388,7 @@
   <joint name="joint_block_2_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_15"/>
-    <origin xyz="-1.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -369,7 +399,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -388,7 +418,7 @@
   <joint name="joint_block_2_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_16"/>
-    <origin xyz="0.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -399,7 +429,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -418,7 +448,7 @@
   <joint name="joint_block_2_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_17"/>
-    <origin xyz="1.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -429,7 +459,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -448,7 +478,7 @@
   <joint name="joint_block_2_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_18"/>
-    <origin xyz="2.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -459,7 +489,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -478,7 +508,7 @@
   <joint name="joint_block_2_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_19"/>
-    <origin xyz="3.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -489,7 +519,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -508,7 +538,7 @@
   <joint name="joint_block_2_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_20"/>
-    <origin xyz="4.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -519,7 +549,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -538,7 +568,7 @@
   <joint name="joint_block_2_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_21"/>
-    <origin xyz="5.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -549,7 +579,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -568,18 +598,18 @@
   <joint name="joint_block_2_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_22"/>
-    <origin xyz="6.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_2_23">
+  <link name="block_2_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -595,10 +625,10 @@
   </link>
 
 
-  <joint name="joint_block_2_23" type="fixed">
+  <joint name="joint_block_2_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_2_23"/>
-    <origin xyz="7.0 15.5 0.5" rpy="0 0 0"/>
+    <child link="block_2_24"/>
+    <origin xyz="6.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -609,7 +639,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -628,7 +658,7 @@
   <joint name="joint_block_2_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_25"/>
-    <origin xyz="9.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -639,7 +669,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -658,7 +688,7 @@
   <joint name="joint_block_2_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_26"/>
-    <origin xyz="10.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -669,7 +699,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -688,7 +718,7 @@
   <joint name="joint_block_2_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_27"/>
-    <origin xyz="11.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -699,7 +729,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -718,7 +748,7 @@
   <joint name="joint_block_2_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_28"/>
-    <origin xyz="12.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -729,7 +759,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -748,7 +778,7 @@
   <joint name="joint_block_2_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_29"/>
-    <origin xyz="13.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -759,7 +789,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -778,7 +808,7 @@
   <joint name="joint_block_2_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_30"/>
-    <origin xyz="14.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -789,7 +819,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -808,7 +838,97 @@
   <joint name="joint_block_2_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_31"/>
-    <origin xyz="15.0 15.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 14.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_2_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_2_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_2_32"/>
+    <origin xyz="14.5 14.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_2_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_2_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_2_33"/>
+    <origin xyz="15.5 14.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_6_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_6_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_6_2"/>
+    <origin xyz="-15.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -819,7 +939,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -838,7 +958,7 @@
   <joint name="joint_block_6_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_3"/>
-    <origin xyz="-13.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -849,7 +969,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -868,7 +988,7 @@
   <joint name="joint_block_6_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_4"/>
-    <origin xyz="-12.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -879,7 +999,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -898,7 +1018,7 @@
   <joint name="joint_block_6_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_5"/>
-    <origin xyz="-11.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -909,7 +1029,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -928,7 +1048,7 @@
   <joint name="joint_block_6_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_6"/>
-    <origin xyz="-10.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -939,7 +1059,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -958,7 +1078,7 @@
   <joint name="joint_block_6_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_7"/>
-    <origin xyz="-9.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -969,7 +1089,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -988,7 +1108,7 @@
   <joint name="joint_block_6_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_8"/>
-    <origin xyz="-8.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -999,7 +1119,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1018,7 +1138,7 @@
   <joint name="joint_block_6_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_9"/>
-    <origin xyz="-7.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1029,7 +1149,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1048,7 +1168,7 @@
   <joint name="joint_block_6_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_10"/>
-    <origin xyz="-6.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1059,7 +1179,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1078,18 +1198,18 @@
   <joint name="joint_block_6_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_11"/>
-    <origin xyz="-5.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_6_12">
+  <link name="block_6_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1105,10 +1225,10 @@
   </link>
 
 
-  <joint name="joint_block_6_12" type="fixed">
+  <joint name="joint_block_6_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_6_12"/>
-    <origin xyz="-4.0 11.5 0.5" rpy="0 0 0"/>
+    <child link="block_6_13"/>
+    <origin xyz="-4.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1119,7 +1239,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1138,7 +1258,7 @@
   <joint name="joint_block_6_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_14"/>
-    <origin xyz="-2.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1149,7 +1269,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1168,7 +1288,7 @@
   <joint name="joint_block_6_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_15"/>
-    <origin xyz="-1.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1179,7 +1299,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1198,7 +1318,7 @@
   <joint name="joint_block_6_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_16"/>
-    <origin xyz="0.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1209,7 +1329,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1228,7 +1348,7 @@
   <joint name="joint_block_6_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_17"/>
-    <origin xyz="1.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1239,7 +1359,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1258,7 +1378,7 @@
   <joint name="joint_block_6_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_18"/>
-    <origin xyz="2.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1269,7 +1389,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1288,7 +1408,7 @@
   <joint name="joint_block_6_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_19"/>
-    <origin xyz="3.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1299,7 +1419,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1318,7 +1438,7 @@
   <joint name="joint_block_6_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_20"/>
-    <origin xyz="4.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1329,7 +1449,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1348,7 +1468,7 @@
   <joint name="joint_block_6_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_21"/>
-    <origin xyz="5.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1359,7 +1479,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1378,18 +1498,18 @@
   <joint name="joint_block_6_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_22"/>
-    <origin xyz="6.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_6_23">
+  <link name="block_6_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1405,10 +1525,10 @@
   </link>
 
 
-  <joint name="joint_block_6_23" type="fixed">
+  <joint name="joint_block_6_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_6_23"/>
-    <origin xyz="7.0 11.5 0.5" rpy="0 0 0"/>
+    <child link="block_6_24"/>
+    <origin xyz="6.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1419,7 +1539,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1438,7 +1558,7 @@
   <joint name="joint_block_6_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_25"/>
-    <origin xyz="9.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1449,7 +1569,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1468,7 +1588,7 @@
   <joint name="joint_block_6_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_26"/>
-    <origin xyz="10.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1479,7 +1599,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1498,7 +1618,7 @@
   <joint name="joint_block_6_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_27"/>
-    <origin xyz="11.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1509,7 +1629,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1528,7 +1648,7 @@
   <joint name="joint_block_6_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_28"/>
-    <origin xyz="12.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1539,7 +1659,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1558,7 +1678,7 @@
   <joint name="joint_block_6_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_29"/>
-    <origin xyz="13.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1569,7 +1689,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1588,7 +1708,7 @@
   <joint name="joint_block_6_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_30"/>
-    <origin xyz="14.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1599,7 +1719,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1618,7 +1738,97 @@
   <joint name="joint_block_6_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_31"/>
-    <origin xyz="15.0 11.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 10.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_6_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_6_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_6_32"/>
+    <origin xyz="14.5 10.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_6_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_6_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_6_33"/>
+    <origin xyz="15.5 10.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_10_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_10_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_10_2"/>
+    <origin xyz="-15.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1629,7 +1839,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1648,7 +1858,7 @@
   <joint name="joint_block_10_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_3"/>
-    <origin xyz="-13.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1659,7 +1869,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1678,7 +1888,7 @@
   <joint name="joint_block_10_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_4"/>
-    <origin xyz="-12.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1689,7 +1899,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1708,7 +1918,7 @@
   <joint name="joint_block_10_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_5"/>
-    <origin xyz="-11.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1719,7 +1929,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1738,7 +1948,7 @@
   <joint name="joint_block_10_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_6"/>
-    <origin xyz="-10.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1749,7 +1959,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1768,7 +1978,7 @@
   <joint name="joint_block_10_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_7"/>
-    <origin xyz="-9.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1779,7 +1989,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1798,7 +2008,7 @@
   <joint name="joint_block_10_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_8"/>
-    <origin xyz="-8.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1809,7 +2019,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1828,7 +2038,7 @@
   <joint name="joint_block_10_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_9"/>
-    <origin xyz="-7.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1839,7 +2049,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1858,7 +2068,7 @@
   <joint name="joint_block_10_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_10"/>
-    <origin xyz="-6.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1869,7 +2079,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1888,18 +2098,18 @@
   <joint name="joint_block_10_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_11"/>
-    <origin xyz="-5.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_10_12">
+  <link name="block_10_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1915,10 +2125,10 @@
   </link>
 
 
-  <joint name="joint_block_10_12" type="fixed">
+  <joint name="joint_block_10_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_10_12"/>
-    <origin xyz="-4.0 7.5 0.5" rpy="0 0 0"/>
+    <child link="block_10_13"/>
+    <origin xyz="-4.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1929,7 +2139,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1948,7 +2158,7 @@
   <joint name="joint_block_10_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_14"/>
-    <origin xyz="-2.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1959,7 +2169,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -1978,7 +2188,7 @@
   <joint name="joint_block_10_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_15"/>
-    <origin xyz="-1.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1989,7 +2199,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2008,7 +2218,7 @@
   <joint name="joint_block_10_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_16"/>
-    <origin xyz="0.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2019,7 +2229,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2038,7 +2248,7 @@
   <joint name="joint_block_10_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_17"/>
-    <origin xyz="1.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2049,7 +2259,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2068,7 +2278,7 @@
   <joint name="joint_block_10_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_18"/>
-    <origin xyz="2.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2079,7 +2289,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2098,7 +2308,7 @@
   <joint name="joint_block_10_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_19"/>
-    <origin xyz="3.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2109,7 +2319,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2128,7 +2338,7 @@
   <joint name="joint_block_10_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_20"/>
-    <origin xyz="4.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2139,7 +2349,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2158,7 +2368,7 @@
   <joint name="joint_block_10_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_21"/>
-    <origin xyz="5.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2169,7 +2379,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2188,18 +2398,18 @@
   <joint name="joint_block_10_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_22"/>
-    <origin xyz="6.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_10_23">
+  <link name="block_10_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2215,10 +2425,10 @@
   </link>
 
 
-  <joint name="joint_block_10_23" type="fixed">
+  <joint name="joint_block_10_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_10_23"/>
-    <origin xyz="7.0 7.5 0.5" rpy="0 0 0"/>
+    <child link="block_10_24"/>
+    <origin xyz="6.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2229,7 +2439,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2248,7 +2458,7 @@
   <joint name="joint_block_10_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_25"/>
-    <origin xyz="9.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2259,7 +2469,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2278,7 +2488,7 @@
   <joint name="joint_block_10_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_26"/>
-    <origin xyz="10.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2289,7 +2499,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2308,7 +2518,7 @@
   <joint name="joint_block_10_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_27"/>
-    <origin xyz="11.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2319,7 +2529,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2338,7 +2548,7 @@
   <joint name="joint_block_10_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_28"/>
-    <origin xyz="12.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2349,7 +2559,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2368,7 +2578,7 @@
   <joint name="joint_block_10_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_29"/>
-    <origin xyz="13.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2379,7 +2589,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2398,7 +2608,7 @@
   <joint name="joint_block_10_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_30"/>
-    <origin xyz="14.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2409,7 +2619,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2428,7 +2638,97 @@
   <joint name="joint_block_10_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_31"/>
-    <origin xyz="15.0 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 6.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_10_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_10_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_10_32"/>
+    <origin xyz="14.5 6.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_10_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_10_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_10_33"/>
+    <origin xyz="15.5 6.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_14_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_14_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_14_2"/>
+    <origin xyz="-15.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2439,7 +2739,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2458,7 +2758,7 @@
   <joint name="joint_block_14_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_3"/>
-    <origin xyz="-13.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2469,7 +2769,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2488,7 +2788,7 @@
   <joint name="joint_block_14_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_4"/>
-    <origin xyz="-12.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2499,7 +2799,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2518,7 +2818,7 @@
   <joint name="joint_block_14_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_5"/>
-    <origin xyz="-11.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2529,7 +2829,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2548,7 +2848,7 @@
   <joint name="joint_block_14_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_6"/>
-    <origin xyz="-10.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2559,7 +2859,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2578,7 +2878,7 @@
   <joint name="joint_block_14_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_7"/>
-    <origin xyz="-9.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2589,7 +2889,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2608,7 +2908,7 @@
   <joint name="joint_block_14_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_8"/>
-    <origin xyz="-8.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2619,7 +2919,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2638,7 +2938,7 @@
   <joint name="joint_block_14_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_9"/>
-    <origin xyz="-7.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2649,7 +2949,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2668,7 +2968,7 @@
   <joint name="joint_block_14_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_10"/>
-    <origin xyz="-6.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2679,7 +2979,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2698,18 +2998,18 @@
   <joint name="joint_block_14_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_11"/>
-    <origin xyz="-5.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_14_12">
+  <link name="block_14_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2725,10 +3025,10 @@
   </link>
 
 
-  <joint name="joint_block_14_12" type="fixed">
+  <joint name="joint_block_14_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_14_12"/>
-    <origin xyz="-4.0 3.5 0.5" rpy="0 0 0"/>
+    <child link="block_14_13"/>
+    <origin xyz="-4.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2739,7 +3039,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2758,7 +3058,7 @@
   <joint name="joint_block_14_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_14"/>
-    <origin xyz="-2.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2769,7 +3069,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2788,7 +3088,7 @@
   <joint name="joint_block_14_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_15"/>
-    <origin xyz="-1.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2799,7 +3099,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2818,7 +3118,7 @@
   <joint name="joint_block_14_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_16"/>
-    <origin xyz="0.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2829,7 +3129,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2848,7 +3148,7 @@
   <joint name="joint_block_14_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_17"/>
-    <origin xyz="1.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2859,7 +3159,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2878,7 +3178,7 @@
   <joint name="joint_block_14_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_18"/>
-    <origin xyz="2.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2889,7 +3189,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2908,7 +3208,7 @@
   <joint name="joint_block_14_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_19"/>
-    <origin xyz="3.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2919,7 +3219,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2938,7 +3238,7 @@
   <joint name="joint_block_14_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_20"/>
-    <origin xyz="4.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2949,7 +3249,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2968,7 +3268,7 @@
   <joint name="joint_block_14_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_21"/>
-    <origin xyz="5.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -2979,7 +3279,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -2998,18 +3298,18 @@
   <joint name="joint_block_14_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_22"/>
-    <origin xyz="6.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_14_23">
+  <link name="block_14_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3025,10 +3325,10 @@
   </link>
 
 
-  <joint name="joint_block_14_23" type="fixed">
+  <joint name="joint_block_14_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_14_23"/>
-    <origin xyz="7.0 3.5 0.5" rpy="0 0 0"/>
+    <child link="block_14_24"/>
+    <origin xyz="6.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3039,7 +3339,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3058,7 +3358,7 @@
   <joint name="joint_block_14_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_25"/>
-    <origin xyz="9.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3069,7 +3369,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3088,7 +3388,7 @@
   <joint name="joint_block_14_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_26"/>
-    <origin xyz="10.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3099,7 +3399,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3118,7 +3418,7 @@
   <joint name="joint_block_14_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_27"/>
-    <origin xyz="11.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3129,7 +3429,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3148,7 +3448,7 @@
   <joint name="joint_block_14_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_28"/>
-    <origin xyz="12.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3159,7 +3459,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3178,7 +3478,7 @@
   <joint name="joint_block_14_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_29"/>
-    <origin xyz="13.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3189,7 +3489,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3208,7 +3508,7 @@
   <joint name="joint_block_14_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_30"/>
-    <origin xyz="14.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3219,7 +3519,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3238,7 +3538,97 @@
   <joint name="joint_block_14_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_31"/>
-    <origin xyz="15.0 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 2.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_14_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_14_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_14_32"/>
+    <origin xyz="14.5 2.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_14_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_14_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_14_33"/>
+    <origin xyz="15.5 2.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_18_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_18_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_18_2"/>
+    <origin xyz="-15.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3249,7 +3639,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3268,7 +3658,7 @@
   <joint name="joint_block_18_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_3"/>
-    <origin xyz="-13.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3279,7 +3669,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3298,7 +3688,7 @@
   <joint name="joint_block_18_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_4"/>
-    <origin xyz="-12.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3309,7 +3699,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3328,7 +3718,7 @@
   <joint name="joint_block_18_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_5"/>
-    <origin xyz="-11.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3339,7 +3729,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3358,7 +3748,7 @@
   <joint name="joint_block_18_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_6"/>
-    <origin xyz="-10.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3369,7 +3759,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3388,7 +3778,7 @@
   <joint name="joint_block_18_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_7"/>
-    <origin xyz="-9.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3399,7 +3789,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3418,7 +3808,7 @@
   <joint name="joint_block_18_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_8"/>
-    <origin xyz="-8.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3429,7 +3819,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3448,7 +3838,7 @@
   <joint name="joint_block_18_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_9"/>
-    <origin xyz="-7.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3459,7 +3849,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3478,7 +3868,7 @@
   <joint name="joint_block_18_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_10"/>
-    <origin xyz="-6.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3489,7 +3879,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3508,18 +3898,18 @@
   <joint name="joint_block_18_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_11"/>
-    <origin xyz="-5.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_18_12">
+  <link name="block_18_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3535,10 +3925,10 @@
   </link>
 
 
-  <joint name="joint_block_18_12" type="fixed">
+  <joint name="joint_block_18_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_18_12"/>
-    <origin xyz="-4.0 -0.5 0.5" rpy="0 0 0"/>
+    <child link="block_18_13"/>
+    <origin xyz="-4.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3549,7 +3939,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3568,7 +3958,7 @@
   <joint name="joint_block_18_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_14"/>
-    <origin xyz="-2.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3579,7 +3969,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3598,7 +3988,7 @@
   <joint name="joint_block_18_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_15"/>
-    <origin xyz="-1.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3609,7 +3999,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3628,7 +4018,7 @@
   <joint name="joint_block_18_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_16"/>
-    <origin xyz="0.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3639,7 +4029,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3658,7 +4048,7 @@
   <joint name="joint_block_18_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_17"/>
-    <origin xyz="1.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3669,7 +4059,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3688,7 +4078,7 @@
   <joint name="joint_block_18_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_18"/>
-    <origin xyz="2.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3699,7 +4089,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3718,7 +4108,7 @@
   <joint name="joint_block_18_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_19"/>
-    <origin xyz="3.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3729,7 +4119,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3748,7 +4138,7 @@
   <joint name="joint_block_18_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_20"/>
-    <origin xyz="4.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3759,7 +4149,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3778,7 +4168,7 @@
   <joint name="joint_block_18_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_21"/>
-    <origin xyz="5.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3789,7 +4179,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3808,18 +4198,18 @@
   <joint name="joint_block_18_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_22"/>
-    <origin xyz="6.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_18_23">
+  <link name="block_18_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3835,10 +4225,10 @@
   </link>
 
 
-  <joint name="joint_block_18_23" type="fixed">
+  <joint name="joint_block_18_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_18_23"/>
-    <origin xyz="7.0 -0.5 0.5" rpy="0 0 0"/>
+    <child link="block_18_24"/>
+    <origin xyz="6.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3849,7 +4239,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3868,7 +4258,7 @@
   <joint name="joint_block_18_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_25"/>
-    <origin xyz="9.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3879,7 +4269,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3898,7 +4288,7 @@
   <joint name="joint_block_18_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_26"/>
-    <origin xyz="10.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3909,7 +4299,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3928,7 +4318,7 @@
   <joint name="joint_block_18_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_27"/>
-    <origin xyz="11.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3939,7 +4329,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3958,7 +4348,7 @@
   <joint name="joint_block_18_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_28"/>
-    <origin xyz="12.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3969,7 +4359,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -3988,7 +4378,7 @@
   <joint name="joint_block_18_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_29"/>
-    <origin xyz="13.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -3999,7 +4389,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4018,7 +4408,7 @@
   <joint name="joint_block_18_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_30"/>
-    <origin xyz="14.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 -2.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4029,7 +4419,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4048,7 +4438,97 @@
   <joint name="joint_block_18_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_18_31"/>
-    <origin xyz="15.0 -0.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 -2.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_18_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_18_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_18_32"/>
+    <origin xyz="14.5 -2.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_18_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_18_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_18_33"/>
+    <origin xyz="15.5 -2.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_22_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_22_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_22_2"/>
+    <origin xyz="-15.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4059,7 +4539,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4078,7 +4558,7 @@
   <joint name="joint_block_22_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_3"/>
-    <origin xyz="-13.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4089,7 +4569,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4108,7 +4588,7 @@
   <joint name="joint_block_22_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_4"/>
-    <origin xyz="-12.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4119,7 +4599,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4138,7 +4618,7 @@
   <joint name="joint_block_22_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_5"/>
-    <origin xyz="-11.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4149,7 +4629,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4168,7 +4648,7 @@
   <joint name="joint_block_22_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_6"/>
-    <origin xyz="-10.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4179,7 +4659,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4198,7 +4678,7 @@
   <joint name="joint_block_22_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_7"/>
-    <origin xyz="-9.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4209,7 +4689,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4228,7 +4708,7 @@
   <joint name="joint_block_22_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_8"/>
-    <origin xyz="-8.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4239,7 +4719,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4258,7 +4738,7 @@
   <joint name="joint_block_22_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_9"/>
-    <origin xyz="-7.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4269,7 +4749,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4288,7 +4768,7 @@
   <joint name="joint_block_22_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_10"/>
-    <origin xyz="-6.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4299,7 +4779,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4318,18 +4798,18 @@
   <joint name="joint_block_22_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_11"/>
-    <origin xyz="-5.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_22_12">
+  <link name="block_22_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4345,10 +4825,10 @@
   </link>
 
 
-  <joint name="joint_block_22_12" type="fixed">
+  <joint name="joint_block_22_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_22_12"/>
-    <origin xyz="-4.0 -4.5 0.5" rpy="0 0 0"/>
+    <child link="block_22_13"/>
+    <origin xyz="-4.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4359,7 +4839,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4378,7 +4858,7 @@
   <joint name="joint_block_22_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_14"/>
-    <origin xyz="-2.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4389,7 +4869,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4408,7 +4888,7 @@
   <joint name="joint_block_22_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_15"/>
-    <origin xyz="-1.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4419,7 +4899,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4438,7 +4918,7 @@
   <joint name="joint_block_22_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_16"/>
-    <origin xyz="0.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4449,7 +4929,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4468,7 +4948,7 @@
   <joint name="joint_block_22_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_17"/>
-    <origin xyz="1.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4479,7 +4959,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4498,7 +4978,7 @@
   <joint name="joint_block_22_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_18"/>
-    <origin xyz="2.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4509,7 +4989,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4528,7 +5008,7 @@
   <joint name="joint_block_22_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_19"/>
-    <origin xyz="3.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4539,7 +5019,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4558,7 +5038,7 @@
   <joint name="joint_block_22_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_20"/>
-    <origin xyz="4.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4569,7 +5049,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4588,7 +5068,7 @@
   <joint name="joint_block_22_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_21"/>
-    <origin xyz="5.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4599,7 +5079,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4618,18 +5098,18 @@
   <joint name="joint_block_22_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_22"/>
-    <origin xyz="6.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_22_23">
+  <link name="block_22_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4645,10 +5125,10 @@
   </link>
 
 
-  <joint name="joint_block_22_23" type="fixed">
+  <joint name="joint_block_22_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_22_23"/>
-    <origin xyz="7.0 -4.5 0.5" rpy="0 0 0"/>
+    <child link="block_22_24"/>
+    <origin xyz="6.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4659,7 +5139,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4678,7 +5158,7 @@
   <joint name="joint_block_22_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_25"/>
-    <origin xyz="9.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4689,7 +5169,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4708,7 +5188,7 @@
   <joint name="joint_block_22_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_26"/>
-    <origin xyz="10.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4719,7 +5199,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4738,7 +5218,7 @@
   <joint name="joint_block_22_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_27"/>
-    <origin xyz="11.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4749,7 +5229,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4768,7 +5248,7 @@
   <joint name="joint_block_22_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_28"/>
-    <origin xyz="12.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4779,7 +5259,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4798,7 +5278,7 @@
   <joint name="joint_block_22_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_29"/>
-    <origin xyz="13.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4809,7 +5289,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4828,7 +5308,7 @@
   <joint name="joint_block_22_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_30"/>
-    <origin xyz="14.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 -6.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4839,7 +5319,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4858,7 +5338,97 @@
   <joint name="joint_block_22_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_22_31"/>
-    <origin xyz="15.0 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 -6.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_22_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_22_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_22_32"/>
+    <origin xyz="14.5 -6.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_22_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_22_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_22_33"/>
+    <origin xyz="15.5 -6.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_26_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_26_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_26_2"/>
+    <origin xyz="-15.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4869,7 +5439,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4888,7 +5458,7 @@
   <joint name="joint_block_26_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_3"/>
-    <origin xyz="-13.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4899,7 +5469,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4918,7 +5488,7 @@
   <joint name="joint_block_26_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_4"/>
-    <origin xyz="-12.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4929,7 +5499,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4948,7 +5518,7 @@
   <joint name="joint_block_26_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_5"/>
-    <origin xyz="-11.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4959,7 +5529,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -4978,7 +5548,7 @@
   <joint name="joint_block_26_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_6"/>
-    <origin xyz="-10.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -4989,7 +5559,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5008,7 +5578,7 @@
   <joint name="joint_block_26_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_7"/>
-    <origin xyz="-9.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5019,7 +5589,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5038,7 +5608,7 @@
   <joint name="joint_block_26_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_8"/>
-    <origin xyz="-8.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5049,7 +5619,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5068,7 +5638,7 @@
   <joint name="joint_block_26_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_9"/>
-    <origin xyz="-7.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5079,7 +5649,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5098,7 +5668,7 @@
   <joint name="joint_block_26_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_10"/>
-    <origin xyz="-6.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5109,7 +5679,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5128,18 +5698,18 @@
   <joint name="joint_block_26_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_11"/>
-    <origin xyz="-5.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_26_12">
+  <link name="block_26_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5155,10 +5725,10 @@
   </link>
 
 
-  <joint name="joint_block_26_12" type="fixed">
+  <joint name="joint_block_26_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_26_12"/>
-    <origin xyz="-4.0 -8.5 0.5" rpy="0 0 0"/>
+    <child link="block_26_13"/>
+    <origin xyz="-4.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5169,7 +5739,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5188,7 +5758,7 @@
   <joint name="joint_block_26_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_14"/>
-    <origin xyz="-2.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5199,7 +5769,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5218,7 +5788,7 @@
   <joint name="joint_block_26_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_15"/>
-    <origin xyz="-1.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5229,7 +5799,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5248,7 +5818,7 @@
   <joint name="joint_block_26_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_16"/>
-    <origin xyz="0.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5259,7 +5829,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5278,7 +5848,7 @@
   <joint name="joint_block_26_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_17"/>
-    <origin xyz="1.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5289,7 +5859,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5308,7 +5878,7 @@
   <joint name="joint_block_26_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_18"/>
-    <origin xyz="2.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5319,7 +5889,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5338,7 +5908,7 @@
   <joint name="joint_block_26_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_19"/>
-    <origin xyz="3.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5349,7 +5919,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5368,7 +5938,7 @@
   <joint name="joint_block_26_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_20"/>
-    <origin xyz="4.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5379,7 +5949,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5398,7 +5968,7 @@
   <joint name="joint_block_26_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_21"/>
-    <origin xyz="5.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5409,7 +5979,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5428,18 +5998,18 @@
   <joint name="joint_block_26_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_22"/>
-    <origin xyz="6.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_26_23">
+  <link name="block_26_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5455,10 +6025,10 @@
   </link>
 
 
-  <joint name="joint_block_26_23" type="fixed">
+  <joint name="joint_block_26_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_26_23"/>
-    <origin xyz="7.0 -8.5 0.5" rpy="0 0 0"/>
+    <child link="block_26_24"/>
+    <origin xyz="6.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5469,7 +6039,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5488,7 +6058,7 @@
   <joint name="joint_block_26_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_25"/>
-    <origin xyz="9.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5499,7 +6069,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5518,7 +6088,7 @@
   <joint name="joint_block_26_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_26"/>
-    <origin xyz="10.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5529,7 +6099,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5548,7 +6118,7 @@
   <joint name="joint_block_26_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_27"/>
-    <origin xyz="11.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5559,7 +6129,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5578,7 +6148,7 @@
   <joint name="joint_block_26_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_28"/>
-    <origin xyz="12.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5589,7 +6159,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5608,7 +6178,7 @@
   <joint name="joint_block_26_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_29"/>
-    <origin xyz="13.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5619,7 +6189,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5638,7 +6208,7 @@
   <joint name="joint_block_26_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_30"/>
-    <origin xyz="14.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 -10.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5649,7 +6219,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5668,7 +6238,97 @@
   <joint name="joint_block_26_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_26_31"/>
-    <origin xyz="15.0 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 -10.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_26_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_26_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_26_32"/>
+    <origin xyz="14.5 -10.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_26_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_26_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_26_33"/>
+    <origin xyz="15.5 -10.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_30_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_30_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_30_2"/>
+    <origin xyz="-15.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5679,7 +6339,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5698,7 +6358,7 @@
   <joint name="joint_block_30_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_3"/>
-    <origin xyz="-13.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-14.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5709,7 +6369,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5728,7 +6388,7 @@
   <joint name="joint_block_30_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_4"/>
-    <origin xyz="-12.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-13.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5739,7 +6399,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5758,7 +6418,7 @@
   <joint name="joint_block_30_5" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_5"/>
-    <origin xyz="-11.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-12.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5769,7 +6429,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5788,7 +6448,7 @@
   <joint name="joint_block_30_6" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_6"/>
-    <origin xyz="-10.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-11.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5799,7 +6459,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5818,7 +6478,7 @@
   <joint name="joint_block_30_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_7"/>
-    <origin xyz="-9.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-10.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5829,7 +6489,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5848,7 +6508,7 @@
   <joint name="joint_block_30_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_8"/>
-    <origin xyz="-8.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-9.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5859,7 +6519,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5878,7 +6538,7 @@
   <joint name="joint_block_30_9" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_9"/>
-    <origin xyz="-7.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-8.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5889,7 +6549,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5908,7 +6568,7 @@
   <joint name="joint_block_30_10" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_10"/>
-    <origin xyz="-6.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-7.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5919,7 +6579,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5938,18 +6598,18 @@
   <joint name="joint_block_30_11" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_11"/>
-    <origin xyz="-5.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-6.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_30_12">
+  <link name="block_30_13">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5965,10 +6625,10 @@
   </link>
 
 
-  <joint name="joint_block_30_12" type="fixed">
+  <joint name="joint_block_30_13" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_30_12"/>
-    <origin xyz="-4.0 -12.5 0.5" rpy="0 0 0"/>
+    <child link="block_30_13"/>
+    <origin xyz="-4.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -5979,7 +6639,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -5998,7 +6658,7 @@
   <joint name="joint_block_30_14" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_14"/>
-    <origin xyz="-2.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6009,7 +6669,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6028,7 +6688,7 @@
   <joint name="joint_block_30_15" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_15"/>
-    <origin xyz="-1.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6039,7 +6699,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6058,7 +6718,7 @@
   <joint name="joint_block_30_16" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_16"/>
-    <origin xyz="0.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-1.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6069,7 +6729,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6088,7 +6748,7 @@
   <joint name="joint_block_30_17" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_17"/>
-    <origin xyz="1.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-0.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6099,7 +6759,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6118,7 +6778,7 @@
   <joint name="joint_block_30_18" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_18"/>
-    <origin xyz="2.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6129,7 +6789,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6148,7 +6808,7 @@
   <joint name="joint_block_30_19" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_19"/>
-    <origin xyz="3.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6159,7 +6819,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6178,7 +6838,7 @@
   <joint name="joint_block_30_20" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_20"/>
-    <origin xyz="4.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="2.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6189,7 +6849,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6208,7 +6868,7 @@
   <joint name="joint_block_30_21" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_21"/>
-    <origin xyz="5.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="3.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6219,7 +6879,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6238,18 +6898,18 @@
   <joint name="joint_block_30_22" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_22"/>
-    <origin xyz="6.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="4.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_30_23">
+  <link name="block_30_24">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6265,10 +6925,10 @@
   </link>
 
 
-  <joint name="joint_block_30_23" type="fixed">
+  <joint name="joint_block_30_24" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_30_23"/>
-    <origin xyz="7.0 -12.5 0.5" rpy="0 0 0"/>
+    <child link="block_30_24"/>
+    <origin xyz="6.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6279,7 +6939,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6298,7 +6958,7 @@
   <joint name="joint_block_30_25" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_25"/>
-    <origin xyz="9.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="7.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6309,7 +6969,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6328,7 +6988,7 @@
   <joint name="joint_block_30_26" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_26"/>
-    <origin xyz="10.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="8.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6339,7 +6999,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6358,7 +7018,7 @@
   <joint name="joint_block_30_27" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_27"/>
-    <origin xyz="11.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="9.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6369,7 +7029,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6388,7 +7048,7 @@
   <joint name="joint_block_30_28" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_28"/>
-    <origin xyz="12.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="10.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6399,7 +7059,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6418,7 +7078,7 @@
   <joint name="joint_block_30_29" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_29"/>
-    <origin xyz="13.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="11.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6429,7 +7089,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6448,7 +7108,7 @@
   <joint name="joint_block_30_30" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_30"/>
-    <origin xyz="14.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="12.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -6459,7 +7119,7 @@
         <box size="1.0 1.0 1"/>
       </geometry>
       <material name="wall">
-        <color rgba="0 0 0.5 0.3"/>
+        <color rgba="0.3 0.3 0.3 0.9"/>
       </material>
     </visual>
     <collision>
@@ -6478,7 +7138,67 @@
   <joint name="joint_block_30_31" type="fixed">
     <parent link="struct_base"/>
     <child link="block_30_31"/>
-    <origin xyz="15.0 -12.5 0.5" rpy="0 0 0"/>
+    <origin xyz="13.5 -14.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_30_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_30_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_30_32"/>
+    <origin xyz="14.5 -14.0 0.5" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_30_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0.3 0.3 0.3 0.9"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="joint_block_30_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_30_33"/>
+    <origin xyz="15.5 -14.0 0.5" rpy="0 0 0"/>
   </joint>
 
 </robot>
