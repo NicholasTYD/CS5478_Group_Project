@@ -32,14 +32,14 @@ def get_default_warehouse_params():
     
     # Setup endpoints. The destination to collect a delivery is one of these endpoints.
     endpoints = np.zeros([rows, cols])
-    endpoints[1:-2:4,
+    endpoints[1:-1:4,
               1: -2] = 1
-    endpoints[4:-2:4,
+    endpoints[4:-1:4,
               1: -2] = 1
 
-    endpoints[1:-2:4,
+    endpoints[1:-1:4,
               1:-2:11] = 0
-    endpoints[4:-2:4,
+    endpoints[4:-1:4,
               1:-2:11] = 0
     
     return rows, cols, work_stns, shelves, endpoints

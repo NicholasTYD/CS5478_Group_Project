@@ -8971,4 +8971,694 @@
     <origin xyz="15.5 -10.5 0.05" rpy="0 0 0"/>
   </joint>
 
+
+  <link name="block_28_2">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_2" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_2"/>
+    <origin xyz="-15.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_3">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_3" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_3"/>
+    <origin xyz="-14.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_4">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_4" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_4"/>
+    <origin xyz="-13.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_5">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_5" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_5"/>
+    <origin xyz="-12.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_6">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_6" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_6"/>
+    <origin xyz="-11.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_7">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_7" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_7"/>
+    <origin xyz="-10.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_8">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_8" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_8"/>
+    <origin xyz="-9.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_9">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_9" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_9"/>
+    <origin xyz="-8.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_10">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_10" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_10"/>
+    <origin xyz="-7.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_11">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_11" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_11"/>
+    <origin xyz="-6.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_13">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_13" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_13"/>
+    <origin xyz="-4.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_14">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_14" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_14"/>
+    <origin xyz="-3.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_15">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_15" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_15"/>
+    <origin xyz="-2.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_16">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_16" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_16"/>
+    <origin xyz="-1.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_17">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_17" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_17"/>
+    <origin xyz="-0.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_18">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_18" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_18"/>
+    <origin xyz="0.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_19">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_19" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_19"/>
+    <origin xyz="1.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_20">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_20" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_20"/>
+    <origin xyz="2.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_21">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_21" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_21"/>
+    <origin xyz="3.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_22">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_22" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_22"/>
+    <origin xyz="4.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_24">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_24" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_24"/>
+    <origin xyz="6.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_25">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_25" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_25"/>
+    <origin xyz="7.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_26">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_26" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_26"/>
+    <origin xyz="8.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_27">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_27" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_27"/>
+    <origin xyz="9.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_28">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_28" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_28"/>
+    <origin xyz="10.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_29">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_29" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_29"/>
+    <origin xyz="11.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_30">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_30" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_30"/>
+    <origin xyz="12.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_31">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_31" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_31"/>
+    <origin xyz="13.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_32">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_32" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_32"/>
+    <origin xyz="14.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_28_33">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.1"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_28_33" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_28_33"/>
+    <origin xyz="15.5 -13.5 0.05" rpy="0 0 0"/>
+  </joint>
+
 </robot>
