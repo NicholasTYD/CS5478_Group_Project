@@ -42,31 +42,7 @@ def get_default_warehouse_params():
     endpoints[4:-2:4,
               1:-2:11] = 0
     
-    
     return rows, cols, work_stns, shelves, endpoints
-
-def init_scene(rows, cols, work_stn_arr, shelves_arr):
-    # We offset the floor to align with the local coordinates instead of the global coordinates
-    floor_base_pos = [(rows%2+1)/2, (cols%2+1)/2, 0]
-    planeId = p.loadURDF("assets/plane/plane.urdf", basePosition=floor_base_pos)
-
-    whouse_map = np.zeros([rows + 2, cols + 2])
-
-    # Create border walls
-    whouse_map[0,:] = 1
-    whouse_map[-1,:] = 1
-    whouse_map[:,0] = 1
-    whouse_map[:,-1] = 1
-
-    wall_pos = create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
-    work_stns_pos = create_struct_urdf(work_stn_arr, "assets/warehouse/endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5))
-    shelves_pos = create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
-
-    wh = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-    endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-    shelves = p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-
-    return wall_pos, work_stns_pos, shelves_pos
 
 
 

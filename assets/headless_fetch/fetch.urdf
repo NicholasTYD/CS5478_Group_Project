@@ -71,7 +71,7 @@
         <mesh filename="fetch_description/meshes/r_wheel_link.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.086 0.506 0.767 1"/>
+        <color rgba="1 1 1 1"/>
       </material>
     </visual>
     <collision>
@@ -100,7 +100,7 @@
         <mesh filename="fetch_description/meshes/l_wheel_link.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.086 0.506 0.767 1"/>
+        <color rgba="1 1 1 1"/>
       </material>
     </visual>
     <collision>

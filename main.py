@@ -18,6 +18,7 @@ class Simulator:
             robot_pos = stn_pos.copy()
             robot_pos[2] = 0
             self.robots.append(self._load_robot(robot_pos))
+        
         self._load_camera()
 
     def step(self):
@@ -29,7 +30,9 @@ class Simulator:
 
     def _load_map(self, rows, cols, work_stn_arr, shelves_arr, endpoints_arr):
         # We offset the floor to align with the local coordinates instead of the global coordinates
-        floor_base_pos = [(rows%2+1)/2, (cols%2+1)/2, 0]
+        x_offset = 0 if cols % 2 == 0 else 0.5
+        y_offset = 0 if rows % 2 == 0 else 0.5
+        floor_base_pos = [x_offset, y_offset, 0]
         planeId = p.loadURDF("assets/plane/plane.urdf", basePosition=floor_base_pos)
 
         whouse_map = np.zeros([rows + 2, cols + 2])
@@ -43,7 +46,7 @@ class Simulator:
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
         work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5), has_collison=False)
         shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
-        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.1, box_color=(0, 0, 1, 0.2), has_collison=False)
+        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.1, box_color=(0, 0, 1, 0.1), has_collison=False)
 
         wh = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         workstations = p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
@@ -58,7 +61,7 @@ class Simulator:
             "assets/headless_fetch/fetch.urdf",
             pos,
             base_ori,
-            useFixedBase=True,
+            # useFixedBase=True,
         )
         
         # robot_collison = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
@@ -77,15 +80,15 @@ class Simulator:
         # Init Camera
         p.resetDebugVisualizerCamera(
             cameraDistance=30,      # how far away the camera is
-            cameraYaw=0,          # left-right rotation (degrees)
-            cameraPitch=269,       # up-down rotation (degrees)
+            cameraYaw=180,          # left-right rotation (degrees)
+            cameraPitch=265,       # up-down rotation (degrees)
             cameraTargetPosition=[0, 0, 0]  # what the camera looks at
         )
 
 sim = Simulator()
-# startPos = [0, 0 ,0]
-# startOrientation = p.getQuaternionFromEuler([0,0,0])
-# boxId = p.loadURDF("assets/box/box.urdf",startPos, startOrientation)
+startPos = [5, 2 ,0]
+startOrientation = p.getQuaternionFromEuler([0,0,0])
+boxId = p.loadURDF("assets/box/box.urdf",startPos, startOrientation)
 while True:
     # cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
     # print(cubePos,cubeOrn)
