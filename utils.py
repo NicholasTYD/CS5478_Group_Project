@@ -4,10 +4,10 @@ import os
 import pybullet as p
 
 def get_default_warehouse_params():
-    # Layout recreated from here
+    # Layout partially adapted from here
     # https://ojs.aaai.org/index.php/SOCS/article/view/31593/33753
 
-    rows, cols = 33, 36
+    rows, cols = 30, 36
     # rows, cols = 9, 14
 
     # Setup workstations
@@ -18,14 +18,32 @@ def get_default_warehouse_params():
               0] = 1
 
     # Setup shelves
+    # Shelves are purely DECORATIVE. See endpoints for the actual robot destination.
     shelves = np.zeros([rows, cols])
     shelves[2:-2:4,
             1: -2] = 1
+    shelves[3:-2:4,
+            1: -2] = 1
+    
     shelves[2:-2:4,
             1:-2:11] = 0
+    shelves[3:-2:4,
+            1:-2:11] = 0
+    
+    # Setup endpoints. The destination to collect a delivery is one of these endpoints.
+    endpoints = np.zeros([rows, cols])
+    endpoints[1:-2:4,
+              1: -2] = 1
+    endpoints[4:-2:4,
+              1: -2] = 1
+
+    endpoints[1:-2:4,
+              1:-2:11] = 0
+    endpoints[4:-2:4,
+              1:-2:11] = 0
     
     
-    return rows, cols, work_stns, shelves
+    return rows, cols, work_stns, shelves, endpoints
 
 def init_scene(rows, cols, work_stn_arr, shelves_arr):
     # We offset the floor to align with the local coordinates instead of the global coordinates
@@ -43,7 +61,6 @@ def init_scene(rows, cols, work_stn_arr, shelves_arr):
     wall_pos = create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
     work_stns_pos = create_struct_urdf(work_stn_arr, "assets/warehouse/endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5))
     shelves_pos = create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
-    print(wall_pos)
 
     wh = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
     endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)

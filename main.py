@@ -5,13 +5,13 @@ import utils
 import numpy as np
 
 class Simulator:
-    def __init__(self, seed=0):
+    def __init__(self):
         # 'connecting' to the physics simulation
         self.physicsClient = p.connect(p.GUI)  # or p.DIRECT for non-graphical version
         p.setGravity(0,0,-10)
 
-        rows, cols, work_stns, shelves = utils.get_default_warehouse_params()
-        self.wall_pos, self.work_stns_pos, self.shelves = self._load_map(rows, cols, work_stns, shelves)
+        rows, cols, work_stns, shelves, endpoints = utils.get_default_warehouse_params()
+        self.wall_pos, self.work_stns_pos, self.shelves, self.endpoints = self._load_map(rows, cols, work_stns, shelves, endpoints)
 
         self.robots = []
         for stn_pos in self.work_stns_pos:
@@ -22,9 +22,12 @@ class Simulator:
 
     def step(self):
         p.stepSimulation()
+        for robot in self.robots:
+            robot.act()
+
         time.sleep(1./240.)
 
-    def _load_map(self, rows, cols, work_stn_arr, shelves_arr):
+    def _load_map(self, rows, cols, work_stn_arr, shelves_arr, endpoints_arr):
         # We offset the floor to align with the local coordinates instead of the global coordinates
         floor_base_pos = [(rows%2+1)/2, (cols%2+1)/2, 0]
         planeId = p.loadURDF("assets/plane/plane.urdf", basePosition=floor_base_pos)
@@ -38,30 +41,37 @@ class Simulator:
         whouse_map[:,-1] = 1
 
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
-        work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/endpoints.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5), has_collison=False)
+        work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.25, box_color=(1, 0, 0.5, 0.5), has_collison=False)
         shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
+        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.1, box_color=(0, 0, 1, 0.2), has_collison=False)
 
         wh = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        workstations = p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         shelves = p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
-        return wall_pos, work_stns_pos, shelves_pos
+        return wall_pos, work_stns_pos, shelves_pos, endpoints_pos
     
     def _load_robot(self, pos):
-        robot_radius = 0.4
-        robot_height = 0.25
-
-        robot_collison = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
-        robot_visual = p.createVisualShape(p.GEOM_CYLINDER, radius=robot_radius, length=robot_height, 
-                                           rgbaColor=[0.2, 0.2, 1, 1])
-
-        robot_id = p.createMultiBody(baseMass=1,
-                                baseCollisionShapeIndex=robot_collison,
-                                baseVisualShapeIndex=robot_visual,
-                                basePosition=pos.tolist(),
-                                baseOrientation=p.getQuaternionFromEuler([0,0,0]))
+        base_ori = p.getQuaternionFromEuler([0, 0, 0])
+        robot_id = p.loadURDF(
+            "assets/headless_fetch/fetch.urdf",
+            pos,
+            base_ori,
+            useFixedBase=True,
+        )
         
-        return Robot(robot_id, robot_height, robot_radius)
+        # robot_collison = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
+        # robot_visual = p.createVisualShape(p.GEOM_CYLINDER, radius=robot_radius, length=robot_height, 
+        #                                    rgbaColor=[0.2, 0.2, 1, 1])
+ # 
+        # robot_id = p.createMultiBody(baseMass=1,
+        #                         baseCollisionShapeIndex=robot_collison,
+        #                         baseVisualShapeIndex=robot_visual,
+        #                         basePosition=pos.tolist(),
+        #                         baseOrientation=p.getQuaternionFromEuler([0,0,0]))
+        
+        return Robot(robot_id)
 
     def _load_camera(self):
         # Init Camera
