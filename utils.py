@@ -4,6 +4,9 @@ import os
 import pybullet as p
 
 def get_default_warehouse_params():
+    # Layout recreated from here
+    # https://ojs.aaai.org/index.php/SOCS/article/view/31593/33753
+
     rows, cols = 33, 36
     # rows, cols = 9, 14
 
@@ -60,6 +63,7 @@ def create_struct_urdf(
     struct_center_y: float = 0.0,
     struct_center_z: float = 0.0,
     box_color=(1, 1, 1, 1),
+    has_collison=True,
 ):
     """
     Generate a URDF file for a struct (walls as cubes) that can be loaded in PyBullet.
@@ -86,9 +90,6 @@ def create_struct_urdf(
                 world_y = struct_center_y + (n_rows / 2 - i - 0.5) * grid_xy
                 world_z = struct_center_z + half_z
 
-                # print(struct_center_y, (n_rows / 2 - i - 0.5) )
-                # exit()
-
                 name = f"block_{i}_{j}"
 
                 # child link
@@ -103,17 +104,19 @@ def create_struct_urdf(
         <color rgba="{box_color[0]} {box_color[1]} {box_color[2]} {box_color[3]}"/>
       </material>
     </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+"""
+                if has_collison:
+                    link += f"""
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="{grid_xy} {grid_xy} {grid_z}"/>
       </geometry>
     </collision>
-    <inertial>
-      <mass value="0"/> <!-- static -->
-      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
-    </inertial>
-  </link>
 """
 
                 joint = f"""
@@ -123,7 +126,7 @@ def create_struct_urdf(
     <origin xyz="{world_x} {world_y} {world_z}" rpy="0 0 0"/>
   </joint>
 """
-
+                link += "</link>"
                 urdf_parts.append(link)
                 urdf_parts.append(joint)
                 cube_positions.append((world_x, world_y, world_z))

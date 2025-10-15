@@ -12,18 +12,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_1_0" type="fixed">
     <parent link="struct_base"/>
@@ -42,18 +35,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_1_35" type="fixed">
     <parent link="struct_base"/>
@@ -72,18 +58,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_4_0" type="fixed">
     <parent link="struct_base"/>
@@ -102,18 +81,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_4_35" type="fixed">
     <parent link="struct_base"/>
@@ -132,18 +104,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_7_0" type="fixed">
     <parent link="struct_base"/>
@@ -162,18 +127,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_7_35" type="fixed">
     <parent link="struct_base"/>
@@ -192,18 +150,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_10_0" type="fixed">
     <parent link="struct_base"/>
@@ -222,18 +173,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_10_35" type="fixed">
     <parent link="struct_base"/>
@@ -252,18 +196,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_13_0" type="fixed">
     <parent link="struct_base"/>
@@ -282,18 +219,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_13_35" type="fixed">
     <parent link="struct_base"/>
@@ -312,18 +242,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_16_0" type="fixed">
     <parent link="struct_base"/>
@@ -342,18 +265,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_16_35" type="fixed">
     <parent link="struct_base"/>
@@ -372,18 +288,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_19_0" type="fixed">
     <parent link="struct_base"/>
@@ -402,18 +311,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_19_35" type="fixed">
     <parent link="struct_base"/>
@@ -432,18 +334,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_22_0" type="fixed">
     <parent link="struct_base"/>
@@ -462,18 +357,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_22_35" type="fixed">
     <parent link="struct_base"/>
@@ -492,18 +380,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_25_0" type="fixed">
     <parent link="struct_base"/>
@@ -522,18 +403,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_25_35" type="fixed">
     <parent link="struct_base"/>
@@ -552,18 +426,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_28_0" type="fixed">
     <parent link="struct_base"/>
@@ -582,18 +449,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_28_35" type="fixed">
     <parent link="struct_base"/>
@@ -612,18 +472,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_31_0" type="fixed">
     <parent link="struct_base"/>
@@ -642,18 +495,11 @@
         <color rgba="1 0 0.5 0.5"/>
       </material>
     </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size="1.0 1.0 1.25"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0"/> <!-- static -->
       <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
     </inertial>
-  </link>
-
+</link>
 
   <joint name="joint_block_31_35" type="fixed">
     <parent link="struct_base"/>
