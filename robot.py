@@ -1,72 +1,82 @@
 import pybullet as p
 import numpy as np
+import time
 
 class Robot:
     def __init__(self, id):
-        # self.robot_radius = 0.4
-        # self.robot_height = 0.25
         self.id = id
         self.pos, self.orn = [], []
-
-        n_joints = p.getNumJoints(self.id)
-        indices = []
-        lowers, uppers, ranges, rest = [], [], [], []
-
         
-        # Code below from default project
-        self.max_force = 2000000
-
-        # Collect joint info (skip fixed)
-        for j in range(n_joints):
-            info = p.getJointInfo(self.id, j)
-            joint_type = info[2]
-            if joint_type in (p.JOINT_REVOLUTE, p.JOINT_PRISMATIC):
-                indices.append(j)
-                lowers.append(info[8])
-                uppers.append(info[9])
-                ranges.append(info[9] - info[8])
-                rest.append(info[10])  # joint damping? (PyBullet packs different things; we keep a placeholder)
-
-                p.setJointMotorControl2(
-                    self.id, j, p.VELOCITY_CONTROL, force=0.0,
-                )
-
-        self.joint_indices = indices
-        self.joint_lower = np.array(lowers, dtype=np.float32)
-        self.joint_upper = np.array(uppers, dtype=np.float32)
-        self.joint_ranges = np.array(ranges, dtype=np.float32)
-        self.rest_poses = np.zeros_like(self.joint_lower, dtype=np.float32)
+        # Simple robot - no joints, just base movement
+        self.start_time = time.time()
+        self.velocity = [0, 0, 0]  # [vx, vy, vz]
         
-        # self.joint_lower[self.joint_upper==-1] = -np.inf
-        # self.joint_upper[self.joint_upper==-1] = np.inf
-        # self.joint_ranges[self.joint_upper==np.inf] = np.inf
-        
-        # print("Controllable joints:", len(self.joint_indices))
-        # print("Joint Indices:", self.joint_indices)
-        # print("Joint Lower:", self.joint_lower)
-        # print("Joint Upper:", self.joint_upper)
+        print(f"Simple robot loaded with ID: {self.id}")
 
     def act(self):
-        self.pos, self.orn = p.getBasePositionAndOrientation(self.id)
-        # print(self.pos, self.orn)
+        try:
+            # Check if robot still exists
+            if not p.getNumBodies() or self.id >= p.getNumBodies():
+                print(f"Robot {self.id} no longer exists, skipping...")
+                return
+                
+            self.pos, self.orn = p.getBasePositionAndOrientation(self.id)
+        except Exception as e:
+            print(f"Error getting robot {self.id} position: {e}")
+            return
         
-        # Read the setJointMotorControlArray pybullet quickstart for how this works
-        # But TLDR there's 2 modes, one that moves the robot using velocity p.VELOCITY_CONTROL,
-        # and another based on moving the robot to a set positon p.POSITION_CONTROL
-        #
-        # targetVelocities/targetPositions: The actual velocity/positon you want
-        # velocityGains/positionGains: Something to smooth out the motion
-        p.setJointMotorControlArray(
-            bodyUniqueId=self.id,
-            jointIndices=self.joint_indices,
-            forces=[self.max_force] * len(self.joint_indices), # 
-
-            controlMode=p.VELOCITY_CONTROL,
-            targetVelocities=[2, 0, 0],
-            # velocityGains=[123213, 12321 ,31321],
-
-            # controlMode=p.POSITION_CONTROL,
-            # targetPositions=[0, 5, 0],
-            # positionGains=[0.003] * len(self.joint_indices),
-        )
-        pass
+        # Enhanced boundary checking to prevent robots from going out of bounds
+        x, y, z = self.pos
+        warehouse_bounds = 12  # Reduced bounds to avoid walls
+        
+        # Calculate movement - robots should actually navigate the warehouse
+        import math
+        current_time = time.time()
+        time_factor = (current_time - self.start_time) * 0.5  # Faster time factor
+        
+        # Create a wandering behavior - robots move in different directions
+        robot_id = (self.id - 1) % 3  # Different behavior for each robot (IDs 1,2,3 -> 0,1,2)
+        
+        if robot_id == 0:
+            # Robot 0: Move in a large circle
+            desired_vx = 1.5 * math.sin(time_factor)
+            desired_vy = 1.5 * math.cos(time_factor)
+        elif robot_id == 1:
+            # Robot 1: Move in a figure-8 pattern
+            desired_vx = 1.2 * math.sin(time_factor)
+            desired_vy = 1.2 * math.sin(time_factor * 2)
+        else:
+            # Robot 2: Move in a square pattern
+            phase = (time_factor * 0.5) % 4
+            if phase < 1:
+                desired_vx, desired_vy = 1.0, 0  # Move right
+            elif phase < 2:
+                desired_vx, desired_vy = 0, 1.0  # Move up
+            elif phase < 3:
+                desired_vx, desired_vy = -1.0, 0  # Move left
+            else:
+                desired_vx, desired_vy = 0, -1.0  # Move down
+        
+        # Boundary checking - reverse direction if hitting walls
+        if x < -warehouse_bounds:
+            desired_vx = 1.0  # Move right
+        elif x > warehouse_bounds:
+            desired_vx = -1.0  # Move left
+            
+        if y < -warehouse_bounds:
+            desired_vy = 1.0  # Move forward
+        elif y > warehouse_bounds:
+            desired_vy = -1.0  # Move backward
+        
+        # Apply velocity directly to the robot base
+        try:
+            p.resetBaseVelocity(self.id, [desired_vx, desired_vy, 0], [0, 0, 0])
+            # Debug: print movement every 100 steps
+            if hasattr(self, 'debug_counter'):
+                self.debug_counter += 1
+            else:
+                self.debug_counter = 0
+            if self.debug_counter % 100 == 0:
+                print(f"Robot {self.id}: pos=({x:.1f},{y:.1f}) vel=({desired_vx:.1f},{desired_vy:.1f})")
+        except Exception as e:
+            print(f"Error setting robot {self.id} velocity: {e}")
