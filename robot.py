@@ -1,11 +1,23 @@
 import pybullet as p
 import numpy as np
 import time
+from queue import Queue
+import logging
+
+logger = logging.getLogger(__name__)
+
+class RobotTask:
+    def __init__(self, endpoint_pos, work_stn_pos):
+        self.endpoint_pos = endpoint_pos
+        self.work_stn_pos = work_stn_pos
 
 class Robot:
     def __init__(self, id):
         self.id = id
         self.pos, self.orn = [], []
+
+        self.task_queue = Queue()
+        self.curr_task = None
         
         # Simple robot - no joints, just base movement
         self.start_time = time.time()
@@ -14,6 +26,15 @@ class Robot:
         print(f"Simple robot loaded with ID: {self.id}")
 
     def act(self):
+        # Get its own self position and orientiaton
+        self.pos, self.orn = p.getBasePositionAndOrientation(self.id)
+
+        # Check if it is idle and there are pending tasks
+        if self.curr_task is None and not self.task_queue.empty():
+            self.curr_task = self.task_queue.get()
+            logging.info(f'Robot {self.id} received task with endpoint at:'
+                         f'{self.curr_task.endpoint_pos} and workstation at: {self.curr_task.work_stn_pos}')
+
         try:
             # Check if robot still exists
             if not p.getNumBodies() or self.id >= p.getNumBodies():
@@ -80,3 +101,16 @@ class Robot:
                 print(f"Robot {self.id}: pos=({x:.1f},{y:.1f}) vel=({desired_vx:.1f},{desired_vy:.1f})")
         except Exception as e:
             print(f"Error setting robot {self.id} velocity: {e}")
+
+    def add_task(self, task: RobotTask):
+        self.task_queue.put(task)
+
+    def check_tgt_pos_reached(self):
+        robot_xy_pos = self.pos[:2]
+        tgt_xy_pos = self.curr_tgt_pos[:2]
+
+        dist_diff = np.linalg.norm(robot_xy_pos, tgt_xy_pos)
+        # If distance between robot and tgt differs by this amt (disgarding z axis),
+        # we consider target reached
+        return dist_diff < 0.1 
+    
