@@ -18,11 +18,11 @@ class Simulator:
         rows, cols, work_stns, shelves, endpoints = utils.get_default_warehouse_params()
         self.wall_pos, self.work_stns_pos, self.shelves_pos, self.endpoints_pos = self._load_map(rows, cols, work_stns, shelves, endpoints)
 
-        self.max_sim_steps = 3000
+        self.max_sim_steps = 9999
         self.curr_sim_step = 0
 
         # Create a list of time steps where orders should be created. Should be in ascending order.
-        self.order_creation_times = sorted(rng.choice(range(self.max_sim_steps), 150))
+        self.order_creation_times = [1] # sorted(rng.choice(range(self.max_sim_steps), 150))
         print(self.order_creation_times)
         self.order_idx = 0 # Just a pointer for delivery_creation_times arr (A helper)
         
@@ -49,7 +49,7 @@ class Simulator:
         while self.order_idx < len(self.order_creation_times):
             next_order_time = self.order_creation_times[self.order_idx]
             if next_order_time == self.curr_sim_step:
-                self.create_delivery_order()
+                self.create_delivery_order(self.order_idx)
                 self.order_idx += 1
             else:
                 break
@@ -58,7 +58,7 @@ class Simulator:
         for robot in self.robots:
             robot.act()
 
-    def create_delivery_order(self):
+    def create_delivery_order(self, id):
         # This is where we implement the scheduling system for the robots.
         # For now we implement a basic 'deterministic' algorithm where it doesn't depend on how fast a robot completes
         # a delivery order to ensure that we can accurate measure benchmark algos.
@@ -70,7 +70,7 @@ class Simulator:
         # So, use round robin for deterministic choice of robot and work_stns
         chosen_work_stn_pos = self.work_stns_pos[self.order_idx % len(self.work_stns_pos)]
         allocated_robot = self.work_stn_robot_dict[tuple(chosen_work_stn_pos.tolist())]
-        task = RobotTask(chosen_endpoint_pos, chosen_work_stn_pos)
+        task = RobotTask(id, chosen_endpoint_pos, chosen_work_stn_pos)
         allocated_robot.add_task(task)
 
 
