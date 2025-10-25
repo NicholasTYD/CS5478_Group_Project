@@ -31,16 +31,13 @@ def get_default_warehouse_params():
             1:-2:11] = 0
     
     # Setup endpoints. The destination to collect a delivery is one of these endpoints.
+    # Create SPARSE endpoints (scattered dots, not entire rows!)
     endpoints = np.zeros([rows, cols])
+    # Place endpoints sparsely - every 4th row and every 6th column creates scattered dots
     endpoints[1:-1:4,
-              1: -2] = 1
+              2:-2:6] = 1  # Very sparse: every 6th column
     endpoints[4:-1:4,
-              1: -2] = 1
-
-    endpoints[1:-1:4,
-              1:-2:11] = 0
-    endpoints[4:-1:4,
-              1:-2:11] = 0
+              5:-2:6] = 1  # Offset pattern for variety
     
     return rows, cols, work_stns, shelves, endpoints
 

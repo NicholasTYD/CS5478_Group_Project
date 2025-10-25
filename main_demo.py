@@ -1,14 +1,25 @@
+"""
+Enhanced demo version of the warehouse simulation with better visualization.
+This version has:
+- More visible endpoints (green instead of transparent blue)
+- Multiple orders (10 orders in first 100 steps)
+- Colored robots for easier tracking
+- Debug info printed to console
+"""
+
 import pybullet as p
 import time
 from robot import Robot, RobotTask
 import utils
 import numpy as np
 import logging
-from pathfinding import create_warehouse_grid, AStarPlanner
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 rng = np.random.default_rng(seed=42)
+
+# Import pathfinding
+from pathfinding import create_warehouse_grid, AStarPlanner
 
 class Simulator:
     def __init__(self):
@@ -25,29 +36,55 @@ class Simulator:
         self.grid_map = create_warehouse_grid(rows, cols, self.wall_pos, self.shelves_pos,
                                                cell_size=1.0, offset=(x_offset, y_offset))
         self.planner = AStarPlanner(self.grid_map)
-        print("Occupancy grid created for pathfinding")
+        print("\n" + "="*60)
+        print("WAREHOUSE SIMULATION INITIALIZED")
+        print("="*60)
+        print(f"Grid size: {rows} x {cols}")
+        print(f"Workstations: {len(self.work_stns_pos)}")
+        print(f"Shelves (obstacles): {len(self.shelves_pos)}")
+        print(f"Endpoints (pickup dots): {len(self.endpoints_pos)} scattered points")
+        print("Occupancy grid created for A* pathfinding")
+        print("="*60 + "\n")
 
         self.max_sim_steps = 9999
         self.curr_sim_step = 0
 
-        # Create a list of time steps where orders should be created. Should be in ascending order.
-        self.order_creation_times = [1] # sorted(rng.choice(range(self.max_sim_steps), 150))
-        print(self.order_creation_times)
+        # DEMO: Create 20 orders spread across first 200 steps for better visualization
+        # This ensures all robots get at least one task
+        self.order_creation_times = sorted(rng.choice(range(1, 200), 20, replace=False))
+        print(f"📦 Orders scheduled at steps: {self.order_creation_times}\n")
         self.order_idx = 0 # Just a pointer for delivery_creation_times arr (A helper)
-        
+
         self.robots = []
         self.work_stn_robot_dict = {}
-        for stn_pos in self.work_stns_pos:
+
+        # Robot colors for visual distinction
+        robot_colors = [
+            [0.2, 0.2, 1.0, 1],   # Blue
+            [1.0, 0.2, 0.2, 1],   # Red
+            [0.2, 1.0, 0.2, 1],   # Green
+            [1.0, 1.0, 0.2, 1],   # Yellow
+            [1.0, 0.5, 0.0, 1],   # Orange
+            [0.5, 0.0, 1.0, 1],   # Purple
+            [0.0, 1.0, 1.0, 1],   # Cyan
+            [1.0, 0.0, 1.0, 1],   # Magenta
+        ]
+
+        for idx, stn_pos in enumerate(self.work_stns_pos):
             robot_pos = stn_pos.copy()
             robot_pos[2] = 0
-            robot_obj = self._load_robot(robot_pos, self.planner)
+            robot_color = robot_colors[idx % len(robot_colors)]
+            robot_obj = self._load_robot(robot_pos, self.planner, robot_color)
             self.robots.append(robot_obj)
             # Convert np_array into a hashable type
             self.work_stn_robot_dict[tuple(stn_pos.tolist())] = robot_obj
-        
+
         self._load_camera()
 
+        print("🤖 All robots loaded and ready!\n")
+
     def run(self):
+        print("▶️  Starting simulation...\n")
         while self.curr_sim_step < self.max_sim_steps:
             sim.step()
             time.sleep(1./240.)
@@ -99,10 +136,11 @@ class Simulator:
         whouse_map[:,-1] = 1
 
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
-        # Workstations (DELIVERY POINTS) - Bright pink/magenta, clearly visible
+        # Workstations (DELIVERY POINTS) - Bright pink/magenta, more opaque for visibility
         work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.8), has_collison=False)
         shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
-        # Endpoints (PICKUP POINTS) - Small visible orange dots
+
+        # Endpoints (PICKUP POINTS) - Small visible dots (red/orange for easy visibility)
         endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 1), has_collison=False)
 
         walls = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
@@ -111,8 +149,8 @@ class Simulator:
         endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
         return wall_pos, work_stns_pos, shelves_pos, endpoints_pos
-    
-    def _load_robot(self, pos, planner):
+
+    def _load_robot(self, pos, planner, color=[0.2, 0.2, 1, 1]):
         try:
             robot_radius = 0.3
             robot_height = 0.2
@@ -120,7 +158,7 @@ class Simulator:
             # Create collision and visual shapes
             robot_collision = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
             robot_visual = p.createVisualShape(p.GEOM_CYLINDER, radius=robot_radius, length=robot_height,
-                                              rgbaColor=[0.2, 0.2, 1, 1])
+                                              rgbaColor=color)
 
             # Create the robot body
             robot_id = p.createMultiBody(
@@ -135,35 +173,37 @@ class Simulator:
         except Exception as e:
             print(f"Error creating robot: {e}")
             return None
-        
-        # base_ori = p.getQuaternionFromEuler([0, 0, 0])
-        # robot_id = p.loadURDF(
-        #     "assets/headless_fetch/fetch.urdf",
-        #     pos,
-        #     base_ori,
-        #     # useFixedBase=True,
-        # )
-        # robot_collison = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
-        # robot_visual = p.createVisualShape(p.GEOM_CYLINDER, radius=robot_radius, length=robot_height, 
-        #                                    rgbaColor=[0.2, 0.2, 1, 1])
-        # robot_id = p.createMultiBody(baseMass=1,
-        #                         baseCollisionShapeIndex=robot_collison,
-        #                         baseVisualShapeIndex=robot_visual,
-        #                         basePosition=pos.tolist(),
-        #                         baseOrientation=p.getQuaternionFromEuler([0,0,0]))
-        # return Robot(robot_id)
 
     def _load_camera(self):
-        # Init Camera
+        # Init Camera - better overhead view
         p.resetDebugVisualizerCamera(
-            cameraDistance=30,      # how far away the camera is
+            cameraDistance=35,      # slightly further for full view
             cameraYaw=180,          # left-right rotation (degrees)
-            cameraPitch=265,       # up-down rotation (degrees)
-            cameraTargetPosition=[0, 0, 0]  # what the camera looks at
+            cameraPitch=-89,        # almost top-down view
+            cameraTargetPosition=[0, 0, 0]  # warehouse center
         )
 
-sim = Simulator()
-# startPos = [5, 2 ,0]
-# startOrientation = p.getQuaternionFromEuler([0,0,0])
-# boxId = p.loadURDF("assets/box/box.urdf",startPos, startOrientation)
-sim.run()
+if __name__ == "__main__":
+    print("\n" + "🏭 " * 20)
+    print("WAREHOUSE ROBOT SIMULATION - DEMO MODE")
+    print("🏭 " * 20 + "\n")
+    print("CONTROLS:")
+    print("  Left Mouse Drag  - Rotate view")
+    print("  Right Mouse Drag - Pan view")
+    print("  Mouse Wheel      - Zoom in/out")
+    print("\nCOLOR LEGEND:")
+    print("  🟦 Blue/Red/etc cylinders - Robots (different colors)")
+    print("  ⬛ Dark gray boxes       - Walls (boundaries)")
+    print("  🟫 Gray boxes (1m tall)  - Shelves (OBSTACLES - robots avoid these)")
+    print("  🟪 Pink boxes (1.5m)     - Workstations (DELIVERY POINTS on edges)")
+    print("  🟠 Orange dots (0.3m)    - Endpoints (PICKUP POINTS)")
+    print("\n⚠️  No physical cargo boxes - pickup/delivery is tracked by console logs")
+    print("\nROBOT TASK FLOW:")
+    print("  1. Robot starts at 🟪 Pink workstation")
+    print("  2. Navigates to 🟠 Orange pickup point → Console shows 'COLLECTED'")
+    print("  3. Returns to 🟪 Pink workstation → Console shows 'DELIVERED'")
+    print("\n💡 Watch robots navigate around 🟫 gray shelves to reach 🟠 orange dots!")
+    print("\n" + "-" * 60 + "\n")
+
+    sim = Simulator()
+    sim.run()
