@@ -13,6 +13,7 @@ from robot import Robot, RobotTask
 import utils
 import numpy as np
 import logging
+from metrics import MetricsCollector
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -33,8 +34,14 @@ class Simulator:
         # Create occupancy grid for pathfinding
         x_offset = 0 if cols % 2 == 0 else 0.5
         y_offset = 0 if rows % 2 == 0 else 0.5
+        # Use 0.2m buffer instead of full 0.3m radius to avoid blocking endpoints near walls
+        # This provides clearance while keeping paths accessible
+        robot_radius = 0.2  # Lighter inflation than actual robot radius (0.3m)
         self.grid_map = create_warehouse_grid(rows, cols, self.wall_pos, self.shelves_pos,
-                                               cell_size=1.0, offset=(x_offset, y_offset))
+                                               cell_size=1.0, offset=(x_offset, y_offset),
+                                               robot_radius=robot_radius,
+                                               endpoints_pos=self.endpoints_pos,
+                                               work_stns_pos=self.work_stns_pos)
         self.planner = AStarPlanner(self.grid_map)
         print("\n" + "="*60)
         print("WAREHOUSE SIMULATION INITIALIZED")
@@ -57,6 +64,11 @@ class Simulator:
 
         self.robots = []
         self.work_stn_robot_dict = {}
+
+        # Initialize metrics collector
+        num_robots = len(self.work_stns_pos)
+        self.metrics = MetricsCollector(num_robots=num_robots, time_step=1/240.0)
+        print(f"📊 Metrics collector initialized for {num_robots} robots\n")
 
         # Robot colors for visual distinction
         robot_colors = [
@@ -85,10 +97,47 @@ class Simulator:
 
     def run(self):
         print("▶️  Starting simulation...\n")
-        while self.curr_sim_step < self.max_sim_steps:
-            sim.step()
-            time.sleep(1./240.)
-            self.curr_sim_step += 1
+        try:
+            while self.curr_sim_step < self.max_sim_steps:
+                sim.step()
+                time.sleep(1./240.)
+                self.curr_sim_step += 1
+
+                # Check if all orders are completed (optional early stopping)
+                if (self.order_idx >= len(self.order_creation_times) and
+                    self.metrics.orders_completed >= len(self.order_creation_times)):
+                    print(f"\n✓ All {self.metrics.orders_completed} orders completed at step {self.curr_sim_step}!")
+                    # Give some buffer time to ensure all metrics are recorded
+                    buffer_steps = 100
+                    for _ in range(buffer_steps):
+                        p.stepSimulation()
+                        self.curr_sim_step += 1
+                        queue_lengths = [robot.task_queue.qsize() for robot in self.robots]
+                        self.metrics.step(queue_lengths)
+                    break
+
+        except KeyboardInterrupt:
+            print("\n⚠️  Simulation interrupted by user")
+
+        # Print and export metrics
+        self.finalize_metrics()
+
+    def finalize_metrics(self):
+        """Print summary and export metrics after simulation."""
+        print("\n" + "="*70)
+        print("SIMULATION COMPLETE - GENERATING METRICS")
+        print("="*70 + "\n")
+
+        # Print summary to console
+        self.metrics.print_summary()
+
+        # Export metrics to files
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        self.metrics.export_to_csv(f"metrics_summary_{timestamp}.csv")
+        self.metrics.export_to_json(f"metrics_full_{timestamp}.json", include_events=True, include_step_data=True)
+        self.metrics.export_timeseries_csv(f"metrics_timeseries_{timestamp}.csv")
+
+        print(f"\n✓ Metrics exported with timestamp: {timestamp}")
 
     def step(self):
         # Create a delivery order if scheduled in this sim step.
@@ -104,11 +153,18 @@ class Simulator:
         for robot in self.robots:
             robot.act()
 
+        # Record queue lengths and update metrics for this step
+        queue_lengths = [robot.task_queue.qsize() for robot in self.robots]
+        self.metrics.step(queue_lengths)
+
     def create_delivery_order(self, id):
         # This is where we implement the scheduling system for the robots.
         # For now we implement a basic 'deterministic' algorithm where it doesn't depend on how fast a robot completes
         # a delivery order to ensure that we can accurate measure benchmark algos.
         # Can consider improving this scheduling algorithm if we have spare time in the future.
+
+        # Log order creation to metrics
+        self.metrics.order_created(id)
 
         # Randomly allocate an endpoint for a robot to collect an item from
         chosen_endpoint_pos = rng.choice(self.endpoints_pos)
@@ -138,7 +194,8 @@ class Simulator:
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
         # Workstations (DELIVERY POINTS) - Bright pink/magenta, more opaque for visibility
         work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.8), has_collison=False)
-        shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
+        # Shelves with smaller collision boxes (0.7m) for robot clearance
+        shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9), collision_scale=0.7)
 
         # Endpoints (PICKUP POINTS) - Small visible dots (red/orange for easy visibility)
         endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 1), has_collison=False)
@@ -169,7 +226,7 @@ class Simulator:
                 baseOrientation=p.getQuaternionFromEuler([0, 0, 0])
             )
 
-            return Robot(robot_id, planner)
+            return Robot(robot_id, planner, self.metrics)
         except Exception as e:
             print(f"Error creating robot: {e}")
             return None

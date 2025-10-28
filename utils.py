@@ -54,16 +54,22 @@ def create_struct_urdf(
     struct_center_z: float = 0.0,
     box_color=(1, 1, 1, 1),
     has_collison=True,
+    collision_scale: float = 1.0,
 ):
     """
     Generate a URDF file for a struct (walls as cubes) that can be loaded in PyBullet.
     - Single root link 'struct_base'
     - Each block attached with a fixed joint
+    - collision_scale: Scale factor for collision box (e.g., 0.7 for smaller collision than visual)
     """
 
     n_rows = len(struct_map)
     n_cols = len(struct_map[0]) if n_rows > 0 else 0
     half_x, half_y, half_z = grid_xy / 2, grid_xy / 2, grid_z / 2
+
+    # Collision box size (can be smaller than visual for clearance)
+    collision_xy = grid_xy * collision_scale
+    collision_z = grid_z * collision_scale
 
     urdf_parts = [
         '<?xml version="1.0" ?>',
@@ -104,7 +110,7 @@ def create_struct_urdf(
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
-        <box size="{grid_xy} {grid_xy} {grid_z}"/>
+        <box size="{collision_xy} {collision_xy} {collision_z}"/>
       </geometry>
     </collision>
 """

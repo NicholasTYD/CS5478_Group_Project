@@ -13,7 +13,7 @@ class RobotTask:
         self.work_stn_pos = work_stn_pos
 
 class Robot:
-    def __init__(self, id, planner=None):
+    def __init__(self, id, planner=None, metrics_collector=None):
         self.id = id
         self.pos, self.orn = [], []
 
@@ -33,6 +33,13 @@ class Robot:
         self.velocity = [0, 0, 0]  # [vx, vy, vz]
         self.max_speed = 5.0  # Maximum speed in m/s (increased for faster movement)
 
+        # Metrics tracking
+        self.metrics_collector = metrics_collector
+        self.last_position = None  # Track position for distance calculation
+
+        # Debug tracking
+        self._debug_counter = 0
+
         print(f"Simple robot loaded with ID: {self.id}")
 
     def update_task_status(self):
@@ -45,12 +52,26 @@ class Robot:
             if has_tgt_reached:
                 if self.curr_tgt_type == 'ENDPOINT':
                     logging.info(f'COLLECTED: Robot {self.id} collected order {self.curr_task.id} at {self.curr_task.endpoint_pos}')
+                    # Log item collection to metrics
+                    if self.metrics_collector:
+                        self.metrics_collector.item_collected(
+                            self.curr_task.id,
+                            self.id,
+                            tuple(self.curr_task.endpoint_pos)
+                        )
                     self.curr_tgt_pos = self.curr_task.work_stn_pos
                     self.curr_tgt_type = 'WORKSTN'
                     # Plan new path to workstation
                     self.plan_path_to_target()
                 else:
                     logging.info(f'DELIVERED: Robot {self.id} delivered order {self.curr_task.id} at {self.curr_task.work_stn_pos}')
+                    # Log order delivery to metrics
+                    if self.metrics_collector:
+                        self.metrics_collector.order_delivered(
+                            self.curr_task.id,
+                            self.id,
+                            tuple(self.curr_task.work_stn_pos)
+                        )
                     self.curr_task = None
                     self.curr_tgt_pos = None
                     self.current_path = []  # Clear path when task completed
@@ -62,6 +83,9 @@ class Robot:
             self.curr_tgt_type = 'ENDPOINT'
             logging.info(f'RECEIVED: Robot {self.id} received order {self.curr_task.id} with endpoint at:'
                          f'{self.curr_task.endpoint_pos} and workstation at: {self.curr_task.work_stn_pos}')
+            # Log order assignment to metrics
+            if self.metrics_collector:
+                self.metrics_collector.order_assigned(self.curr_task.id, self.id)
             # Plan path to endpoint
             self.plan_path_to_target()
 
@@ -81,11 +105,21 @@ class Robot:
         # Update task status (this may trigger path planning)
         self.update_task_status()
 
+        # Update robot state for metrics (idle if no current task)
+        if self.metrics_collector:
+            is_idle = self.curr_task is None
+            self.metrics_collector.update_robot_state(self.id, is_idle)
+
+        # Increment debug counter
+        self._debug_counter += 1
+
         # Follow the path if we have one
         if len(self.current_path) > 0:
             self.follow_path()
         else:
             # No path, stay still
+            if self._debug_counter % 1000 == 0 and self.curr_task is not None:
+                logging.warning(f"DEBUG Robot {self.id}: Has task but NO PATH! Task type: {self.curr_tgt_type}")
             try:
                 p.resetBaseVelocity(self.id, [0, 0, 0], [0, 0, 0])
             except Exception as e:
@@ -109,9 +143,13 @@ class Robot:
         path = self.planner.plan(start, goal)
 
         if path is not None and len(path) > 0:
+            # IMPORTANT: A* returns path to grid cell centers, not exact goal position
+            # Append the exact goal as final waypoint to ensure robot reaches it
+            if path[-1] != goal:
+                path.append(goal)
             self.current_path = path
             self.waypoint_index = 0
-            logging.info(f"Robot {self.id}: Path planned with {len(path)} waypoints")
+            logging.info(f"Robot {self.id}: Path planned with {len(path)} waypoints (includes exact goal)")
         else:
             logging.error(f"Robot {self.id}: Failed to find path from {start} to {goal}")
             self.current_path = []
@@ -120,6 +158,7 @@ class Robot:
         """Follow the current path by moving towards the next waypoint."""
         if self.waypoint_index >= len(self.current_path):
             # Reached end of path
+            logging.info(f"DEBUG Robot {self.id}: Finished path! Now at distance {np.linalg.norm(np.array(self.pos[:2]) - np.array(self.curr_tgt_pos[:2])):.3f}m from target")
             self.current_path = []
             self.waypoint_index = 0
             return
@@ -134,12 +173,24 @@ class Robot:
         dy = wy - y
         distance = np.sqrt(dx**2 + dy**2)
 
+        # Track distance traveled for metrics
+        if self.metrics_collector and self.last_position is not None:
+            last_x, last_y = self.last_position[0], self.last_position[1]
+            distance_traveled = np.sqrt((x - last_x)**2 + (y - last_y)**2)
+            self.metrics_collector.robot_moved(self.id, distance_traveled)
+
+        # Update last position for next step
+        self.last_position = self.pos
+
         # Check if waypoint reached
-        if distance < self.waypoint_tolerance:
+        # SIMPLE: Use consistent tolerance for all waypoints
+        tolerance = self.waypoint_tolerance
+
+        if distance < tolerance:
             self.waypoint_index += 1
             if self.waypoint_index >= len(self.current_path):
                 # Path complete
-                logging.debug(f"Robot {self.id}: Path complete")
+                logging.info(f"DEBUG Robot {self.id}: Finished path! Final distance: {distance:.3f}m")
                 self.current_path = []
                 self.waypoint_index = 0
                 try:
@@ -168,10 +219,15 @@ class Robot:
 
         diff = robot_xy_pos - tgt_xy_pos
         dist_diff_squared = np.dot(diff, diff)
+        actual_dist = np.sqrt(dist_diff_squared)
 
-        # If distance between robot and tgt differs by this amt (disgarding z axis),
-        # we consider target reached
-        dist_threshold = 0.1
-        # We use square dist when compute so we don't need square root but the idea is the same
+        # SIMPLE: Target reached if robot is within 1 cell (1.0m) of target
+        # This aligns with our simple grid-based pathfinding
+        dist_threshold = 1.0
+
+        # DEBUG: Print distance every 1000 steps
+        if self.curr_tgt_type is not None and hasattr(self, '_debug_counter') and self._debug_counter % 1000 == 0:
+            logging.info(f'DEBUG Robot {self.id}: Distance to {self.curr_tgt_type}: {actual_dist:.3f}m (threshold: {dist_threshold}m)')
+
         return dist_diff_squared < (dist_threshold * dist_threshold) 
     

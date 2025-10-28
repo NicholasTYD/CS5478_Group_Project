@@ -45,8 +45,9 @@ class GridMap:
         """
         # The grid is centered, so we need to adjust
         # Grid coordinates go from -cols/2 to +cols/2 in world space
-        grid_x = int(np.round((world_x - self.offset[0]) / self.cell_size + self.cols / 2))
-        grid_y = int(np.round((world_y - self.offset[1]) / self.cell_size + self.rows / 2))
+        # The -0.5 offset accounts for the +0.5 offset used in URDF generation
+        grid_x = int(np.round((world_x - self.offset[0]) / self.cell_size + self.cols / 2 - 0.5))
+        grid_y = int(np.round((world_y - self.offset[1]) / self.cell_size + self.rows / 2 - 0.5))
         return grid_x, grid_y
 
     def grid_to_world(self, grid_x, grid_y):
@@ -59,20 +60,30 @@ class GridMap:
         Returns:
             (world_x, world_y): Position in world coordinates (meters)
         """
-        world_x = (grid_x - self.cols / 2) * self.cell_size + self.offset[0]
-        world_y = (grid_y - self.rows / 2) * self.cell_size + self.offset[1]
+        # The +0.5 offset aligns grid cells with URDF box positions
+        world_x = (grid_x - self.cols / 2 + 0.5) * self.cell_size + self.offset[0]
+        world_y = (grid_y - self.rows / 2 + 0.5) * self.cell_size + self.offset[1]
         return world_x, world_y
 
-    def add_obstacles_from_positions(self, obstacle_positions):
+    def add_obstacles_from_positions(self, obstacle_positions, inflation_radius=0):
         """
         Mark grid cells as occupied based on world coordinate positions.
 
         Args:
             obstacle_positions: List/array of [x, y, z] positions
+            inflation_radius: Inflate obstacles by this many cells (for robot radius)
         """
         for pos in obstacle_positions:
             grid_x, grid_y = self.world_to_grid(pos[0], pos[1])
             self.set_occupied(grid_x, grid_y)
+
+            # Inflate obstacle by radius (for robot collision avoidance)
+            if inflation_radius > 0:
+                for dx in range(-inflation_radius, inflation_radius + 1):
+                    for dy in range(-inflation_radius, inflation_radius + 1):
+                        # Use circular inflation (Euclidean distance)
+                        if dx*dx + dy*dy <= inflation_radius*inflation_radius:
+                            self.set_occupied(grid_x + dx, grid_y + dy)
 
     def print_grid(self):
         """Print ASCII representation of the grid."""
@@ -251,7 +262,8 @@ class AStarPlanner:
         return path_world
 
 
-def create_warehouse_grid(rows, cols, wall_pos, shelves_pos, cell_size=1.0, offset=(0, 0)):
+def create_warehouse_grid(rows, cols, wall_pos, shelves_pos, cell_size=1.0, offset=(0, 0), robot_radius=0.3,
+                          endpoints_pos=None, work_stns_pos=None):
     """
     Create a GridMap from warehouse structure positions.
 
@@ -261,15 +273,20 @@ def create_warehouse_grid(rows, cols, wall_pos, shelves_pos, cell_size=1.0, offs
         shelves_pos: Array of shelf positions
         cell_size: Size of each grid cell (default 1.0m)
         offset: (x_offset, y_offset) tuple
+        robot_radius: Ignored (kept for backward compatibility)
+        endpoints_pos: Ignored (kept for backward compatibility)
+        work_stns_pos: Ignored (kept for backward compatibility)
 
     Returns:
-        GridMap object with obstacles marked
+        GridMap object with only actual obstacle cells marked (no inflation)
     """
     # Add padding for walls
     grid_map = GridMap(rows + 2, cols + 2, cell_size, offset)
 
-    # Add walls and shelves as obstacles
-    grid_map.add_obstacles_from_positions(wall_pos)
-    grid_map.add_obstacles_from_positions(shelves_pos)
+    # SIMPLE APPROACH: No inflation, only actual obstacle cells are blocked
+    # Robot radius and collision detection handled by PyBullet physics
+    # Grid is just for high-level pathfinding
+    grid_map.add_obstacles_from_positions(wall_pos, inflation_radius=0)
+    grid_map.add_obstacles_from_positions(shelves_pos, inflation_radius=0)
 
     return grid_map

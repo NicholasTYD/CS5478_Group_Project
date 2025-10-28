@@ -23,7 +23,9 @@ class Simulator:
         x_offset = 0 if cols % 2 == 0 else 0.5
         y_offset = 0 if rows % 2 == 0 else 0.5
         self.grid_map = create_warehouse_grid(rows, cols, self.wall_pos, self.shelves_pos,
-                                               cell_size=1.0, offset=(x_offset, y_offset))
+                                               cell_size=1.0, offset=(x_offset, y_offset),
+                                               endpoints_pos=self.endpoints_pos,
+                                               work_stns_pos=self.work_stns_pos)
         self.planner = AStarPlanner(self.grid_map)
         print("Occupancy grid created for pathfinding")
 
@@ -101,7 +103,8 @@ class Simulator:
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
         # Workstations (DELIVERY POINTS) - Bright pink/magenta, clearly visible
         work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.8), has_collison=False)
-        shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9))
+        # Shelves with smaller collision boxes (0.7m) for robot clearance
+        shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9), collision_scale=0.7)
         # Endpoints (PICKUP POINTS) - Small visible orange dots
         endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 1), has_collison=False)
 
