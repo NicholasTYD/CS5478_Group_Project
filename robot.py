@@ -26,7 +26,7 @@ class Robot:
         self.planner = planner
         self.current_path = []  # List of (x, y) waypoints in world coordinates
         self.waypoint_index = 0  # Current waypoint we're heading to
-        self.waypoint_tolerance = 0.5  # Distance to consider waypoint reached (meters)
+        self.waypoint_tolerance = 0.1  # Distance to consider waypoint reached (meters)
 
         # Simple robot - no joints, just base movement
         self.start_time = time.time()
@@ -221,9 +221,9 @@ class Robot:
         dist_diff_squared = np.dot(diff, diff)
         actual_dist = np.sqrt(dist_diff_squared)
 
-        # SIMPLE: Target reached if robot is within 1 cell (1.0m) of target
+        # SIMPLE: Target reached if robot is within 0.1 cell (10cm) of target (Same as default course project)
         # This aligns with our simple grid-based pathfinding
-        dist_threshold = 1.0
+        dist_threshold = 0.1
 
         # DEBUG: Print distance every 1000 steps
         if self.curr_tgt_type is not None and hasattr(self, '_debug_counter') and self._debug_counter % 1000 == 0:
