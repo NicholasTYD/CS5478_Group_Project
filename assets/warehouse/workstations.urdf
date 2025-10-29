@@ -9,7 +9,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -32,7 +32,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -55,7 +55,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -78,7 +78,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -101,7 +101,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -124,7 +124,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -147,7 +147,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -170,7 +170,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -193,7 +193,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -216,7 +216,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -239,7 +239,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -262,7 +262,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -285,7 +285,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -308,7 +308,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -331,7 +331,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -354,7 +354,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -377,7 +377,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -400,7 +400,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -423,7 +423,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>
@@ -446,7 +446,7 @@
         <box size="1.0 1.0 1.5"/>
       </geometry>
       <material name="wall">
-        <color rgba="1 0.2 0.6 0.8"/>
+        <color rgba="1 0.2 0.6 0.5"/>
       </material>
     </visual>
     <inertial>

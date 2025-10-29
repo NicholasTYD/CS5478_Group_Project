@@ -33,7 +33,7 @@ class Simulator:
         self.curr_sim_step = 0
 
         # Create a list of time steps where orders should be created. Should be in ascending order.
-        self.order_creation_times = [1] # sorted(rng.choice(range(self.max_sim_steps), 150))
+        self.order_creation_times = sorted(rng.choice(range(self.max_sim_steps), 150))
         print(self.order_creation_times)
         self.order_idx = 0 # Just a pointer for delivery_creation_times arr (A helper)
         
@@ -102,11 +102,11 @@ class Simulator:
 
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
         # Workstations (DELIVERY POINTS) - Bright pink/magenta, clearly visible
-        work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.8), has_collison=False)
+        work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.5), has_collison=False)
         # Shelves with smaller collision boxes (0.7m) for robot clearance
         shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9), collision_scale=0.7)
         # Endpoints (PICKUP POINTS) - Small visible orange dots
-        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 1), has_collison=False)
+        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 0.3), has_collison=False)
 
         walls = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         work_stns = p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
@@ -123,7 +123,7 @@ class Simulator:
             # Create collision and visual shapes
             robot_collision = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
             robot_visual = p.createVisualShape(p.GEOM_CYLINDER, radius=robot_radius, length=robot_height,
-                                              rgbaColor=[0.2, 0.2, 1, 1])
+                                              rgbaColor=[rng.random(), rng.random(), rng.random(), 1])
 
             # Create the robot body
             robot_id = p.createMultiBody(
@@ -149,7 +149,7 @@ class Simulator:
         # robot_collison = p.createCollisionShape(p.GEOM_CYLINDER, radius=robot_radius, height=robot_height)
         # robot_visual = p.createVisualShape(p.GEOM_CYLINDER, radius=robot_radius, length=robot_height, 
         #                                    rgbaColor=[0.2, 0.2, 1, 1])
-        # robot_id = p.createMultiBody(baseMass=1,
+        # robot_id = p.createMultiBody(baseMass=1,  
         #                         baseCollisionShapeIndex=robot_collison,
         #                         baseVisualShapeIndex=robot_visual,
         #                         basePosition=pos.tolist(),

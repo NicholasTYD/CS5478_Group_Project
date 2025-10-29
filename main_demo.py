@@ -193,12 +193,12 @@ class Simulator:
 
         wall_pos = utils.create_struct_urdf(whouse_map, "assets/warehouse/wall.urdf", grid_z=3, box_color=(0.1, 0.1, 0.1, 1))
         # Workstations (DELIVERY POINTS) - Bright pink/magenta, more opaque for visibility
-        work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.8), has_collison=False)
+        work_stns_pos = utils.create_struct_urdf(work_stn_arr, "assets/warehouse/workstations.urdf", grid_z=1.5, box_color=(1, 0.2, 0.6, 0.5), has_collison=False)
         # Shelves with smaller collision boxes (0.7m) for robot clearance
         shelves_pos = utils.create_struct_urdf(shelves_arr, "assets/warehouse/shelves.urdf", grid_z=1, box_color=(0.3, 0.3, 0.3, 0.9), collision_scale=0.7)
 
         # Endpoints (PICKUP POINTS) - Small visible dots (red/orange for easy visibility)
-        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 1), has_collison=False)
+        endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 0.3), has_collison=False)
 
         walls = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         work_stns = p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
