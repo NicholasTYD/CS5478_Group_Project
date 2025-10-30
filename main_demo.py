@@ -9,6 +9,7 @@ This version has:
 
 import pybullet as p
 import time
+from collisions import CollisionChecker
 from robot import Robot, RobotTask
 import utils
 import numpy as np
@@ -29,7 +30,8 @@ class Simulator:
         p.setGravity(0,0,-10)
 
         rows, cols, work_stns, shelves, endpoints = utils.get_default_warehouse_params()
-        self.wall_pos, self.work_stns_pos, self.shelves_pos, self.endpoints_pos = self._load_map(rows, cols, work_stns, shelves, endpoints)
+        self.wall_pos, self.work_stns_pos, self.shelves_pos, self.endpoints_pos, \
+            walls_struct_id, shelves_struct_id  = self._load_map(rows, cols, work_stns, shelves, endpoints)
 
         # Create occupancy grid for pathfinding
         x_offset = 0 if cols % 2 == 0 else 0.5
@@ -91,6 +93,8 @@ class Simulator:
             # Convert np_array into a hashable type
             self.work_stn_robot_dict[tuple(stn_pos.tolist())] = robot_obj
 
+        self.collision_checker = CollisionChecker(self.robots, [walls_struct_id, shelves_struct_id])
+
         self._load_camera()
 
         print("🤖 All robots loaded and ready!\n")
@@ -140,6 +144,17 @@ class Simulator:
         print(f"\n✓ Metrics exported with timestamp: {timestamp}")
 
     def step(self):
+        robot_robot_collision_ids, robot_obstacle_collison_ids = self.collision_checker.check_robot_collisions()
+        for object_ids, contact_points in robot_robot_collision_ids.items():
+            body_a_id, body_b_id = object_ids
+            print(f"WARNING: Robot-Robot Collision between {body_a_id} and {body_b_id}: {len(contact_points)} points")
+            self.metrics.robot_robot_collided(body_a_id, body_b_id, contact_points)
+
+        for object_ids, contact_points in robot_obstacle_collison_ids.items():
+            body_a_id, body_b_id = object_ids
+            print(f"WARNING: Robot-Obstacle Collision between {body_a_id} and {body_b_id}: {len(contact_points)} points")
+            self.metrics.robot_obstacle_collided(body_a_id, body_b_id, contact_points)
+
         # Create a delivery order if scheduled in this sim step.
         while self.order_idx < len(self.order_creation_times):
             next_order_time = self.order_creation_times[self.order_idx]
@@ -200,12 +215,12 @@ class Simulator:
         # Endpoints (PICKUP POINTS) - Small visible dots (red/orange for easy visibility)
         endpoints_pos = utils.create_struct_urdf(endpoints_arr, "assets/warehouse/endpoints.urdf", grid_z=0.3, box_color=(1, 0.5, 0, 0.3), has_collison=False)
 
-        walls = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        work_stns = p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        shelves = p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        endpoints = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        wall_struct_id = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        workstn_struct_id = p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        shelves_struct_id = p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        endpoints_struct_id = p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
-        return wall_pos, work_stns_pos, shelves_pos, endpoints_pos
+        return wall_pos, work_stns_pos, shelves_pos, endpoints_pos, wall_struct_id, shelves_struct_id
 
     def _load_robot(self, pos, planner, color=[0.2, 0.2, 1, 1]):
         try:

@@ -47,6 +47,10 @@ class MetricsCollector:
         self.robot_idle_times: Dict[int, float] = defaultdict(float)  # robot_id -> idle_time
         self.robot_working_times: Dict[int, float] = defaultdict(float)  # robot_id -> working_time
 
+        # Collisions
+        self.robot_robot_collisions = 0
+        self.robot_obstacle_collisions = 0
+
         # Per-step metrics (for time series analysis)
         self.step_metrics: List[Dict] = []
         self.current_step = 0
@@ -61,7 +65,32 @@ class MetricsCollector:
         for robot_id in range(num_robots):
             self.robot_states[robot_id] = 'idle'
 
-    def log_event(self, event_type: str, robot_id: Optional[int] = None, order_id: Optional[int] = None,
+    def log_collision_event(self, event_type:str, body_a:Optional[int] = None, body_b: Optional[int] = None, 
+                            contact_points: list = None, details=None):
+        """
+        Log a collision event.
+
+        Args:
+            event_type: Type of event ('rr_collision', 'ro_collision')
+            robot_id: ID of robot involved (if applicable)
+            order_id: ID of order involved (if applicable)
+            position: Position where event occurred (if applicable)
+            details: Additional event details
+        """
+        event = {
+            'step': self.current_step,
+            'sim_time': self.current_step * self.time_step,
+            'wall_time': time.time() - self.start_time,
+            'type': event_type,
+            'bodyA': body_a,
+            'bodyB': body_b,
+            'contact_points': contact_points,
+            'details': details or {}
+        }
+        self.events.append(event)
+
+
+    def log_order_event(self, event_type: str, robot_id: Optional[int] = None, order_id: Optional[int] = None,
                   position: Optional[tuple] = None, details: Optional[Dict] = None):
         """
         Log a simulation event.
@@ -85,21 +114,31 @@ class MetricsCollector:
         }
         self.events.append(event)
 
+    def robot_robot_collided(self, body_a_id:int, body_b_id:int, contact_point:list[float]):
+        "Record a robot-robot collision"
+        self.robot_robot_collisions += 1
+        self.log_collision_event('rr_collision', body_a_id, body_b_id, contact_point)
+
+    def robot_obstacle_collided(self, body_a_id:int, body_b_id:int, contact_point:list[float]):
+        "Record a robot-obstacle collision"
+        self.robot_obstacle_collisions += 1
+        self.log_collision_event('ro_collision', body_a_id, body_b_id, contact_point)
+        
     def order_created(self, order_id: int):
         """Record when a new order is created."""
         self.orders_created += 1
         self.order_start_times[order_id] = self.current_step * self.time_step
-        self.log_event('order_created', order_id=order_id)
+        self.log_order_event('order_created', order_id=order_id)
 
     def order_assigned(self, order_id: int, robot_id: int):
         """Record when an order is assigned to a robot."""
-        self.log_event('order_assigned', robot_id=robot_id, order_id=order_id)
+        self.log_order_event('order_assigned', robot_id=robot_id, order_id=order_id)
         if self.robot_states[robot_id] == 'idle':
             self.robot_states[robot_id] = 'working'
 
     def item_collected(self, order_id: int, robot_id: int, position: tuple):
         """Record when a robot collects an item from an endpoint."""
-        self.log_event('item_collected', robot_id=robot_id, order_id=order_id, position=position)
+        self.log_order_event('item_collected', robot_id=robot_id, order_id=order_id, position=position)
 
     def order_delivered(self, order_id: int, robot_id: int, position: tuple):
         """Record when an order is completed (delivered to workstation)."""
@@ -115,7 +154,7 @@ class MetricsCollector:
         # Update robot task count
         self.robot_task_counts[robot_id] += 1
 
-        self.log_event('order_delivered', robot_id=robot_id, order_id=order_id, position=position)
+        self.log_order_event('order_delivered', robot_id=robot_id, order_id=order_id, position=position)
 
     def robot_moved(self, robot_id: int, distance: float):
         """
@@ -229,6 +268,11 @@ class MetricsCollector:
             'sim_time_seconds': sim_time,
             'num_robots': self.num_robots,
 
+            # Collisions metrics
+            'total_collisions': self.robot_robot_collisions + self.robot_obstacle_collisions,
+            'robot_robot_collisions': self.robot_robot_collisions,
+            'robot_obstacle_collisions': self.robot_obstacle_collisions,
+
             # Order metrics
             'orders_created': self.orders_created,
             'orders_completed': self.orders_completed,
@@ -276,6 +320,11 @@ class MetricsCollector:
         print(f"  Total Steps: {summary['total_steps']}")
         print(f"  Sim Time: {summary['sim_time_seconds']:.2f} seconds")
         print(f"  Num Robots: {summary['num_robots']}")
+
+        print(f"\nCOLLISION INFO:")
+        print(f"  Total Collisions: {summary['total_collisions']}")
+        print(f"  Total Robot-Robot Collisions: {summary['robot_robot_collisions']}")
+        print(f"  Total Robot-Obstacle Collisions: {summary['robot_obstacle_collisions']}")
 
         print(f"\n📦 ORDER METRICS:")
         print(f"  Orders Created: {summary['orders_created']}")
