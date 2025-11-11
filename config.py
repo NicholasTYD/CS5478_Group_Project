@@ -62,6 +62,10 @@ class SchedulingConfig:
     priority_enabled: bool = False
     dynamic_reassignment: bool = False
 
+    # MAPF settings
+    use_cbs: bool = False  # Enable Conflict-Based Search for collision-free planning
+    cbs_replan_interval: int = 50  # Replan all paths every N steps (0 = plan once at start)
+
 
 @dataclass
 class SimulationConfig:

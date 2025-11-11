@@ -147,12 +147,10 @@ class Simulator:
         robot_robot_collision_ids, robot_obstacle_collison_ids = self.collision_checker.check_robot_collisions()
         for object_ids, contact_points in robot_robot_collision_ids.items():
             body_a_id, body_b_id = object_ids
-            print(f"WARNING: Robot-Robot Collision between {body_a_id} and {body_b_id}: {len(contact_points)} points")
             self.metrics.robot_robot_collided(body_a_id, body_b_id, contact_points)
 
         for object_ids, contact_points in robot_obstacle_collison_ids.items():
             body_a_id, body_b_id = object_ids
-            print(f"WARNING: Robot-Obstacle Collision between {body_a_id} and {body_b_id}: {len(contact_points)} points")
             self.metrics.robot_obstacle_collided(body_a_id, body_b_id, contact_points)
 
         # Create a delivery order if scheduled in this sim step.
