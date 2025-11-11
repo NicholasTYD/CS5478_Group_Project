@@ -1,4 +1,5 @@
 """Standalone CBS demo with a handful of robots in the warehouse environment."""
+# python main_cbs_demo.py --robots 12 --step-duration 0.1
 
 from __future__ import annotations
 
