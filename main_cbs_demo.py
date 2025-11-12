@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import logging
 import math
 import time
@@ -33,11 +34,14 @@ class CBSDemoBot:
     order_id: int
     endpoint: Tuple[float, float]
     workstation: Tuple[float, float]
+    endpoint_marker_id: int = None
 
     def __post_init__(self):
         self.total_duration = max((len(self.schedule) - 1) * self.step_duration, 0.0)
         self._pickup_logged = False
         self._delivery_logged = False
+        self._pickup_visual_updated = False
+        self._delivery_visual_updated = False
         self.pickup_time: float | None = None
         self.delivery_time: float | None = None
 
@@ -57,6 +61,10 @@ class CBSDemoBot:
                 self._delivery_logged = True
                 if self.delivery_time is None:
                     self.delivery_time = sim_time
+                # Change endpoint marker to green
+                if self.endpoint_marker_id is not None and not self._delivery_visual_updated:
+                    p.changeVisualShape(self.endpoint_marker_id, -1, rgbaColor=[0, 1, 0, 0.9])
+                    self._delivery_visual_updated = True
             return
 
         segment = min(int(sim_time / self.step_duration), len(self.schedule) - 2)
@@ -80,6 +88,10 @@ class CBSDemoBot:
             self._pickup_logged = True
             if self.pickup_time is None:
                 self.pickup_time = sim_time
+            # Change endpoint marker to yellow
+            if self.endpoint_marker_id is not None and not self._pickup_visual_updated:
+                p.changeVisualShape(self.endpoint_marker_id, -1, rgbaColor=[1, 1, 0, 0.9])
+                self._pickup_visual_updated = True
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
         p.resetBasePositionAndOrientation(
@@ -108,7 +120,7 @@ class CBSDemo:
         (self.wall_pos,
          self.work_stn_pos,
          self.shelves_pos,
-         self.endpoints_pos) = self._load_map()
+         self.all_endpoints_pos) = self._load_map()
 
         x_offset = 0 if self.cols % 2 == 0 else 0.5
         y_offset = 0 if self.rows % 2 == 0 else 0.5
@@ -120,15 +132,15 @@ class CBSDemo:
             cell_size=1.0,
             offset=(x_offset, y_offset),
             robot_radius=0.2,
-            endpoints_pos=self.endpoints_pos,
+            endpoints_pos=self.all_endpoints_pos,
             work_stns_pos=self.work_stn_pos,
         )
 
         self.step_duration = step_duration
         self.time_step = 1 / 720.0  # faster visual updates keep interpolation smooth
         self.metrics_file = metrics_file
-        self.near_collision_events = 0
         self.num_active = min(num_robots, len(self.work_stn_pos))
+        self.collisions_avoided = 0
 
         logger.info("Initializing CBS demo with %s robots", self.num_active)
 
@@ -172,6 +184,8 @@ class CBSDemo:
             box_color=(0.3, 0.3, 0.3, 0.9),
             collision_scale=0.7,
         )
+        # Get endpoint positions but don't create visual markers yet
+        # (we'll create them individually for assigned orders)
         endpoints_pos = utils.create_struct_urdf(
             self.endpoints,
             "assets/warehouse/endpoints.urdf",
@@ -183,7 +197,8 @@ class CBSDemo:
         p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        # Don't load all endpoints visually - we'll create them per order
+        # p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
         return wall_pos, work_stn_pos, shelves_pos, endpoints_pos
 
@@ -221,12 +236,27 @@ class CBSDemo:
 
         return body_ids
 
+    def _create_endpoint_marker(self, position: Tuple[float, float]) -> int:
+        """Create a visual marker for an assigned endpoint (order pickup location)."""
+        marker_visual = p.createVisualShape(
+            p.GEOM_BOX,
+            halfExtents=[0.4, 0.4, 0.15],
+            rgbaColor=[1, 0.6, 0.0, 0.9],  # Orange initially
+        )
+        marker_id = p.createMultiBody(
+            baseMass=0,
+            baseVisualShapeIndex=marker_visual,
+            basePosition=[position[0], position[1], 0.3],
+            baseOrientation=p.getQuaternionFromEuler([0, 0, 0]),
+        )
+        return marker_id
+
     def _plan_and_assign_paths(self):
         rng = np.random.default_rng(seed=7)
         planner = CBSPlanner(self.grid_map, max_time=400)
 
-        chosen_endpoints = rng.choice(len(self.endpoints_pos), size=self.num_active, replace=False)
-        endpoint_list = [self.endpoints_pos[i] for i in chosen_endpoints]
+        chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
+        endpoint_list = [self.all_endpoints_pos[i] for i in chosen_endpoints]
 
         to_pick_specs = []
         to_drop_specs = []
@@ -247,7 +277,10 @@ class CBSDemo:
             }
 
         pickup_paths = planner.plan_paths(to_pick_specs)
+        pickup_conflicts = planner.conflicts_resolved
         drop_paths = planner.plan_paths(to_drop_specs)
+        drop_conflicts = planner.conflicts_resolved
+        self.collisions_avoided = pickup_conflicts + drop_conflicts
 
         for idx, body_id in enumerate(self.body_ids):
             pick_path = pickup_paths[idx]
@@ -260,6 +293,10 @@ class CBSDemo:
             pickup_index = len(pick_path) - 1
 
             metadata = self.order_metadata[idx]
+
+            # Create endpoint marker for this assigned order
+            endpoint_marker_id = self._create_endpoint_marker(metadata["endpoint"])
+
             bot = CBSDemoBot(
                 body_id=body_id,
                 schedule=schedule,
@@ -268,10 +305,12 @@ class CBSDemo:
                 order_id=idx,
                 endpoint=metadata["endpoint"],
                 workstation=metadata["workstation"],
+                endpoint_marker_id=endpoint_marker_id,
             )
             self.demo_bots.append(bot)
 
         logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
+        logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
 
     def _load_camera(self):
         p.resetDebugVisualizerCamera(
@@ -308,6 +347,7 @@ class CBSDemo:
         avg_pickup = round(sum(pickups) / len(pickups), 4) if pickups else ""
         avg_delivery = round(sum(deliveries) / len(deliveries), 4) if deliveries else ""
 
+        # CSV export
         fieldnames = [
             "total_orders",
             "orders_delivered",
@@ -316,7 +356,7 @@ class CBSDemo:
             "avg_delivery_time",
             "total_sim_duration",
             "min_clearance",
-            "near_collision_events",
+            "collisions_avoided",
         ]
 
         with open(self.metrics_file, "w", newline="") as csvfile:
@@ -330,9 +370,45 @@ class CBSDemo:
                 "avg_delivery_time": avg_delivery,
                 "total_sim_duration": round(total_duration, 4),
                 "min_clearance": summary_clearance,
-                "near_collision_events": self.near_collision_events,
+                "collisions_avoided": self.collisions_avoided,
             })
-        print(f"Metrics written to {self.metrics_file}")
+        print(f"CSV metrics written to {self.metrics_file}")
+
+        # JSON export with detailed per-order data
+        json_file = self.metrics_file.replace(".csv", ".json")
+
+        # Build per-order details
+        order_details = []
+        for bot in self.demo_bots:
+            order_details.append({
+                "order_id": bot.order_id,
+                "pickup_time": round(bot.pickup_time, 4) if bot.pickup_time is not None else None,
+                "delivery_time": round(bot.delivery_time, 4) if bot.delivery_time is not None else None,
+                "total_time": round(bot.delivery_time, 4) if bot.delivery_time is not None else None,
+                "endpoint": list(np.round(bot.endpoint, 2)),
+                "workstation": list(np.round(bot.workstation, 2)),
+                "status": "completed" if bot._delivery_logged else "pending"
+            })
+
+        json_metrics = {
+            "summary": {
+                "total_orders": total_orders,
+                "orders_completed": completed,
+                "orders_pending": pending,
+                "collisions_avoided": self.collisions_avoided,
+                "total_time_for_all_orders": round(total_duration, 4),
+                "avg_pickup_time": round(sum(pickups) / len(pickups), 4) if pickups else None,
+                "avg_delivery_time": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
+                "min_clearance": round(min_clearance, 4) if not math.isinf(min_clearance) else None,
+                "num_robots": self.num_active,
+                "step_duration": self.step_duration
+            },
+            "orders": order_details
+        }
+
+        with open(json_file, "w") as jsonfile:
+            json.dump(json_metrics, jsonfile, indent=2)
+        print(f"JSON metrics written to {json_file}")
 
     # ------------------------------------------------------------------
     def run(self):
@@ -361,8 +437,6 @@ class CBSDemo:
 
             current_clearance = self._pairwise_clearance()
             min_clearance = min(min_clearance, current_clearance)
-            if current_clearance < 0.35:
-                self.near_collision_events += 1
 
             if all(bot._delivery_logged for bot in self.demo_bots):
                 print("\n✓ All CBS orders delivered. Ending demo early.")
@@ -384,14 +458,14 @@ def _parse_args():
     parser.add_argument(
         "--step-duration",
         type=float,
-        default=0.2,
+        default=0.08,
         help="Seconds allocated per CBS grid step (smaller = faster)",
     )
     parser.add_argument(
         "--metrics-file",
         type=str,
-        default=None,
-        help="Optional CSV path to dump pickup/delivery timings and summary stats",
+        default="results.csv",
+        help="CSV path to dump pickup/delivery timings and summary stats (default: results.csv)",
     )
     return parser.parse_args()
 

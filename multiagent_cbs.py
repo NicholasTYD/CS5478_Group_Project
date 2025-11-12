@@ -38,6 +38,7 @@ class CBSPlanner:
     def __init__(self, grid_map, max_time: int = 200):
         self.grid_map = grid_map
         self.max_time = max_time
+        self.conflicts_resolved = 0
 
     # ------------------------------------------------------------------
     # Public API
@@ -55,6 +56,7 @@ class CBSPlanner:
         agent_map = {spec.agent_id: spec for spec in agent_specs}
         root_constraints: List[Constraint] = []
         root_paths: Dict[int, List[GridPos]] = {}
+        self.conflicts_resolved = 0
 
         for spec in agent_specs:
             path = self._low_level_search(spec, root_constraints)
@@ -68,6 +70,9 @@ class CBSPlanner:
             "cost": self._compute_cost(root_paths),
         }
 
+        # Count conflicts in independent planning (root node)
+        self.conflicts_resolved = self._count_all_conflicts(root_paths)
+
         open_list: List[Tuple[float, int, Dict]] = []
         counter = 0
         heapq.heappush(open_list, (root_node["cost"], counter, root_node))
@@ -77,7 +82,6 @@ class CBSPlanner:
             conflict = self._find_conflict(node["paths"])
             if not conflict:
                 return node["paths"]
-
             agent_a, agent_b = conflict["agents"]
             time = conflict["time"]
             pos = conflict["position"]
@@ -242,6 +246,7 @@ class CBSPlanner:
         return path
 
     def _find_conflict(self, paths: Dict[int, List[GridPos]]):
+        """Find the first conflict in the given paths (used by CBS search)."""
         if not paths:
             return None
 
@@ -274,6 +279,39 @@ class CBSPlanner:
                             }
 
         return None
+
+    def _count_all_conflicts(self, paths: Dict[int, List[GridPos]]) -> int:
+        """Count total number of conflicts in the given paths."""
+        if not paths:
+            return 0
+
+        conflict_count = 0
+        max_len = max(len(p) for p in paths.values())
+
+        agents = list(paths.keys())
+        for i in range(len(agents)):
+            for j in range(i + 1, len(agents)):
+                a_id = agents[i]
+                b_id = agents[j]
+                path_a = paths[a_id]
+                path_b = paths[b_id]
+
+                for t in range(max_len):
+                    pos_a = self._get_position_at_time(path_a, t)
+                    pos_b = self._get_position_at_time(path_b, t)
+
+                    # Vertex conflict
+                    if pos_a == pos_b:
+                        conflict_count += 1
+
+                    # Edge conflict
+                    if t > 0:
+                        prev_a = self._get_position_at_time(path_a, t - 1)
+                        prev_b = self._get_position_at_time(path_b, t - 1)
+                        if prev_a == pos_b and pos_a == prev_b:
+                            conflict_count += 1
+
+        return conflict_count
 
     @staticmethod
     def _get_position_at_time(path: List[GridPos], time_step: int) -> GridPos:
