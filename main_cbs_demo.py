@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import logging
 import math
@@ -338,44 +337,11 @@ class CBSDemo:
         if not self.metrics_file:
             return
 
-        summary_clearance = "NA" if math.isinf(min_clearance) else round(min_clearance, 4)
         pickups = [bot.pickup_time for bot in self.demo_bots if bot.pickup_time is not None]
         deliveries = [bot.delivery_time for bot in self.demo_bots if bot.delivery_time is not None]
         total_orders = len(self.demo_bots)
         completed = len(deliveries)
         pending = total_orders - completed
-        avg_pickup = round(sum(pickups) / len(pickups), 4) if pickups else ""
-        avg_delivery = round(sum(deliveries) / len(deliveries), 4) if deliveries else ""
-
-        # CSV export
-        fieldnames = [
-            "total_orders",
-            "orders_delivered",
-            "orders_pending",
-            "avg_pickup_time",
-            "avg_delivery_time",
-            "total_sim_duration",
-            "min_clearance",
-            "collisions_avoided",
-        ]
-
-        with open(self.metrics_file, "w", newline="") as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerow({
-                "total_orders": total_orders,
-                "orders_delivered": completed,
-                "orders_pending": pending,
-                "avg_pickup_time": avg_pickup,
-                "avg_delivery_time": avg_delivery,
-                "total_sim_duration": round(total_duration, 4),
-                "min_clearance": summary_clearance,
-                "collisions_avoided": self.collisions_avoided,
-            })
-        print(f"CSV metrics written to {self.metrics_file}")
-
-        # JSON export with detailed per-order data
-        json_file = self.metrics_file.replace(".csv", ".json")
 
         # Build per-order details
         order_details = []
@@ -406,9 +372,9 @@ class CBSDemo:
             "orders": order_details
         }
 
-        with open(json_file, "w") as jsonfile:
+        with open(self.metrics_file, "w") as jsonfile:
             json.dump(json_metrics, jsonfile, indent=2)
-        print(f"JSON metrics written to {json_file}")
+        print(f"Metrics written to {self.metrics_file}")
 
     # ------------------------------------------------------------------
     def run(self):
@@ -464,8 +430,8 @@ def _parse_args():
     parser.add_argument(
         "--metrics-file",
         type=str,
-        default="results.csv",
-        help="CSV path to dump pickup/delivery timings and summary stats (default: results.csv)",
+        default="results.json",
+        help="JSON path to dump pickup/delivery timings and summary stats (default: results.json)",
     )
     return parser.parse_args()
 
