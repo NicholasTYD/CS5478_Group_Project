@@ -3,54 +3,73 @@ import numpy as np
 import os
 import pybullet as p
 
-def get_default_warehouse_params():
-    # Layout partially adapted from here
-    # https://ojs.aaai.org/index.php/SOCS/article/view/31593/33753
+def get_warehouse_params(layout='default'):
+    if layout =='default':
+      # Layout partially adapted from here
+      # https://ojs.aaai.org/index.php/SOCS/article/view/31593/33753
 
-    rows, cols = 30, 36
-    # rows, cols = 9, 14
+      rows, cols = 30, 36
+      # rows, cols = 9, 14
 
-    # Setup workstations
-    work_stns = np.zeros([rows, cols])
-    work_stns[1:-1:3,
-              -1] = 1
-    work_stns[1:-1:3,
-              0] = 1
+      # Setup workstations
+      work_stns = np.zeros([rows, cols])
+      work_stns[1:-1:3,
+                -1] = 1
+      work_stns[1:-1:3,
+                0] = 1
 
-    # Setup shelves
-    # Shelves are purely DECORATIVE. See endpoints for the actual robot destination.
-    shelves = np.zeros([rows, cols])
-    shelves[2:-2:4,
-            1: -2] = 1
-    shelves[3:-2:4,
-            1: -2] = 1
-    
-    shelves[2:-2:4,
-            1:-2:11] = 0
-    shelves[3:-2:4,
-            1:-2:11] = 0
-    
-    # Setup endpoints. The destination to collect a delivery is one of these endpoints.
-    # Create SPARSE endpoints (scattered dots, not entire rows!)
-    endpoints = np.zeros([rows, cols])
-    # Place endpoints sparsely - every 4th row and every 6th column creates scattered dots
-    # endpoints[1:-1:4,
-    #           2:-2:6] = 1  # Very sparse: every 6th column
-    # endpoints[4:-1:4,
-    #           5:-2:6] = 1  # Offset pattern for variety
-    
-
-    # Dense Endpoint configuration
-    endpoints = np.zeros([rows, cols])
-    endpoints[1:-1:4,
+      # Setup shelves
+      # Shelves are purely DECORATIVE. See endpoints for the actual robot destination.
+      shelves = np.zeros([rows, cols])
+      shelves[2:-2:4,
               1: -2] = 1
-    endpoints[4:-1:4,
+      shelves[3:-2:4,
               1: -2] = 1
 
-    endpoints[1:-1:4,
+      shelves[2:-2:4,
               1:-2:11] = 0
-    endpoints[4:-1:4,
+      shelves[3:-2:4,
               1:-2:11] = 0
+
+      # Setup endpoints. The destination to collect a delivery is one of these endpoints.
+      # Create SPARSE endpoints (scattered dots, not entire rows!)
+      endpoints = np.zeros([rows, cols])
+      # Place endpoints sparsely - every 4th row and every 6th column creates scattered dots
+      # endpoints[1:-1:4,
+      #           2:-2:6] = 1  # Very sparse: every 6th column
+      # endpoints[4:-1:4,
+      #           5:-2:6] = 1  # Offset pattern for variety
+
+
+      # Dense Endpoint configuration
+      endpoints = np.zeros([rows, cols])
+      endpoints[1:-1:4,
+                1: -2] = 1
+      endpoints[4:-1:4,
+                1: -2] = 1
+
+      endpoints[1:-1:4,
+                1:-2:11] = 0
+      endpoints[4:-1:4,
+                1:-2:11] = 0
+    
+    elif layout == 'debug':
+      rows, cols = 8, 10
+
+      work_stns = np.zeros([rows, cols])
+      work_stns[0,
+                0:10] = 1
+      
+      shelves = np.zeros([rows, cols])
+      shelves[5,
+              1:10] = 1
+      
+      endpoints = np.zeros([rows, cols])
+      endpoints[-1,
+                0:10] = 1
+
+    else:
+        raise Exception("Warehouse params layout not valid!")
     
     return rows, cols, work_stns, shelves, endpoints
 

@@ -96,7 +96,7 @@ class BenchmarkSimulator:
     def _generate_warehouse_layout(self, rows, cols):
         """Generate warehouse layout based on configuration."""
         # Use default layout scaled to the requested size
-        default_rows, default_cols, work_stns, shelves, endpoints = utils.get_default_warehouse_params()
+        default_rows, default_cols, work_stns, shelves, endpoints = utils.get_warehouse_params()
 
         # If dimensions match default, use as-is
         if rows == default_rows and cols == default_cols:

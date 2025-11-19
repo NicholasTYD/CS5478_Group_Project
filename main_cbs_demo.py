@@ -114,7 +114,7 @@ class CBSDemo:
          self.cols,
          self.workstations,
          self.shelves,
-         self.endpoints) = utils.get_default_warehouse_params()
+         self.endpoints) = utils.get_warehouse_params()
 
         (self.wall_pos,
          self.work_stn_pos,

@@ -17,7 +17,7 @@ class Simulator:
         self.physicsClient = p.connect(p.GUI)  # or p.DIRECT for non-graphical version
         p.setGravity(0,0,-10)
 
-        rows, cols, work_stns, shelves, endpoints = utils.get_default_warehouse_params()
+        rows, cols, work_stns, shelves, endpoints = utils.get_warehouse_params()
         self.wall_pos, self.work_stns_pos, self.shelves_pos, self.endpoints_pos, \
             walls_struct_id, shelves_struct_id = self._load_map(rows, cols, work_stns, shelves, endpoints)
 
