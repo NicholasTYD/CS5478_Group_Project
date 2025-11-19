@@ -183,21 +183,21 @@ class CBSDemo:
             box_color=(0.3, 0.3, 0.3, 0.9),
             collision_scale=0.7,
         )
-        # Get endpoint positions but don't create visual markers yet
-        # (we'll create them individually for assigned orders)
+
+        # We'll also highlight endpoints individually for assigned orders later on
         endpoints_pos = utils.create_struct_urdf(
             self.endpoints,
             "assets/warehouse/endpoints.urdf",
             grid_z=0.3,
-            box_color=(1, 0.6, 0.0, 0.9),
+            box_color=(0, 0, 1, 0.1),
             has_collison=False,
         )
 
         p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        # Don't load all endpoints visually - we'll create them per order
-        # p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        # Load all endpoints visually but at a greatly reduced transparency
+        p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
         return wall_pos, work_stn_pos, shelves_pos, endpoints_pos
 

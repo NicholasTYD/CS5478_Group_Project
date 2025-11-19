@@ -34,23 +34,23 @@ def get_default_warehouse_params():
     # Create SPARSE endpoints (scattered dots, not entire rows!)
     endpoints = np.zeros([rows, cols])
     # Place endpoints sparsely - every 4th row and every 6th column creates scattered dots
-    endpoints[1:-1:4,
-              2:-2:6] = 1  # Very sparse: every 6th column
-    endpoints[4:-1:4,
-              5:-2:6] = 1  # Offset pattern for variety
+    # endpoints[1:-1:4,
+    #           2:-2:6] = 1  # Very sparse: every 6th column
+    # endpoints[4:-1:4,
+    #           5:-2:6] = 1  # Offset pattern for variety
     
 
     # Dense Endpoint configuration
-    # endpoints = np.zeros([rows, cols])
-    # endpoints[1:-1:4,
-    #           1: -2] = 1
-    # endpoints[4:-1:4,
-    #           1: -2] = 1
+    endpoints = np.zeros([rows, cols])
+    endpoints[1:-1:4,
+              1: -2] = 1
+    endpoints[4:-1:4,
+              1: -2] = 1
 
-    # endpoints[1:-1:4,
-    #           1:-2:11] = 0
-    # endpoints[4:-1:4,
-    #           1:-2:11] = 0
+    endpoints[1:-1:4,
+              1:-2:11] = 0
+    endpoints[4:-1:4,
+              1:-2:11] = 0
     
     return rows, cols, work_stns, shelves, endpoints
 
