@@ -89,21 +89,20 @@ class CBSPlanner:
             for agent in (agent_a, agent_b):
                 new_constraints = list(node["constraints"])
                 if conflict["type"] == "vertex":
-                    new_constraints.append(
-                        Constraint(agent_id=agent, time=time, position=pos, constraint_type="vertex")
-                    )
+                    constraint = Constraint(agent_id=agent, time=time, position=pos, constraint_type="vertex")
                 else:  # edge conflict
                     frm = self._get_position_at_time(node["paths"][agent], time - 1)
                     to = self._get_position_at_time(node["paths"][agent], time)
-                    new_constraints.append(
-                        Constraint(
-                            agent_id=agent,
-                            time=time,
-                            position=frm,
-                            next_position=to,
-                            constraint_type="edge",
-                        )
+                    constraint = Constraint(
+                        agent_id=agent,
+                        time=time,
+                        position=frm,
+                        next_position=to,
+                        constraint_type="edge",
                     )
+                # Only add constraints into the constraint list if it doesn't already exist.
+                if constraint not in new_constraints:
+                    new_constraints.append(constraint)
 
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
