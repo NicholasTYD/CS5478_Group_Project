@@ -1,9 +1,13 @@
 from collections import defaultdict
 from dataclasses import dataclass
+import logging
 from typing import Dict
 import pybullet as p
 from robot import Robot
 import time
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 class CollisionChecker:
     def __init__(self, robot_objs:list[Robot], obstacle_ids:list[int]):
@@ -108,13 +112,13 @@ class CBSCollisionsTracker:
             # Check robot-robot collisions
             if bodyA in self.robot_ids and bodyB in self.robot_ids:
                 self.rr_collision_records.append(CollisionRecord(bodyA, bodyB, contact_point, sim_time))
-                print(f"ROBOT-ROBOT COLLISION DETECTED: Between ids {bodyA} and {bodyB} at time {sim_time:.3f}")
+                logger.warning(f"ROBOT-ROBOT COLLISION DETECTED: Between ids {bodyA} and {bodyB} at time {sim_time:.3f}")
 
             # Check robot-obstacle collisions
             if (bodyA in self.robot_ids and bodyB in self.obstacle_ids) \
                     or (bodyA in self.obstacle_ids and bodyB in self.robot_ids):
                 self.ro_collision_records.append(CollisionRecord(bodyA, bodyB, contact_point, sim_time))
-                print(f"ROBOT-OBSTACLE COLLISION DETECTED: Between ids {bodyA} and {bodyB} at time {sim_time:.3f}")
+                logger.warning(f"ROBOT-OBSTACLE COLLISION DETECTED: Between ids {bodyA} and {bodyB} at time {sim_time:.3f}")
 
     def get_rr_collision_records(self, as_list_of_dicts=False) -> list[CollisionRecord|dict]:
         if as_list_of_dicts:

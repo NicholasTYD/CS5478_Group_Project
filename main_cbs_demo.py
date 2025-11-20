@@ -104,7 +104,7 @@ class CBSDemoBot:
 class CBSDemo:
     """Creates a lightweight simulator showcasing CBS collision avoidance."""
 
-    def __init__(self, num_robots: int = 6, step_duration: float = 0.2, metrics_file: str | None = None):
+    def __init__(self, num_robots: int = 10, step_duration: float = 0.2, metrics_file: str | None = None):
         if num_robots < 2:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
@@ -115,7 +115,7 @@ class CBSDemo:
          self.cols,
          self.workstations,
          self.shelves,
-         self.endpoints) = utils.get_warehouse_params()
+         self.endpoints) = utils.get_warehouse_params(layout='debug')
 
         (self.wall_pos,
          self.work_stn_pos,
@@ -438,7 +438,7 @@ def _parse_args():
     parser.add_argument(
         "--robots",
         type=int,
-        default=6,
+        default=10,
         help="Number of robots to include in the demo (default: 6)",
     )
     parser.add_argument(
