@@ -1,3 +1,5 @@
+# TODO: Fix robot collision bug caused by running cbs from endpoint to workstn, and workstn to endpoint separately.
+
 # CBS Algorithm Analysis & Improvement Opportunities
 
 ## 1. What's Going Well: CBS vs Plain A*

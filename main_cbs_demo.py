@@ -17,6 +17,7 @@ import pybullet as p
 import utils
 from multiagent_cbs import AgentSpec, CBSPlanner
 from pathfinding import create_warehouse_grid
+from collisions import CBSCollisionsTracker
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -119,7 +120,9 @@ class CBSDemo:
         (self.wall_pos,
          self.work_stn_pos,
          self.shelves_pos,
-         self.all_endpoints_pos) = self._load_map()
+         self.all_endpoints_pos,
+         self.wall_struct_id,
+         self.shelves_struct_id) = self._load_map()
 
         x_offset = 0 if self.cols % 2 == 0 else 0.5
         y_offset = 0 if self.rows % 2 == 0 else 0.5
@@ -135,6 +138,7 @@ class CBSDemo:
             work_stns_pos=self.work_stn_pos,
         )
 
+
         self.step_duration = step_duration
         self.time_step = 1 / 720.0  # faster visual updates keep interpolation smooth
         self.metrics_file = metrics_file
@@ -146,6 +150,12 @@ class CBSDemo:
         self.active_robot_indices = list(range(self.num_active))
         self.body_ids = self._spawn_bodies()
         self.demo_bots: List[CBSDemoBot] = []
+        
+        self.collision_checker = CBSCollisionsTracker()
+        for body_id in self.body_ids:
+            self.collision_checker.add_robot_to_track(body_id)
+        self.collision_checker.add_obstacle_to_track(self.wall_struct_id)
+        self.collision_checker.add_obstacle_to_track(self.shelves_struct_id)
 
         self._plan_and_assign_paths()
         self._load_camera()
@@ -193,13 +203,13 @@ class CBSDemo:
             has_collison=False,
         )
 
-        p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        wall_struct_id = p.loadURDF("assets/warehouse/wall.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         p.loadURDF("assets/warehouse/workstations.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
-        p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
+        shelves_struct_id = p.loadURDF("assets/warehouse/shelves.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
         # Load all endpoints visually but at a greatly reduced transparency
         p.loadURDF("assets/warehouse/endpoints.urdf", useFixedBase=1, flags=p.URDF_MERGE_FIXED_LINKS)
 
-        return wall_pos, work_stn_pos, shelves_pos, endpoints_pos
+        return wall_pos, work_stn_pos, shelves_pos, endpoints_pos, wall_struct_id, shelves_struct_id
 
     def _spawn_bodies(self):
         body_ids = []
@@ -343,6 +353,9 @@ class CBSDemo:
         completed = len(deliveries)
         pending = total_orders - completed
 
+        rr_collisions = self.collision_checker.get_rr_collision_records(as_list_of_dicts=True)
+        ro_collisions = self.collision_checker.get_ro_collision_records(as_list_of_dicts=True)
+
         # Build per-order details
         order_details = []
         for bot in self.demo_bots:
@@ -367,9 +380,14 @@ class CBSDemo:
                 "avg_delivery_time": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
                 "min_clearance": round(min_clearance, 4) if not math.isinf(min_clearance) else None,
                 "num_robots": self.num_active,
-                "step_duration": self.step_duration
+                "step_duration": self.step_duration,
+                "num_robot_robot_collisions": len(rr_collisions),
+                "num_robot_obstacle_collisions": len(ro_collisions),
             },
-            "orders": order_details
+            "orders": order_details,
+            "robot_robot_collisions": rr_collisions,
+            "robot_obstacle_collisions": ro_collisions,
+
         }
 
         with open(self.metrics_file, "w") as jsonfile:
@@ -395,6 +413,8 @@ class CBSDemo:
 
         min_clearance = math.inf
         while sim_time < total_duration:
+            self.collision_checker.check_robot_collisions(sim_time)
+
             for bot in self.demo_bots:
                 bot.update(sim_time)
             p.stepSimulation()
