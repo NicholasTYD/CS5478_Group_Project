@@ -22,6 +22,49 @@ from collisions import CBSCollisionsTracker
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+class Endpoint:
+    def __init__(self, position:Tuple[float, float]):
+        self.obj_id = self._create_endpoint_marker(position)
+        self.world_pos = position
+
+    def _create_endpoint_marker(self, position: Tuple[float, float]) -> int:
+        """Create a visual marker for an assigned endpoint (order pickup location)."""
+        marker_visual = p.createVisualShape(
+            p.GEOM_BOX,
+            halfExtents=[0.4, 0.4, 0.15],
+            rgbaColor=[1, 0.6, 0.0, 0.0],  # Transparent initially
+        )
+        marker_id = p.createMultiBody(
+            baseMass=0,
+            baseVisualShapeIndex=marker_visual,
+            basePosition=[position[0], position[1], 0.3],
+            baseOrientation=p.getQuaternionFromEuler([0, 0, 0]),
+        )
+        return marker_id
+    
+    def get_world_pos_2d(self):
+        return self.world_pos[:2]
+    
+    def update_visual(self, state='hidden'):
+        '''
+        State is either 'hidden', 'pending', 'collected', or 'completed'
+        '''
+
+        assert state in ('hidden', 'pending', 'collected', 'completed'), f"State {state} not valid!"
+        if state == 'hidden':
+            # Make the visual transparent
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0])
+        elif state == 'pending':
+            # Orange
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 0.6, 0.0, 0.9])
+        elif state == 'collected':
+            # Yellow
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 1, 0, 0.9])
+        elif state == 'completed':
+            # Green
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0.9])
+        else:
+            raise Exception(f"State {state} not valid!")
 
 @dataclass
 class CBSDemoBot:
@@ -32,9 +75,8 @@ class CBSDemoBot:
     step_duration: float
     pickup_index: int
     order_id: int
-    endpoint: Tuple[float, float]
+    endpoint: Endpoint
     workstation: Tuple[float, float]
-    endpoint_marker_id: int = None
 
     def __post_init__(self):
         self.total_duration = max((len(self.schedule) - 1) * self.step_duration, 0.0)
@@ -45,9 +87,19 @@ class CBSDemoBot:
         self.pickup_time: float | None = None
         self.delivery_time: float | None = None
 
+        self._set_pose(self.workstation)
+
+    def update_task(self, order_id=None, workstation=None, endpoint=None, endpoint_marker_id=None):
+        if order_id is not None:
+            self.order_id = order_id
+        if workstation is not None:
+            self.workstation = workstation
+        if endpoint is not None:
+            self.endpoint = endpoint
+        self._pickup_logged = False
+
     def update(self, sim_time: float):
-        if len(self.schedule) == 1:
-            self._set_pose(self.schedule[0])
+        if len(self.schedule) == 0:
             return
 
         if sim_time >= self.total_duration:
@@ -62,8 +114,8 @@ class CBSDemoBot:
                 if self.delivery_time is None:
                     self.delivery_time = sim_time
                 # Change endpoint marker to green
-                if self.endpoint_marker_id is not None and not self._delivery_visual_updated:
-                    p.changeVisualShape(self.endpoint_marker_id, -1, rgbaColor=[0, 1, 0, 0.9])
+                if self.endpoint is not None and not self._delivery_visual_updated:
+                    self.endpoint.update_visual(state='completed')
                     self._delivery_visual_updated = True
             return
 
@@ -82,15 +134,15 @@ class CBSDemoBot:
             logger.info(
                 "COLLECTED (CBS): order %s picked up at %s (t=%.2fs)",
                 self.order_id,
-                np.round(self.endpoint, 2),
+                np.round(self.endpoint.get_world_pos_2d(), 2),
                 sim_time,
             )
             self._pickup_logged = True
             if self.pickup_time is None:
                 self.pickup_time = sim_time
             # Change endpoint marker to yellow
-            if self.endpoint_marker_id is not None and not self._pickup_visual_updated:
-                p.changeVisualShape(self.endpoint_marker_id, -1, rgbaColor=[1, 1, 0, 0.9])
+            if self.endpoint is not None and not self._pickup_visual_updated:
+                self.endpoint.update_visual(state='collected')
                 self._pickup_visual_updated = True
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
@@ -115,7 +167,7 @@ class CBSDemo:
          self.cols,
          self.workstations,
          self.shelves,
-         self.endpoints) = utils.get_warehouse_params(layout='debug')
+         self.endpoints) = utils.get_warehouse_params(layout='default')
 
         (self.wall_pos,
          self.work_stn_pos,
@@ -245,27 +297,13 @@ class CBSDemo:
 
         return body_ids
 
-    def _create_endpoint_marker(self, position: Tuple[float, float]) -> int:
-        """Create a visual marker for an assigned endpoint (order pickup location)."""
-        marker_visual = p.createVisualShape(
-            p.GEOM_BOX,
-            halfExtents=[0.4, 0.4, 0.15],
-            rgbaColor=[1, 0.6, 0.0, 0.9],  # Orange initially
-        )
-        marker_id = p.createMultiBody(
-            baseMass=0,
-            baseVisualShapeIndex=marker_visual,
-            basePosition=[position[0], position[1], 0.3],
-            baseOrientation=p.getQuaternionFromEuler([0, 0, 0]),
-        )
-        return marker_id
-
     def _plan_and_assign_paths(self):
         rng = np.random.default_rng(seed=7)
         planner = CBSPlanner(self.grid_map, max_time=400)
 
         chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
-        endpoint_list = [self.all_endpoints_pos[i] for i in chosen_endpoints]
+        # endpoint_list = [self.all_endpoints_pos[i] for i in chosen_endpoints]
+        endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
 
         to_pick_specs = []
         to_drop_specs = []
@@ -273,15 +311,16 @@ class CBSDemo:
 
         for idx, robot_idx in enumerate(self.active_robot_indices):
             work_pos = self.work_stn_pos[robot_idx]
-            endpoint_pos = endpoint_list[idx]
+            endpoint: Endpoint = endpoint_list[idx]
+            endpoint.update_visual('pending')
 
             start_grid = self.grid_map.world_to_grid(work_pos[0], work_pos[1])
-            pickup_grid = self.grid_map.world_to_grid(endpoint_pos[0], endpoint_pos[1])
+            pickup_grid = self.grid_map.world_to_grid(*endpoint.get_world_pos_2d())
 
             to_pick_specs.append(AgentSpec(agent_id=idx, start=start_grid, goal=pickup_grid))
             to_drop_specs.append(AgentSpec(agent_id=idx, start=pickup_grid, goal=start_grid))
             self.order_metadata[idx] = {
-                "endpoint": (endpoint_pos[0], endpoint_pos[1]),
+                "endpoint": endpoint,
                 "workstation": (work_pos[0], work_pos[1]),
             }
 
@@ -304,7 +343,7 @@ class CBSDemo:
             metadata = self.order_metadata[idx]
 
             # Create endpoint marker for this assigned order
-            endpoint_marker_id = self._create_endpoint_marker(metadata["endpoint"])
+            # endpoint_marker_id = self._create_endpoint_marker(metadata["endpoint"])
 
             bot = CBSDemoBot(
                 body_id=body_id,
@@ -314,7 +353,7 @@ class CBSDemo:
                 order_id=idx,
                 endpoint=metadata["endpoint"],
                 workstation=metadata["workstation"],
-                endpoint_marker_id=endpoint_marker_id,
+                # endpoint_marker_id=endpoint_marker_id,
             )
             self.demo_bots.append(bot)
 
@@ -364,7 +403,7 @@ class CBSDemo:
                 "pickup_time": round(bot.pickup_time, 4) if bot.pickup_time is not None else None,
                 "delivery_time": round(bot.delivery_time, 4) if bot.delivery_time is not None else None,
                 "total_time": round(bot.delivery_time, 4) if bot.delivery_time is not None else None,
-                "endpoint": list(np.round(bot.endpoint, 2)),
+                "endpoint": list(np.round(bot.endpoint.get_world_pos_2d(), 2)),
                 "workstation": list(np.round(bot.workstation, 2)),
                 "status": "completed" if bot._delivery_logged else "pending"
             })
@@ -406,7 +445,7 @@ class CBSDemo:
         print(f"CBS step duration: {self.step_duration:.2f}s")
         print("Orders:")
         for idx, meta in self.order_metadata.items():
-            endpoint = np.round(meta["endpoint"], 2)
+            endpoint = np.round(meta["endpoint"].get_world_pos_2d(), 2)
             workstation = np.round(meta["workstation"], 2)
             print(f"  - Robot {idx}: workstation {workstation} -> endpoint {endpoint} -> workstation")
         print("\nWatching collision-free trajectories...\n")
