@@ -22,13 +22,15 @@ from collisions import CBSCollisionsTracker
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+rng = np.random.default_rng(seed=7)
+
 class Endpoint:
-    def __init__(self, position:Tuple[float, float], state='hidden'):
+    def __init__(self, position:Tuple[float, float, float], state='hidden'):
         self.obj_id = self._create_endpoint_marker(position)
         self.update_visual(state=state)        
         self.world_pos = position
 
-    def _create_endpoint_marker(self, position: Tuple[float, float]) -> int:
+    def _create_endpoint_marker(self, position: Tuple[float, float, float]) -> int:
         """Create a visual marker for an assigned endpoint (order pickup location)."""
         marker_visual = p.createVisualShape(
             p.GEOM_BOX,
@@ -75,39 +77,60 @@ class CBSDemoBot:
     """Controls a single PyBullet robot body using a CBS schedule."""
 
     body_id: int
-    schedule: List[Tuple[float, float]]
     step_duration: float
-    pickup_index: int
-    order_id: int
-    endpoint: Endpoint
+    # pickup_index: int
+    # order_id: int
+    # endpoint: Endpoint
     workstation: Tuple[float, float]
 
+    # Target reached if robot is within 0.1 cell (10cm) of goal (Same as default course project)
+    GOAL_DIST_THRESHOLD = 0.1
+
     def __post_init__(self):
-        self.total_duration = max((len(self.schedule) - 1) * self.step_duration, 0.0)
+        # self.total_duration = max((len(self.schedule) - 1) * self.step_duration, 0.0)
         self._pickup_logged = False
         self._delivery_logged = False
         self._pickup_visual_updated = False
         self._delivery_visual_updated = False
         self.pickup_time: float | None = None
         self.delivery_time: float | None = None
+        self.goal_pos: Tuple[float, float] | None = None
+    
+        self.schedule: List[Tuple[float, float]] | None = None
+        self.endpoint: Endpoint | None = None
+        self.order_id: int | None = None
 
         self._set_pose(self.workstation)
 
-    def update_task(self, order_id=None, workstation=None, endpoint=None, endpoint_marker_id=None):
+    def allocate_new_task(self, order_id:int=None, endpoint:Endpoint=None):
         if order_id is not None:
             self.order_id = order_id
-        if workstation is not None:
-            self.workstation = workstation
         if endpoint is not None:
             self.endpoint = endpoint
-        self._pickup_logged = False
 
+        self._pickup_logged = False
+        self._delivery_logged = False
+        self._pickup_visual_updated = False
+        self._delivery_visual_updated = False
+        self.pickup_time: float | None = None
+        self.delivery_time: float | None = None
+        self.goal_pos = endpoint.get_world_pos_2d()
+
+    def set_schedule(self, schedule):
+        self.schedule = schedule
+
+    def needs_pathfinding(self):
+        '''
+        Returns True if this demo bot requires the central CBS algo to generate a pathfinding algorithm for it.
+        '''
+        return (self.goal_pos is not None) and (self.schedule is None)
+        
     def update(self, sim_time: float):
         if len(self.schedule) == 0:
             return
 
-        if sim_time >= self.total_duration:
-            self._set_pose(self.schedule[-1])
+        if np.array_equal(self.goal_pos, self.workstation) and self._goal_reached():
+            # self._set_pose(self.schedule[-1])
             if not self._delivery_logged:
                 logger.info(
                     "DELIVERED (CBS): order %s returned to workstation at t=%.2fs",
@@ -121,6 +144,7 @@ class CBSDemoBot:
                 if self.endpoint is not None and not self._delivery_visual_updated:
                     self.endpoint.update_visual(state='completed')
                     self._delivery_visual_updated = True
+                    self.goal_pos = None
             return
 
         segment = min(int(sim_time / self.step_duration), len(self.schedule) - 2)
@@ -133,8 +157,8 @@ class CBSDemoBot:
 
         self._set_pose(tuple(interp))
 
-        pickup_time = self.pickup_index * self.step_duration
-        if (not self._pickup_logged) and sim_time >= pickup_time:
+        # pickup_time = self.pickup_index * self.step_duration
+        if np.array_equal(self.goal_pos, self.endpoint.get_world_pos_2d()) and self._goal_reached():
             logger.info(
                 "COLLECTED (CBS): order %s picked up at %s (t=%.2fs)",
                 self.order_id,
@@ -148,6 +172,7 @@ class CBSDemoBot:
             if self.endpoint is not None and not self._pickup_visual_updated:
                 self.endpoint.update_visual(state='collected')
                 self._pickup_visual_updated = True
+                self.goal_pos = self.workstation
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
         p.resetBasePositionAndOrientation(
@@ -155,6 +180,26 @@ class CBSDemoBot:
             [xy_pos[0], xy_pos[1], 0],
             p.getQuaternionFromEuler([0, 0, 0]),
         )
+
+    def get_goal_pos_2d(self):
+        return self.goal_pos
+    
+    def get_world_pos_2d(self):
+        pos_3d, ori = p.getBasePositionAndOrientation(self.body_id)
+        return pos_3d[:2]
+
+    def _goal_reached(self):
+        robot_xy_pos = np.array(self.get_world_pos_2d())
+        goal_xy_pos = self.goal_pos
+
+        diff = robot_xy_pos - goal_xy_pos
+        dist_diff_squared = np.dot(diff, diff)
+        # actual_dist = np.sqrt(dist_diff_squared)
+
+        # DEBUG: Print distance every 1000 steps
+        # if self.curr_tgt_type is not None and hasattr(self, '_debug_counter') and self._debug_counter % 1000 == 0:
+        # logging.info(f'DEBUG Robot {self.id}: Distance to {self.curr_tgt_type}: {actual_dist:.3f}m (threshold: {self.GOAL_DIST_THRESHOLD}m)')
+        return dist_diff_squared < (self.GOAL_DIST_THRESHOLD * self.GOAL_DIST_THRESHOLD) 
 
 
 class CBSDemo:
@@ -214,6 +259,8 @@ class CBSDemo:
         self.collision_checker.add_obstacle_to_track(self.shelves_struct_id)
 
         logger.info("Initialization Done, running pathfinding...")
+        self._init_cbs_demobots()
+        self._allocate_tasks()
         self._plan_and_assign_paths()
         self._load_camera()
 
@@ -301,13 +348,73 @@ class CBSDemo:
             body_ids.append(body_id)
 
         return body_ids
+    
+    def _init_cbs_demobots(self):
+        for idx, body_id in enumerate(self.body_ids):
+            assigned_work_stn = self.work_stn_pos[idx]
+            bot = CBSDemoBot(
+                body_id=body_id,
+                # schedule=schedule,
+                step_duration=self.step_duration,
+                # pickup_index=pickup_index,
+                # order_id=idx,
+                # endpoint=metadata["endpoint"],
+                workstation=(assigned_work_stn[0], assigned_work_stn[1]),
+            )
+            self.demo_bots.append(bot)
 
-    def _plan_and_assign_paths(self):
-        rng = np.random.default_rng(seed=7)
-        planner = CBSPlanner(self.grid_map, max_time=400)
-
+    def _allocate_tasks(self):
         chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
         endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
+
+        for i, bot in enumerate(self.demo_bots):
+            bot.allocate_new_task(order_id=i, endpoint=endpoint_list[i])
+
+    def _plan_and_assign_paths(self):
+        planner = CBSPlanner(self.grid_map, max_time=400)
+
+        pathfinding_needed = any(bot.needs_pathfinding() for bot in self.demo_bots)
+        if not pathfinding_needed:
+            return
+        
+        to_pick_specs = []
+        to_drop_specs = []
+        for bot in self.demo_bots:
+            curr_pos = bot.get_world_pos_2d()
+            goal_pos = bot.get_goal_pos_2d()
+
+            start_grid = self.grid_map.world_to_grid(curr_pos[0], curr_pos[1])
+            pickup_grid = self.grid_map.world_to_grid(goal_pos[0], goal_pos[1])
+
+            to_pick_specs.append(AgentSpec(agent_id=bot.body_id, start=start_grid, goal=pickup_grid))
+            to_drop_specs.append(AgentSpec(agent_id=bot.body_id, start=pickup_grid, goal=start_grid))
+
+
+        pickup_paths = planner.plan_paths(to_pick_specs)
+        pickup_conflicts = planner.conflicts_resolved
+        drop_paths = planner.plan_paths(to_drop_specs)
+        drop_conflicts = planner.conflicts_resolved
+        self.collisions_avoided = pickup_conflicts + drop_conflicts
+
+        for bot in self.demo_bots:
+            bot_id = bot.body_id
+            pick_path = pickup_paths[bot_id]
+            drop_path = drop_paths[bot_id]
+
+            path_grid = pick_path + drop_path[1:]
+            # path_grid = pick_path # TODO CODE!!!!
+            path_world = planner.grid_path_to_world(path_grid)
+
+            schedule = [(x, y) for (x, y) in path_world]
+            bot.set_schedule(schedule)
+
+        logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
+        logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
+        return
+
+
+        # chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
+        # endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
 
         to_pick_specs = []
         to_drop_specs = []
@@ -342,20 +449,20 @@ class CBSDemo:
             path_world = planner.grid_path_to_world(path_grid)
 
             schedule = [(x, y) for (x, y) in path_world]
-            pickup_index = len(pick_path) - 1
+            # pickup_index = len(pick_path) - 1
 
-            metadata = self.order_metadata[idx]
+            # metadata = self.order_metadata[idx]
 
-            bot = CBSDemoBot(
-                body_id=body_id,
-                schedule=schedule,
-                step_duration=self.step_duration,
-                pickup_index=pickup_index,
-                order_id=idx,
-                endpoint=metadata["endpoint"],
-                workstation=metadata["workstation"],
-            )
-            self.demo_bots.append(bot)
+            # bot = CBSDemoBot(
+            #     body_id=body_id,
+            #     schedule=schedule,
+            #     step_duration=self.step_duration,
+            #     # pickup_index=pickup_index,
+            #     order_id=idx,
+            #     endpoint=metadata["endpoint"],
+            #     workstation=metadata["workstation"],
+            # )
+            # self.demo_bots.append(bot)
 
         logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
         logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
@@ -435,7 +542,8 @@ class CBSDemo:
 
     # ------------------------------------------------------------------
     def run(self):
-        total_duration = max(bot.total_duration for bot in self.demo_bots) + 5.0
+        # total_duration = max(bot.total_duration for bot in self.demo_bots) + 5.0
+        total_duration = 2000
         sim_time = 0.0
 
         print("\n" + "🏭 " * 10)
@@ -444,10 +552,10 @@ class CBSDemo:
         print(f"Robots participating: {self.num_active}")
         print(f"CBS step duration: {self.step_duration:.2f}s")
         print("Orders:")
-        for idx, meta in self.order_metadata.items():
-            endpoint = np.round(meta["endpoint"].get_world_pos_2d(), 2)
-            workstation = np.round(meta["workstation"], 2)
-            print(f"  - Robot {idx}: workstation {workstation} -> endpoint {endpoint} -> workstation")
+        # for idx, meta in self.order_metadata.items():
+        #     endpoint = np.round(meta["endpoint"].get_world_pos_2d(), 2)
+        #     workstation = np.round(meta["workstation"], 2)
+        #     print(f"  - Robot {idx}: workstation {workstation} -> endpoint {endpoint} -> workstation")
         print("\nWatching collision-free trajectories...\n")
 
         min_clearance = math.inf
