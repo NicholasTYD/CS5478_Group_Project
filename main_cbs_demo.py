@@ -23,8 +23,9 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 class Endpoint:
-    def __init__(self, position:Tuple[float, float]):
+    def __init__(self, position:Tuple[float, float], state='hidden'):
         self.obj_id = self._create_endpoint_marker(position)
+        self.update_visual(state=state)        
         self.world_pos = position
 
     def _create_endpoint_marker(self, position: Tuple[float, float]) -> int:
@@ -32,7 +33,6 @@ class Endpoint:
         marker_visual = p.createVisualShape(
             p.GEOM_BOX,
             halfExtents=[0.4, 0.4, 0.15],
-            rgbaColor=[1, 0.6, 0.0, 0.0],  # Transparent initially
         )
         marker_id = p.createMultiBody(
             baseMass=0,
@@ -40,6 +40,7 @@ class Endpoint:
             basePosition=[position[0], position[1], 0.3],
             baseOrientation=p.getQuaternionFromEuler([0, 0, 0]),
         )
+
         return marker_id
     
     def get_world_pos_2d(self):
@@ -65,6 +66,9 @@ class Endpoint:
             p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0.9])
         else:
             raise Exception(f"State {state} not valid!")
+        
+    def destroy(self):
+        p.remove_body(self.obj_id)
 
 @dataclass
 class CBSDemoBot:
@@ -165,9 +169,9 @@ class CBSDemo:
 
         (self.rows,
          self.cols,
-         self.workstations,
-         self.shelves,
-         self.endpoints) = utils.get_warehouse_params(layout='default')
+         self.workstations_map,
+         self.shelves_map,
+         self.endpoints_map) = utils.get_warehouse_params(layout='default')
 
         (self.wall_pos,
          self.work_stn_pos,
@@ -209,6 +213,7 @@ class CBSDemo:
         self.collision_checker.add_obstacle_to_track(self.wall_struct_id)
         self.collision_checker.add_obstacle_to_track(self.shelves_struct_id)
 
+        logger.info("Initialization Done, running pathfinding...")
         self._plan_and_assign_paths()
         self._load_camera()
 
@@ -232,14 +237,14 @@ class CBSDemo:
             box_color=(0.1, 0.1, 0.1, 1),
         )
         work_stn_pos = utils.create_struct_urdf(
-            self.workstations,
+            self.workstations_map,
             "assets/warehouse/workstations.urdf",
             grid_z=1.5,
             box_color=(1, 0.2, 0.6, 0.6),
             has_collison=False,
         )
         shelves_pos = utils.create_struct_urdf(
-            self.shelves,
+            self.shelves_map,
             "assets/warehouse/shelves.urdf",
             grid_z=1,
             box_color=(0.3, 0.3, 0.3, 0.9),
@@ -248,7 +253,7 @@ class CBSDemo:
 
         # We'll also highlight endpoints individually for assigned orders later on
         endpoints_pos = utils.create_struct_urdf(
-            self.endpoints,
+            self.endpoints_map,
             "assets/warehouse/endpoints.urdf",
             grid_z=0.3,
             box_color=(0, 0, 1, 0.1),
@@ -302,7 +307,6 @@ class CBSDemo:
         planner = CBSPlanner(self.grid_map, max_time=400)
 
         chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
-        # endpoint_list = [self.all_endpoints_pos[i] for i in chosen_endpoints]
         endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
 
         to_pick_specs = []
@@ -342,9 +346,6 @@ class CBSDemo:
 
             metadata = self.order_metadata[idx]
 
-            # Create endpoint marker for this assigned order
-            # endpoint_marker_id = self._create_endpoint_marker(metadata["endpoint"])
-
             bot = CBSDemoBot(
                 body_id=body_id,
                 schedule=schedule,
@@ -353,7 +354,6 @@ class CBSDemo:
                 order_id=idx,
                 endpoint=metadata["endpoint"],
                 workstation=metadata["workstation"],
-                # endpoint_marker_id=endpoint_marker_id,
             )
             self.demo_bots.append(bot)
 
