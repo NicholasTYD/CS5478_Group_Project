@@ -219,7 +219,7 @@ class CBSDemo:
 
     def __init__(self, num_robots: int = 10, step_duration: float = 0.2, steps_per_grid: int = 10,
                 metrics_file: str | None = None):
-        if num_robots < 1:
+        if num_robots < 2:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
         self.physics_client = p.connect(p.GUI)
@@ -423,7 +423,7 @@ class CBSDemo:
 
         logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
         logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
-        
+
     def _load_camera(self):
         p.resetDebugVisualizerCamera(
             cameraDistance=35,
