@@ -16,7 +16,7 @@ import pybullet as p
 
 import utils
 from multiagent_cbs import AgentSpec, CBSPlanner
-from pathfinding import create_warehouse_grid
+from pathfinding import GridMap, create_warehouse_grid
 from collisions import CBSCollisionsTracker
 
 logger = logging.getLogger(__name__)
@@ -50,14 +50,14 @@ class Endpoint:
     
     def update_visual(self, state='hidden'):
         '''
-        State is either 'hidden', 'pending', 'collected', or 'completed'
+        State is either 'hidden', 'uncollected', 'collected', or 'completed'
         '''
 
-        assert state in ('hidden', 'pending', 'collected', 'completed'), f"State {state} not valid!"
+        assert state in ('hidden', 'uncollected', 'collected', 'completed'), f"State {state} not valid!"
         if state == 'hidden':
             # Make the visual transparent
             p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0])
-        elif state == 'pending':
+        elif state == 'uncollected':
             # Orange
             p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 0.6, 0.0, 0.9])
         elif state == 'collected':
@@ -77,14 +77,12 @@ class CBSDemoBot:
     """Controls a single PyBullet robot body using a CBS schedule."""
 
     body_id: int
-    step_duration: float
+    steps_per_grid: float
     # pickup_index: int
     # order_id: int
     # endpoint: Endpoint
     workstation: Tuple[float, float]
-
-    # Target reached if robot is within 0.1 cell (10cm) of goal (Same as default course project)
-    GOAL_DIST_THRESHOLD = 0.1
+    grid_map: GridMap
 
     def __post_init__(self):
         # self.total_duration = max((len(self.schedule) - 1) * self.step_duration, 0.0)
@@ -97,6 +95,7 @@ class CBSDemoBot:
         self.goal_pos: Tuple[float, float] | None = None
     
         self.schedule: List[Tuple[float, float]] | None = None
+        self.schedule_step_start:int = None
         self.endpoint: Endpoint | None = None
         self.order_id: int | None = None
 
@@ -118,24 +117,27 @@ class CBSDemoBot:
 
     def set_schedule(self, schedule):
         self.schedule = schedule
+        self.schedule_step_start = None
+        self.endpoint.update_visual('uncollected')
 
-    def needs_pathfinding(self):
+    def requires_pathfinding_schedule(self):
         '''
         Returns True if this demo bot requires the central CBS algo to generate a pathfinding algorithm for it.
         '''
         return (self.goal_pos is not None) and (self.schedule is None)
-        
-    def update(self, sim_time: float):
-        if len(self.schedule) == 0:
-            return
-
+    
+    def has_goal(self):
+        return self.goal_pos is not None
+    
+    def check_goal_reached(self, sim_time:float, sim_step:int):
         if np.array_equal(self.goal_pos, self.workstation) and self._goal_reached():
-            # self._set_pose(self.schedule[-1])
+            self.schedule = None
             if not self._delivery_logged:
                 logger.info(
-                    "DELIVERED (CBS): order %s returned to workstation at t=%.2fs",
+                    "DELIVERED (CBS): order %s returned to workstation at t=%.2fs, sim step=%i",
                     self.order_id,
                     sim_time,
+                    sim_step
                 )
                 self._delivery_logged = True
                 if self.delivery_time is None:
@@ -145,25 +147,15 @@ class CBSDemoBot:
                     self.endpoint.update_visual(state='completed')
                     self._delivery_visual_updated = True
                     self.goal_pos = None
-            return
-
-        segment = min(int(sim_time / self.step_duration), len(self.schedule) - 2)
-        t0 = segment * self.step_duration
-        alpha = (sim_time - t0) / self.step_duration
-
-        start = np.array(self.schedule[segment])
-        end = np.array(self.schedule[segment + 1])
-        interp = start + alpha * (end - start)
-
-        self._set_pose(tuple(interp))
-
-        # pickup_time = self.pickup_index * self.step_duration
+        
         if np.array_equal(self.goal_pos, self.endpoint.get_world_pos_2d()) and self._goal_reached():
+            self.schedule = None
             logger.info(
-                "COLLECTED (CBS): order %s picked up at %s (t=%.2fs)",
+                "COLLECTED (CBS): order %s picked up by at %s (t=%.2fs), sim step=%i",
                 self.order_id,
                 np.round(self.endpoint.get_world_pos_2d(), 2),
                 sim_time,
+                sim_step,
             )
             self._pickup_logged = True
             if self.pickup_time is None:
@@ -173,6 +165,25 @@ class CBSDemoBot:
                 self.endpoint.update_visual(state='collected')
                 self._pickup_visual_updated = True
                 self.goal_pos = self.workstation
+        
+    def act(self, sim_time: float, sim_step:int):
+        # Don't do anything if there's no schedule
+        if self.schedule is None:
+            return
+        
+        if self.schedule_step_start is None:
+            self.schedule_step_start = sim_step
+        sim_steps_since_schedule_start = sim_step - self.schedule_step_start 
+        
+        segment = sim_steps_since_schedule_start // self.steps_per_grid
+        alpha = (sim_steps_since_schedule_start % self.steps_per_grid) / self.steps_per_grid
+
+        start = np.array(self.schedule[segment])
+        next_segment = min(segment + 1, len(self.schedule) - 1) # Prevent index out of bounds
+        end = np.array(self.schedule[next_segment])
+        interp = start + alpha * (end - start)
+
+        self._set_pose(tuple(interp))
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
         p.resetBasePositionAndOrientation(
@@ -187,26 +198,28 @@ class CBSDemoBot:
     def get_world_pos_2d(self):
         pos_3d, ori = p.getBasePositionAndOrientation(self.body_id)
         return pos_3d[:2]
-
+    
     def _goal_reached(self):
-        robot_xy_pos = np.array(self.get_world_pos_2d())
-        goal_xy_pos = self.goal_pos
+        # Target reached if robot is within 0.01 cell (1cm) of goal (Same as default course project)
+        # This is for dealing with rounding errors when comparing grid pos and robot world pos.
+        # Technically can pass in the grid map but 
+        GOAL_TOLERANCE = 0.01
 
+
+        robot_xy_pos = np.array(self.get_world_pos_2d())
+        goal_xy_pos = self.goal_pos[0], self.goal_pos[1]
+    
         diff = robot_xy_pos - goal_xy_pos
         dist_diff_squared = np.dot(diff, diff)
-        # actual_dist = np.sqrt(dist_diff_squared)
-
-        # DEBUG: Print distance every 1000 steps
-        # if self.curr_tgt_type is not None and hasattr(self, '_debug_counter') and self._debug_counter % 1000 == 0:
-        # logging.info(f'DEBUG Robot {self.id}: Distance to {self.curr_tgt_type}: {actual_dist:.3f}m (threshold: {self.GOAL_DIST_THRESHOLD}m)')
-        return dist_diff_squared < (self.GOAL_DIST_THRESHOLD * self.GOAL_DIST_THRESHOLD) 
+        return dist_diff_squared < (GOAL_TOLERANCE * GOAL_TOLERANCE) 
 
 
 class CBSDemo:
     """Creates a lightweight simulator showcasing CBS collision avoidance."""
 
-    def __init__(self, num_robots: int = 10, step_duration: float = 0.2, metrics_file: str | None = None):
-        if num_robots < 2:
+    def __init__(self, num_robots: int = 10, step_duration: float = 0.2, steps_per_grid: int = 10,
+                metrics_file: str | None = None):
+        if num_robots < 1:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
         self.physics_client = p.connect(p.GUI)
@@ -241,7 +254,7 @@ class CBSDemo:
 
 
         self.step_duration = step_duration
-        self.time_step = 1 / 720.0  # faster visual updates keep interpolation smooth
+        self.steps_per_grid = steps_per_grid
         self.metrics_file = metrics_file
         self.num_active = min(num_robots, len(self.work_stn_pos))
         self.collisions_avoided = 0
@@ -354,12 +367,9 @@ class CBSDemo:
             assigned_work_stn = self.work_stn_pos[idx]
             bot = CBSDemoBot(
                 body_id=body_id,
-                # schedule=schedule,
-                step_duration=self.step_duration,
-                # pickup_index=pickup_index,
-                # order_id=idx,
-                # endpoint=metadata["endpoint"],
+                steps_per_grid=self.steps_per_grid,
                 workstation=(assigned_work_stn[0], assigned_work_stn[1]),
+                grid_map=self.grid_map,
             )
             self.demo_bots.append(bot)
 
@@ -373,100 +383,47 @@ class CBSDemo:
     def _plan_and_assign_paths(self):
         planner = CBSPlanner(self.grid_map, max_time=400)
 
-        pathfinding_needed = any(bot.needs_pathfinding() for bot in self.demo_bots)
+        pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
             return
         
         to_pick_specs = []
-        to_drop_specs = []
         for bot in self.demo_bots:
+            # We RECOMPUTE CBS for all bots that currently have a goal
+            # (even if they have an active schedule, because we will override it) 
+            if not bot.has_goal(): 
+                continue
+
             curr_pos = bot.get_world_pos_2d()
             goal_pos = bot.get_goal_pos_2d()
 
             start_grid = self.grid_map.world_to_grid(curr_pos[0], curr_pos[1])
             pickup_grid = self.grid_map.world_to_grid(goal_pos[0], goal_pos[1])
 
+            assert all([int(coord) == coord for coord in start_grid + pickup_grid]) \
+                , f'Bot {bot.body_id} coordinates must be integer, but got curr_pos={start_grid}, goal_pos={pickup_grid}'
+
             to_pick_specs.append(AgentSpec(agent_id=bot.body_id, start=start_grid, goal=pickup_grid))
-            to_drop_specs.append(AgentSpec(agent_id=bot.body_id, start=pickup_grid, goal=start_grid))
 
 
         pickup_paths = planner.plan_paths(to_pick_specs)
         pickup_conflicts = planner.conflicts_resolved
-        drop_paths = planner.plan_paths(to_drop_specs)
-        drop_conflicts = planner.conflicts_resolved
-        self.collisions_avoided = pickup_conflicts + drop_conflicts
+        self.collisions_avoided = pickup_conflicts # + drop_conflicts
 
         for bot in self.demo_bots:
+            if not bot.has_goal(): # Bot doesn't need pathfinding
+                continue
             bot_id = bot.body_id
             pick_path = pickup_paths[bot_id]
-            drop_path = drop_paths[bot_id]
 
-            path_grid = pick_path + drop_path[1:]
-            # path_grid = pick_path # TODO CODE!!!!
-            path_world = planner.grid_path_to_world(path_grid)
+            path_world = planner.grid_path_to_world(pick_path)
 
             schedule = [(x, y) for (x, y) in path_world]
             bot.set_schedule(schedule)
 
         logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
         logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
-        return
-
-
-        # chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
-        # endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
-
-        to_pick_specs = []
-        to_drop_specs = []
-        self.order_metadata = {}
-
-        for idx, robot_idx in enumerate(self.active_robot_indices):
-            work_pos = self.work_stn_pos[robot_idx]
-            endpoint: Endpoint = endpoint_list[idx]
-            endpoint.update_visual('pending')
-
-            start_grid = self.grid_map.world_to_grid(work_pos[0], work_pos[1])
-            pickup_grid = self.grid_map.world_to_grid(*endpoint.get_world_pos_2d())
-
-            to_pick_specs.append(AgentSpec(agent_id=idx, start=start_grid, goal=pickup_grid))
-            to_drop_specs.append(AgentSpec(agent_id=idx, start=pickup_grid, goal=start_grid))
-            self.order_metadata[idx] = {
-                "endpoint": endpoint,
-                "workstation": (work_pos[0], work_pos[1]),
-            }
-
-        pickup_paths = planner.plan_paths(to_pick_specs)
-        pickup_conflicts = planner.conflicts_resolved
-        drop_paths = planner.plan_paths(to_drop_specs)
-        drop_conflicts = planner.conflicts_resolved
-        self.collisions_avoided = pickup_conflicts + drop_conflicts
-
-        for idx, body_id in enumerate(self.body_ids):
-            pick_path = pickup_paths[idx]
-            drop_path = drop_paths[idx]
-
-            path_grid = pick_path + drop_path[1:]
-            path_world = planner.grid_path_to_world(path_grid)
-
-            schedule = [(x, y) for (x, y) in path_world]
-            # pickup_index = len(pick_path) - 1
-
-            # metadata = self.order_metadata[idx]
-
-            # bot = CBSDemoBot(
-            #     body_id=body_id,
-            #     schedule=schedule,
-            #     step_duration=self.step_duration,
-            #     # pickup_index=pickup_index,
-            #     order_id=idx,
-            #     endpoint=metadata["endpoint"],
-            #     workstation=metadata["workstation"],
-            # )
-            # self.demo_bots.append(bot)
-
-        logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
-        logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
-
+        
     def _load_camera(self):
         p.resetDebugVisualizerCamera(
             cameraDistance=35,
@@ -545,6 +502,7 @@ class CBSDemo:
         # total_duration = max(bot.total_duration for bot in self.demo_bots) + 5.0
         total_duration = 2000
         sim_time = 0.0
+        sim_step: int = 0
 
         print("\n" + "🏭 " * 10)
         print("CBS DEMO - SMALL ROBOT FLEET")
@@ -563,10 +521,17 @@ class CBSDemo:
             self.collision_checker.check_robot_collisions(sim_time)
 
             for bot in self.demo_bots:
-                bot.update(sim_time)
+                bot.check_goal_reached(sim_time, sim_step)
+
+            if sim_step % self.steps_per_grid == 0:
+                self._plan_and_assign_paths()
+
+            for bot in self.demo_bots:
+                bot.act(sim_time, sim_step)
             p.stepSimulation()
-            time.sleep(self.time_step)
-            sim_time += self.time_step
+            time.sleep(self.step_duration)
+            sim_time += self.step_duration
+            sim_step += 1
 
             current_clearance = self._pairwise_clearance()
             min_clearance = min(min_clearance, current_clearance)
@@ -589,10 +554,16 @@ def _parse_args():
         help="Number of robots to include in the demo (default: 6)",
     )
     parser.add_argument(
+        "--steps-per-grid",
+        type=int,
+        default=60,
+        help="Number of time steps needed to travel 1 CBS Grid (Smaller = Faster)",
+    )
+    parser.add_argument(
         "--step-duration",
         type=float,
-        default=0.08,
-        help="Seconds allocated per CBS grid step (smaller = faster)",
+        default=0.001,
+        help="How long each time step lasts (Smaller = faster)",
     )
     parser.add_argument(
         "--metrics-file",
@@ -607,6 +578,7 @@ if __name__ == "__main__":
     args = _parse_args()
     demo = CBSDemo(
         num_robots=args.robots,
+        steps_per_grid=args.steps_per_grid,
         step_duration=args.step_duration,
         metrics_file=args.metrics_file,
     )
