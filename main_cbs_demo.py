@@ -72,53 +72,55 @@ class Endpoint:
     def destroy(self):
         p.remove_body(self.obj_id)
 
+class DeliveryTask:
+    def __init__(self, order_id: int, endpoint:Endpoint, workstation:Tuple[float, float], curr_sim_step:int):
+        self.order_id = order_id
+
+        self.creation_sim_step:int = curr_sim_step
+        self.pickup_sim_step:int | None = None
+        self.delivered_sim_step: int | None = None
+
+        self.endpoint: Endpoint = endpoint
+        self.workstation: Tuple[float, float] = workstation
+
+    def record_pickup(self, curr_sim_step:int):
+        self.pickup_sim_step = curr_sim_step
+
+    def record_delivery(self, curr_sim_step:int):
+        self.delivered_sim_step = curr_sim_step
+
+    def order_fufilled(self):
+        return self.delivered_sim_step is not None
+
 @dataclass
 class CBSDemoBot:
     """Controls a single PyBullet robot body using a CBS schedule."""
 
     body_id: int
     steps_per_grid: float
-    # pickup_index: int
-    # order_id: int
-    # endpoint: Endpoint
     workstation: Tuple[float, float]
     grid_map: GridMap
 
     def __post_init__(self):
         # self.total_duration = max((len(self.schedule) - 1) * self.step_duration, 0.0)
-        self._pickup_logged = False
-        self._delivery_logged = False
-        self._pickup_visual_updated = False
-        self._delivery_visual_updated = False
-        self.pickup_time: float | None = None
-        self.delivery_time: float | None = None
         self.goal_pos: Tuple[float, float] | None = None
     
         self.schedule: List[Tuple[float, float]] | None = None
         self.schedule_step_start:int = None
-        self.endpoint: Endpoint | None = None
-        self.order_id: int | None = None
+
+        self.delivery_task: DeliveryTask | None = None
 
         self._set_pose(self.workstation)
 
-    def allocate_new_task(self, order_id:int=None, endpoint:Endpoint=None):
-        if order_id is not None:
-            self.order_id = order_id
-        if endpoint is not None:
-            self.endpoint = endpoint
+    def allocate_new_task(self, delivery_task:DeliveryTask):
+        self.delivery_task = delivery_task
 
-        self._pickup_logged = False
-        self._delivery_logged = False
-        self._pickup_visual_updated = False
-        self._delivery_visual_updated = False
-        self.pickup_time: float | None = None
-        self.delivery_time: float | None = None
-        self.goal_pos = endpoint.get_world_pos_2d()
+        self.goal_pos = delivery_task.endpoint.get_world_pos_2d()
+        delivery_task.endpoint.update_visual('uncollected')
 
     def set_schedule(self, schedule):
         self.schedule = schedule
         self.schedule_step_start = None
-        self.endpoint.update_visual('uncollected')
 
     def requires_pathfinding_schedule(self):
         '''
@@ -130,43 +132,35 @@ class CBSDemoBot:
         return self.goal_pos is not None
     
     def check_goal_reached(self, sim_time:float, sim_step:int):
-        if np.array_equal(self.goal_pos, self.workstation) and self._goal_reached():
-            self.schedule = None
-            if not self._delivery_logged:
-                logger.info(
-                    "DELIVERED (CBS): order %s returned to workstation at t=%.2fs, sim step=%i",
-                    self.order_id,
-                    sim_time,
-                    sim_step
-                )
-                self._delivery_logged = True
-                if self.delivery_time is None:
-                    self.delivery_time = sim_time
-                # Change endpoint marker to green
-                if self.endpoint is not None and not self._delivery_visual_updated:
-                    self.endpoint.update_visual(state='completed')
-                    self._delivery_visual_updated = True
-                    self.goal_pos = None
-        
-        if np.array_equal(self.goal_pos, self.endpoint.get_world_pos_2d()) and self._goal_reached():
+        if np.array_equal(self.goal_pos, self.delivery_task.endpoint.get_world_pos_2d()) and self._goal_reached():
             self.schedule = None
             logger.info(
                 "COLLECTED (CBS): order %s picked up by at %s (t=%.2fs), sim step=%i",
-                self.order_id,
-                np.round(self.endpoint.get_world_pos_2d(), 2),
+                self.delivery_task.order_id,
+                np.round(self.delivery_task.endpoint.get_world_pos_2d(), 2),
                 sim_time,
                 sim_step,
             )
-            self._pickup_logged = True
-            if self.pickup_time is None:
-                self.pickup_time = sim_time
-            # Change endpoint marker to yellow
-            if self.endpoint is not None and not self._pickup_visual_updated:
-                self.endpoint.update_visual(state='collected')
-                self._pickup_visual_updated = True
-                self.goal_pos = self.workstation
+            self.delivery_task.record_pickup(sim_step)
+            #Change endpoint marker to yellow
+            self.delivery_task.endpoint.update_visual(state='collected')
+            self._pickup_visual_updated = True
+            self.goal_pos = self.workstation
+
+        if np.array_equal(self.goal_pos, self.workstation) and self._goal_reached():
+            self.schedule = None
+            logger.info(
+                "DELIVERED (CBS): order %s returned to workstation at t=%.2fs, sim step=%i",
+                self.delivery_task.order_id,
+                sim_time,
+                sim_step
+            )
+            self.delivery_task.record_delivery(sim_step)
+            # Change endpoint marker to green
+            self.delivery_task.endpoint.update_visual(state='completed')
+            self.goal_pos = None
         
-    def act(self, sim_time: float, sim_step:int):
+    def act(self, sim_step:int):
         # Don't do anything if there's no schedule
         if self.schedule is None:
             return
@@ -252,11 +246,12 @@ class CBSDemo:
             work_stns_pos=self.work_stn_pos,
         )
 
-
         self.step_duration = step_duration
         self.steps_per_grid = steps_per_grid
         self.metrics_file = metrics_file
         self.num_active = min(num_robots, len(self.work_stn_pos))
+        # Number of collisions avoided had robots are allowed to execute their low level search directly without
+        # any collision avoidance check. Accumulated everytime CBS is called.
         self.collisions_avoided = 0
 
         logger.info("Initializing CBS demo with %s robots", self.num_active)
@@ -270,6 +265,8 @@ class CBSDemo:
             self.collision_checker.add_robot_to_track(body_id)
         self.collision_checker.add_obstacle_to_track(self.wall_struct_id)
         self.collision_checker.add_obstacle_to_track(self.shelves_struct_id)
+
+        self.tasks_created: List[DeliveryTask] = []
 
         logger.info("Initialization Done, running pathfinding...")
         self._init_cbs_demobots()
@@ -378,7 +375,11 @@ class CBSDemo:
         endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
 
         for i, bot in enumerate(self.demo_bots):
-            bot.allocate_new_task(order_id=i, endpoint=endpoint_list[i])
+            delivery_task = DeliveryTask(
+                order_id=i, endpoint=endpoint_list[i], workstation=bot.workstation, curr_sim_step=0
+            )
+            bot.allocate_new_task(delivery_task)
+            self.tasks_created.append(delivery_task)
 
     def _plan_and_assign_paths(self):
         planner = CBSPlanner(self.grid_map, max_time=400)
@@ -406,20 +407,22 @@ class CBSDemo:
             to_pick_specs.append(AgentSpec(agent_id=bot.body_id, start=start_grid, goal=pickup_grid))
 
 
-        pickup_paths = planner.plan_paths(to_pick_specs)
-        pickup_conflicts = planner.conflicts_resolved
-        self.collisions_avoided = pickup_conflicts # + drop_conflicts
+        planned_paths = planner.plan_paths(to_pick_specs)
+        path_conflicts = planner.conflicts_resolved
+        self.collisions_avoided += path_conflicts
 
         for bot in self.demo_bots:
             if not bot.has_goal(): # Bot doesn't need pathfinding
                 continue
             bot_id = bot.body_id
-            pick_path = pickup_paths[bot_id]
+            pick_path = planned_paths[bot_id]
 
             path_world = planner.grid_path_to_world(pick_path)
 
             schedule = [(x, y) for (x, y) in path_world]
             bot.set_schedule(schedule)
+
+            # print(f" Planned - Robot {bot.body_id}: {schedule[0]} -> {schedule[-1]}")
 
         logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
         logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
@@ -445,14 +448,17 @@ class CBSDemo:
                 if dist < best:
                     best = dist
         return best
+    
+    def from_sim_step_to_time(self, sim_step:int, step_duration:float):
+        return sim_step * step_duration
 
     def _export_metrics(self, total_duration: float, min_clearance: float):
         if not self.metrics_file:
             return
 
-        pickups = [bot.pickup_time for bot in self.demo_bots if bot.pickup_time is not None]
-        deliveries = [bot.delivery_time for bot in self.demo_bots if bot.delivery_time is not None]
-        total_orders = len(self.demo_bots)
+        pickups = [task.pickup_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
+        deliveries = [task.delivered_sim_step for task in self.tasks_created if task.delivered_sim_step is not None]
+        total_orders = len(self.tasks_created)
         completed = len(deliveries)
         pending = total_orders - completed
 
@@ -461,15 +467,21 @@ class CBSDemo:
 
         # Build per-order details
         order_details = []
-        for bot in self.demo_bots:
+        for task in self.tasks_created:
             order_details.append({
-                "order_id": bot.order_id,
-                "pickup_time": round(bot.pickup_time, 4) if bot.pickup_time is not None else None,
-                "delivery_time": round(bot.delivery_time, 4) if bot.delivery_time is not None else None,
-                "total_time": round(bot.delivery_time, 4) if bot.delivery_time is not None else None,
-                "endpoint": list(np.round(bot.endpoint.get_world_pos_2d(), 2)),
-                "workstation": list(np.round(bot.workstation, 2)),
-                "status": "completed" if bot._delivery_logged else "pending"
+                "order_id": task.order_id,
+
+                "creation_sim_step": task.creation_sim_step,
+
+                "pickup_sim_step": task.pickup_sim_step if task.pickup_sim_step is not None else None,
+
+                "delivery_sim_step": task.delivered_sim_step if task.delivered_sim_step is not None else None,
+
+                "total_delivery_sim_step": task.delivered_sim_step - task.creation_sim_step if task.delivered_sim_step is not None else None,
+
+                "endpoint": list(np.round(task.endpoint.get_world_pos_2d(), 2)),
+                "workstation": list(np.round(task.workstation, 2)),
+                "status": "completed" if task.delivered_sim_step is not None else "pending"
             })
 
         json_metrics = {
@@ -478,9 +490,9 @@ class CBSDemo:
                 "orders_completed": completed,
                 "orders_pending": pending,
                 "collisions_avoided": self.collisions_avoided,
-                "total_time_for_all_orders": round(total_duration, 4),
-                "avg_pickup_time": round(sum(pickups) / len(pickups), 4) if pickups else None,
-                "avg_delivery_time": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
+                "total_sim_steps_for_all_orders": round(total_duration, 4),
+                "avg_pickup_sim_steps": round(sum(pickups) / len(pickups), 4) if pickups else None,
+                "avg_delivery_sim_steps": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
                 "min_clearance": round(min_clearance, 4) if not math.isinf(min_clearance) else None,
                 "num_robots": self.num_active,
                 "step_duration": self.step_duration,
@@ -500,7 +512,7 @@ class CBSDemo:
     # ------------------------------------------------------------------
     def run(self):
         # total_duration = max(bot.total_duration for bot in self.demo_bots) + 5.0
-        total_duration = 2000
+        max_sim_duration = 2000
         sim_time = 0.0
         sim_step: int = 0
 
@@ -510,15 +522,11 @@ class CBSDemo:
         print(f"Robots participating: {self.num_active}")
         print(f"CBS step duration: {self.step_duration:.2f}s")
         print("Orders:")
-        # for idx, meta in self.order_metadata.items():
-        #     endpoint = np.round(meta["endpoint"].get_world_pos_2d(), 2)
-        #     workstation = np.round(meta["workstation"], 2)
-        #     print(f"  - Robot {idx}: workstation {workstation} -> endpoint {endpoint} -> workstation")
         print("\nWatching collision-free trajectories...\n")
 
         min_clearance = math.inf
-        while sim_time < total_duration:
-            self.collision_checker.check_robot_collisions(sim_time)
+        while sim_time < max_sim_duration:
+            self.collision_checker.check_robot_collisions(sim_step)
 
             for bot in self.demo_bots:
                 bot.check_goal_reached(sim_time, sim_step)
@@ -527,7 +535,7 @@ class CBSDemo:
                 self._plan_and_assign_paths()
 
             for bot in self.demo_bots:
-                bot.act(sim_time, sim_step)
+                bot.act(sim_step)
             p.stepSimulation()
             time.sleep(self.step_duration)
             sim_time += self.step_duration
@@ -536,7 +544,7 @@ class CBSDemo:
             current_clearance = self._pairwise_clearance()
             min_clearance = min(min_clearance, current_clearance)
 
-            if all(bot._delivery_logged for bot in self.demo_bots):
+            if all(task.order_fufilled() for task in self.tasks_created):
                 print("\n✓ All CBS orders delivered. Ending demo early.")
                 self._export_metrics(sim_time, min_clearance)
                 return
@@ -562,7 +570,7 @@ def _parse_args():
     parser.add_argument(
         "--step-duration",
         type=float,
-        default=0.001,
+        default=0.0005,
         help="How long each time step lasts (Smaller = faster)",
     )
     parser.add_argument(

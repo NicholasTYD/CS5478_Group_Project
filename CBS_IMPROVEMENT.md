@@ -1,6 +1,5 @@
 # TODO: Fix CBS deadlock
 # TODO: FIx CBS collision caused by algo not taking into account robots that are finished with goal (that have nth to do)
-# TODO: Fix broken metrics caused by modifying CBS prior.
 
 # CBS Algorithm Analysis & Improvement Opportunities
 

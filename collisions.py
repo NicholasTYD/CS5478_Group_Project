@@ -91,7 +91,7 @@ class CBSCollisionsTracker:
     def add_obstacle_to_track(self, obstacle_id):
         self.obstacle_ids.append(obstacle_id)
 
-    def check_robot_collisions(self, sim_time):
+    def check_robot_collisions(self, sim_step):
         '''
         Check robot-robot collisions and robot-obstacle collisions.
 
@@ -111,14 +111,14 @@ class CBSCollisionsTracker:
             
             # Check robot-robot collisions
             if bodyA in self.robot_ids and bodyB in self.robot_ids:
-                self.rr_collision_records.append(CollisionRecord(bodyA, bodyB, contact_point, sim_time))
-                logger.warning(f"ROBOT-ROBOT COLLISION DETECTED: Between ids {bodyA} and {bodyB} at time {sim_time:.3f}")
+                self.rr_collision_records.append(CollisionRecord(bodyA, bodyB, contact_point, sim_step))
+                logger.warning(f"ROBOT-ROBOT COLLISION DETECTED: Between ids {bodyA} and {bodyB} at sim_step={sim_step:}")
 
             # Check robot-obstacle collisions
             if (bodyA in self.robot_ids and bodyB in self.obstacle_ids) \
                     or (bodyA in self.obstacle_ids and bodyB in self.robot_ids):
-                self.ro_collision_records.append(CollisionRecord(bodyA, bodyB, contact_point, sim_time))
-                logger.warning(f"ROBOT-OBSTACLE COLLISION DETECTED: Between ids {bodyA} and {bodyB} at time {sim_time:.3f}")
+                self.ro_collision_records.append(CollisionRecord(bodyA, bodyB, contact_point, sim_step))
+                logger.warning(f"ROBOT-OBSTACLE COLLISION DETECTED: Between ids {bodyA} and {bodyB} at sim_step={sim_step}")
 
     def get_rr_collision_records(self, as_list_of_dicts=False) -> list[CollisionRecord|dict]:
         if as_list_of_dicts:
