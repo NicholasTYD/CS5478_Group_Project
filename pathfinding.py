@@ -27,6 +27,11 @@ class GridMap:
         if 0 <= grid_x < self.cols and 0 <= grid_y < self.rows:
             self.grid[grid_y, grid_x] = 1
 
+    def set_unoccupied(self, grid_x, grid_y):
+        """Mark a grid cell as occupied."""
+        if 0 <= grid_x < self.cols and 0 <= grid_y < self.rows:
+            self.grid[grid_y, grid_x] = 0
+
     def is_occupied(self, grid_x, grid_y):
         """Check if a grid cell is occupied."""
         if 0 <= grid_x < self.cols and 0 <= grid_y < self.rows:
@@ -288,5 +293,6 @@ def create_warehouse_grid(rows, cols, wall_pos, shelves_pos, cell_size=1.0, offs
     # Grid is just for high-level pathfinding
     grid_map.add_obstacles_from_positions(wall_pos, inflation_radius=0)
     grid_map.add_obstacles_from_positions(shelves_pos, inflation_radius=0)
+    grid_map.add_obstacles_from_positions(work_stns_pos, inflation_radius=0)
 
     return grid_map

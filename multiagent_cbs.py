@@ -7,6 +7,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
+from pathfinding import GridMap
+
 
 GridPos = Tuple[int, int]
 
@@ -18,6 +20,7 @@ class AgentSpec:
     agent_id: int
     start: GridPos
     goal: GridPos
+    grid_map: GridMap
     start_time: int = 0
 
 
@@ -35,8 +38,8 @@ class Constraint:
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
-    def __init__(self, grid_map, max_time: int = 200):
-        self.grid_map = grid_map
+    def __init__(self, max_time: int = 200):
+        # self.default_grid_map = default_grid_map
         self.max_time = max_time
         self.conflicts_resolved = 0
 
@@ -59,7 +62,7 @@ class CBSPlanner:
         self.conflicts_resolved = 0
 
         for spec in agent_specs:
-            path = self._low_level_search(spec, root_constraints)
+            path = self._low_level_search(spec, root_constraints, spec.grid_map)
             if path is None:
                 raise RuntimeError(f"No path found for agent {spec.agent_id} in root planning")
             root_paths[spec.agent_id] = path
@@ -106,7 +109,7 @@ class CBSPlanner:
 
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
-                replanned = self._low_level_search(spec, new_constraints)
+                replanned = self._low_level_search(spec, new_constraints, spec.grid_map)
                 if replanned is None:
                     continue
                 new_paths[agent] = replanned
@@ -126,18 +129,17 @@ class CBSPlanner:
 
         raise RuntimeError("CBS failed to find a conflict-free solution")
 
-    def grid_path_to_world(self, path: List[GridPos]) -> List[Tuple[float, float]]:
+    def grid_path_to_world(self, path: List[GridPos], grid_map:GridMap) -> List[Tuple[float, float]]:
         """Helper to convert grid indices back into world coordinates."""
-
         world_path: List[Tuple[float, float]] = []
         for cell in path:
-            world_path.append(self.grid_map.grid_to_world(cell[0], cell[1]))
+            world_path.append(grid_map.grid_to_world(cell[0], cell[1]))
         return world_path
 
     # ------------------------------------------------------------------
     # CBS helpers
     # ------------------------------------------------------------------
-    def _low_level_search(self, spec: AgentSpec, constraints: List[Constraint]) -> Optional[List[GridPos]]:
+    def _low_level_search(self, spec: AgentSpec, constraints: List[Constraint], grid_map:GridMap) -> Optional[List[GridPos]]:
         """Run constrained A* for a single agent."""
 
         constraint_table = self._build_constraint_table(constraints, spec.agent_id)
@@ -182,10 +184,10 @@ class CBSPlanner:
                 if nt > self.max_time:
                     continue
 
-                if not (0 <= nx < self.grid_map.cols and 0 <= ny < self.grid_map.rows):
+                if not (0 <= nx < grid_map.cols and 0 <= ny < grid_map.rows):
                     continue
 
-                if (dx, dy) != (0, 0) and self.grid_map.is_occupied(nx, ny):
+                if (dx, dy) != (0, 0) and grid_map.is_occupied(nx, ny):
                     continue
 
                 if self._violates_constraints((x, y), (nx, ny), nt, constraint_table):

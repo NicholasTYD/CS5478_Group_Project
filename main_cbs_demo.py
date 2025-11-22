@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import json
 import logging
 import math
@@ -234,7 +235,7 @@ class CBSDemo:
 
         x_offset = 0 if self.cols % 2 == 0 else 0.5
         y_offset = 0 if self.rows % 2 == 0 else 0.5
-        self.grid_map = create_warehouse_grid(
+        self.default_grid_map = create_warehouse_grid(
             self.rows,
             self.cols,
             self.wall_pos,
@@ -362,11 +363,18 @@ class CBSDemo:
     def _init_cbs_demobots(self):
         for idx, body_id in enumerate(self.body_ids):
             assigned_work_stn = self.work_stn_pos[idx]
+
+            # This code segments creates a new grid map spec ific to the demobot that allows exclusive access
+            # to its own workstation (Other robots can't enter it)
+            work_stn_grid_pos = self.default_grid_map.world_to_grid(assigned_work_stn[0], assigned_work_stn[1])
+            bot_grid_map = deepcopy(self.default_grid_map)
+            bot_grid_map.set_unoccupied(*work_stn_grid_pos)
+            
             bot = CBSDemoBot(
                 body_id=body_id,
                 steps_per_grid=self.steps_per_grid,
                 workstation=(assigned_work_stn[0], assigned_work_stn[1]),
-                grid_map=self.grid_map,
+                grid_map=bot_grid_map,
             )
             self.demo_bots.append(bot)
 
@@ -382,13 +390,13 @@ class CBSDemo:
             self.tasks_created.append(delivery_task)
 
     def _plan_and_assign_paths(self):
-        planner = CBSPlanner(self.grid_map, max_time=400)
+        planner = CBSPlanner(max_time=400)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
             return
         
-        to_pick_specs = []
+        agent_specs = []
         for bot in self.demo_bots:
             # We RECOMPUTE CBS for all bots that currently have a goal
             # (even if they have an active schedule, because we will override it) 
@@ -398,29 +406,33 @@ class CBSDemo:
             curr_pos = bot.get_world_pos_2d()
             goal_pos = bot.get_goal_pos_2d()
 
-            start_grid = self.grid_map.world_to_grid(curr_pos[0], curr_pos[1])
-            pickup_grid = self.grid_map.world_to_grid(goal_pos[0], goal_pos[1])
+            start_grid = bot.grid_map.world_to_grid(curr_pos[0], curr_pos[1])
+            pickup_grid = bot.grid_map.world_to_grid(goal_pos[0], goal_pos[1])
 
             assert all([int(coord) == coord for coord in start_grid + pickup_grid]) \
                 , f'Bot {bot.body_id} coordinates must be integer, but got curr_pos={start_grid}, goal_pos={pickup_grid}'
 
-            to_pick_specs.append(AgentSpec(agent_id=bot.body_id, start=start_grid, goal=pickup_grid))
+            agent_specs.append(AgentSpec(agent_id=bot.body_id, start=start_grid, goal=pickup_grid, grid_map=bot.grid_map))
 
 
-        planned_paths = planner.plan_paths(to_pick_specs)
+        planned_paths = planner.plan_paths(agent_specs)
         path_conflicts = planner.conflicts_resolved
         self.collisions_avoided += path_conflicts
 
+        idx_ptr = 0
         for bot in self.demo_bots:
             if not bot.has_goal(): # Bot doesn't need pathfinding
                 continue
+
             bot_id = bot.body_id
             pick_path = planned_paths[bot_id]
 
-            path_world = planner.grid_path_to_world(pick_path)
+            path_world = planner.grid_path_to_world(pick_path, agent_specs[idx_ptr].grid_map)
 
             schedule = [(x, y) for (x, y) in path_world]
             bot.set_schedule(schedule)
+
+            idx_ptr += 1
 
             # print(f" Planned - Robot {bot.body_id}: {schedule[0]} -> {schedule[-1]}")
 
@@ -558,7 +570,7 @@ def _parse_args():
     parser.add_argument(
         "--robots",
         type=int,
-        default=10,
+        default=12,
         help="Number of robots to include in the demo (default: 6)",
     )
     parser.add_argument(
