@@ -572,7 +572,7 @@ def _parse_args():
         "--layout",
         type=str,
         default='default', 
-        help="What layout to use for the warehouse. Accepts 'default', 'debug', and 'debug_mini'",
+        help="What layout to use for the warehouse. Accepts 'default', 'debug', 'debug_small' and 'debug_mini'",
     )
     parser.add_argument(
         "--robots",

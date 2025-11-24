@@ -69,8 +69,8 @@ def get_warehouse_params(layout='default'):
       endpoints[-1,
                 0:10] = 1
     
-    # Tiny layout for congestion tests
-    elif layout == 'debug_mini':
+    # Small layout for congestion tests
+    elif layout == 'debug_small':
       rows, cols = 4, 4
 
       work_stns = np.zeros([rows, cols])
@@ -80,6 +80,24 @@ def get_warehouse_params(layout='default'):
       shelves = np.zeros([rows, cols])
       shelves[2,
               1:] = 1
+      
+      endpoints = np.zeros([rows, cols])
+      endpoints[-1,
+                0:4] = 1
+      
+    # Super small layout (2 robots max) for really simple tests
+    elif layout == 'debug_mini':
+      rows, cols = 4, 4
+
+      work_stns = np.zeros([rows, cols])
+      work_stns[0,
+                0:2] = 1
+      
+      shelves = np.zeros([rows, cols])
+      shelves[2,
+              1:] = 1
+      shelves[0:2,
+              2] = 1
       
       endpoints = np.zeros([rows, cols])
       endpoints[-1,

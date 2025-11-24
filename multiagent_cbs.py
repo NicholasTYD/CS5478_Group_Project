@@ -34,6 +34,29 @@ class Constraint:
     next_position: Optional[GridPos] = None  # Only used for edge constraints
     constraint_type: str = "vertex"  # Either "vertex" or "edge"
 
+    def __eq__(self, other):
+        # Equality comparison (for checking duplicates)
+        if not isinstance(other, Constraint):
+            return False
+        return (self.agent_id == other.agent_id and
+                self.time == other.time and
+                self.position == other.position and
+                self.constraint_type == other.constraint_type and
+                self.next_position == other.next_position)
+    
+    def __lt__(self, other):
+        # Less-than comparison for ordering in a heap or sorted list
+        if not isinstance(other, Constraint):
+            return NotImplemented
+        # Example comparison based on (agent_id, time, position)
+        if self.time != other.time:
+            return self.time < other.time
+        if self.agent_id != other.agent_id:
+            return self.agent_id < other.agent_id
+        if self.position != other.position:
+            return self.position < other.position
+        return False  # For cases where the constraints are otherwise identical
+
 
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
@@ -45,7 +68,7 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
-    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=2) -> Dict[int, List[GridPos]]:
+    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=20) -> Dict[int, List[GridPos]]:
         """Plan conflict-free paths for the provided set of agents.
 
         Args:
@@ -59,7 +82,7 @@ class CBSPlanner:
         """
 
         agent_map = {spec.agent_id: spec for spec in agent_specs}
-        root_constraints: List[Constraint] = []
+        root_constraints: set[Constraint] = set()
         root_paths: Dict[int, List[GridPos]] = {}
         self.conflicts_resolved = 0
 
@@ -91,7 +114,7 @@ class CBSPlanner:
         # Keep a memory of the nodes we've processed before. However since the actual node contains a dict of stuff
         # its not hashable, so we track just the key stuff in the node.
         # Aka just track the (constaints, paths) of the node
-        # node_mem = list()
+        node_mem = list()
 
         while open_list:
             _, _, node = heapq.heappop(open_list)
@@ -103,7 +126,7 @@ class CBSPlanner:
             pos = conflict["position"]
 
             for agent in (agent_a, agent_b):
-                new_constraints = list(node["constraints"])
+                new_constraints = set(node["constraints"])
                 if conflict["type"] == "vertex":
                     constraint = Constraint(agent_id=agent, time=time, position=pos, constraint_type="vertex")
                 else:  # edge conflict
@@ -116,12 +139,15 @@ class CBSPlanner:
                         next_position=to,
                         constraint_type="edge",
                     )
-                # Only add constraints into the constraint list if it doesn't already exist.
-                if constraint not in new_constraints:
-                    new_constraints.append(constraint)
+                # Only add constraints into the constraint set if it doesn't already exist.
+                new_constraints.add(constraint)
+
+                # if new_constraints 
+                # if constraint not in new_constraints:
+                    # print(constraint)
                 # If it already exist, that means we already tried pathfinding with that constraint, so no need recompute
-                else:
-                    continue
+                # else:
+                #     continue
 
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
@@ -133,25 +159,27 @@ class CBSPlanner:
                 if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
                     continue
 
-                # new_node = (new_constraints, new_paths)
-                # if new_node in node_mem:
-                #     continue
-                # node_mem.append(new_node)
+                new_node = (new_constraints, new_paths)
+                if new_node in node_mem:
+                    # print("HI")
+                    continue
+                node_mem.append(new_node)
 
                 new_paths[agent] = replanned
                 counter += 1
-                heapq.heappush(
-                    open_list,
-                    (
-                        self._compute_cost(new_paths),
-                        counter,
-                        {
-                            "constraints": new_constraints,
-                            "paths": new_paths,
-                            "cost": self._compute_cost(new_paths),
-                        },
-                    ),
+                new_node = (
+                    self._compute_cost(new_paths),
+                    counter,
+                    {
+                        "constraints": new_constraints,
+                        "paths": new_paths,
+                        "cost": self._compute_cost(new_paths),
+                    },
                 )
+                if new_node not in open_list:
+                    heapq.heappush(open_list, new_node)
+                else:
+                    pass
 
         raise RuntimeError("CBS failed to find a conflict-free solution")
 
@@ -165,7 +193,7 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # CBS helpers
     # ------------------------------------------------------------------
-    def _low_level_search(self, spec: AgentSpec, constraints: List[Constraint], grid_map:GridMap) -> Optional[List[GridPos]]:
+    def _low_level_search(self, spec: AgentSpec, constraints: set[Constraint], grid_map:GridMap) -> Optional[List[GridPos]]:
         """Run constrained A* for a single agent."""
 
         constraint_table = self._build_constraint_table(constraints, spec.agent_id)
@@ -231,7 +259,7 @@ class CBSPlanner:
 
         return None
 
-    def _build_constraint_table(self, constraints: List[Constraint], agent_id: int):
+    def _build_constraint_table(self, constraints: set[Constraint], agent_id: int):
         vertex = defaultdict(set)
         edge = defaultdict(set)
 
