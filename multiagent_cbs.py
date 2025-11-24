@@ -61,14 +61,15 @@ class Constraint:
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
-    def __init__(self, max_time: int = 200):
+    def __init__(self, max_time: int = 200, allow_backtrack=True):
         self.max_time = max_time
         self.conflicts_resolved = 0
+        self.allow_backtrack = allow_backtrack
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
-    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=20) -> Dict[int, List[GridPos]]:
+    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=999) -> Dict[int, List[GridPos]]:
         """Plan conflict-free paths for the provided set of agents.
 
         Args:
@@ -89,7 +90,7 @@ class CBSPlanner:
 
         shortest_agent_costs: dict[int, int] = {}
         for spec in agent_specs:
-            path = self._low_level_search(spec, root_constraints, spec.grid_map)
+            path = self._low_level_search(spec, root_constraints, spec.grid_map, self.allow_backtrack)
             if path is None:
                 raise RuntimeError(f"No path found for agent {spec.agent_id} in root planning")
             root_paths[spec.agent_id] = path
@@ -108,13 +109,10 @@ class CBSPlanner:
         counter = 0
         heapq.heappush(open_list, (root_node["cost"], counter, root_node))
 
-        ## TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-        ## Set max cap distance to prevent the simulation from spam idling or looping forever idk
-
         # Keep a memory of the nodes we've processed before. However since the actual node contains a dict of stuff
         # its not hashable, so we track just the key stuff in the node.
         # Aka just track the (constaints, paths) of the node
-        node_mem = list()
+        # node_mem = list()
 
         while open_list:
             _, _, node = heapq.heappop(open_list)
@@ -126,9 +124,30 @@ class CBSPlanner:
             pos = conflict["position"]
 
             for agent in (agent_a, agent_b):
+                # Only add constraints into the constraint set if it doesn't already exist.
+                # So we use a set
                 new_constraints = set(node["constraints"])
+
                 if conflict["type"] == "vertex":
+                    # Since get_position_at_time
+                    final_agent_time_step = len(node["paths"][agent]) - 1
+
+                    for time_steps in range(final_agent_time_step, time + 1):
+                        # Basically tell the shorter conflicting path to replan a path that takes as much steps 
+                        # as the longer conflicting path to reach the goal
+                        # 
+                        # Had to do this because the conflict happens in the future; The shorter conflicting path
+                        # is assumed to idle at the goal position after reaching there.
+                        extra_constraint = Constraint(
+                            agent_id=agent, 
+                            time=time_steps,
+                            position=pos,
+                            constraint_type="vertex"
+                        )
+                        new_constraints.add(extra_constraint)
+
                     constraint = Constraint(agent_id=agent, time=time, position=pos, constraint_type="vertex")
+                    new_constraints.add(constraint)
                 else:  # edge conflict
                     frm = self._get_position_at_time(node["paths"][agent], time - 1)
                     to = self._get_position_at_time(node["paths"][agent], time)
@@ -139,20 +158,11 @@ class CBSPlanner:
                         next_position=to,
                         constraint_type="edge",
                     )
-                # Only add constraints into the constraint set if it doesn't already exist.
-                new_constraints.add(constraint)
-
-
-                # if new_constraints 
-                # if constraint not in new_constraints:
-                    # print(constraint)
-                # If it already exist, that means we already tried pathfinding with that constraint, so no need recompute
-                # else:
-                #     continue
+                    new_constraints.add(constraint)
 
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
-                replanned = self._low_level_search(spec, new_constraints, spec.grid_map)
+                replanned = self._low_level_search(spec, new_constraints, spec.grid_map, self.allow_backtrack)
 
                 if replanned is None:
                     continue
@@ -163,10 +173,11 @@ class CBSPlanner:
                 if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
                     continue
 
-                new_node = (new_constraints, new_paths)
-                if new_node in node_mem:
-                    continue
-                node_mem.append(new_node)
+                # new_node = (new_constraints, new_paths)
+                # if new_node in node_mem:
+                #     print("UWU")
+                #     continue
+                # node_mem.append(new_node)
 
                 new_paths[agent] = replanned
                 counter += 1
@@ -327,17 +338,21 @@ class CBSPlanner:
                 path_a = paths[a_id]
                 path_b = paths[b_id]
 
+                # We need to consider a max_horizon, or else the pathfinding algo be stupid and assume 
                 for t in range(max_len):
                     pos_a = self._get_position_at_time(path_a, t)
                     pos_b = self._get_position_at_time(path_b, t)
 
-                    if pos_a == pos_b:
-                        return {"type": "vertex", "agents": (a_id, b_id), "time": t, "position": pos_a}
+                    if t >= len(path_a) + 1 or t >= len(path_b) + 1:
+                        continue
 
+                    if pos_a == pos_b and (pos_a is not None) and (pos_b is not None):
+                        return {"type": "vertex", "agents": (a_id, b_id), "time": t, "position": pos_a}
+                    
                     if t > 0:
                         prev_a = self._get_position_at_time(path_a, t - 1)
                         prev_b = self._get_position_at_time(path_b, t - 1)
-                        if prev_a == pos_b and pos_a == prev_b:
+                        if prev_a == pos_b and pos_a == prev_b and (pos_a is not None) and (pos_b is not None):
                             return {
                                 "type": "edge",
                                 "agents": (a_id, b_id),
@@ -386,7 +401,16 @@ class CBSPlanner:
             time_step = 0
         if time_step < len(path):
             return path[time_step]
+        
+
+        # if max_horizon != -1 and (time_step > max_horizon):
+        #     return None
         return path[-1]
+        
+        # post_linger_duration = 2
+        # if post_linger_duration == -1 or (len(path) + post_linger_duration < time_step):
+        #     return path[-1]
+        # return None
 
     def _compute_cost(self, paths: Dict[int, List[GridPos]]) -> float:
         return sum(self._compute_path_cost(path) for path in paths.values())

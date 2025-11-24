@@ -214,7 +214,7 @@ class CBSDemo:
 
     def __init__(self, layout:str = 'default', num_robots: int = 10, 
                  step_duration: float = 0.2, steps_per_grid: int = 10,
-                 metrics_file: str | None = None):
+                 metrics_file: str | None = None, allow_backtrack=True):
         if num_robots < 2:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
@@ -252,6 +252,7 @@ class CBSDemo:
         self.steps_per_grid = steps_per_grid
         self.metrics_file = metrics_file
         self.num_active = min(num_robots, len(self.work_stn_pos))
+        self.allow_backtrack = allow_backtrack
         # Number of collisions avoided had robots are allowed to execute their low level search directly without
         # any collision avoidance check. Accumulated everytime CBS is called.
         self.collisions_avoided = 0
@@ -391,7 +392,7 @@ class CBSDemo:
             self.tasks_created.append(delivery_task)
 
     def _plan_and_assign_paths(self):
-        planner = CBSPlanner()
+        planner = CBSPlanner(allow_backtrack=self.allow_backtrack)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
@@ -593,6 +594,12 @@ def _parse_args():
         help="How long each time step lasts (Smaller = faster)",
     )
     parser.add_argument(
+        "--allow-backtrack",
+        action='store_true',
+        default=False,
+        help="Allow the pathfinding algorithm to generate backtracking paths",
+    )
+    parser.add_argument(
         "--metrics-file",
         type=str,
         default="results.json",
@@ -609,5 +616,6 @@ if __name__ == "__main__":
         steps_per_grid=args.steps_per_grid,
         step_duration=args.step_duration,
         metrics_file=args.metrics_file,
+        allow_backtrack=args.allow_backtrack,
     )
     demo.run()
