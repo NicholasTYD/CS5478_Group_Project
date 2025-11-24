@@ -1,6 +1,6 @@
 # TODO: Fix CBS deadlock
 # TODO: Fix CBS pathfinding looping for some reason
-# TODO Add mechanism to discourage or even ban backtracking.
+# TODO Add mechanism to discourage or even ban backtracking cuz it might loop forever?
 
 # CBS Algorithm Analysis & Improvement Opportunities
 

@@ -142,6 +142,7 @@ class CBSPlanner:
                 # Only add constraints into the constraint set if it doesn't already exist.
                 new_constraints.add(constraint)
 
+
                 # if new_constraints 
                 # if constraint not in new_constraints:
                     # print(constraint)
@@ -156,12 +157,14 @@ class CBSPlanner:
                 if replanned is None:
                     continue
 
+                # if replanned == new_paths[agent]:
+                #     raise
+
                 if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
                     continue
 
                 new_node = (new_constraints, new_paths)
                 if new_node in node_mem:
-                    # print("HI")
                     continue
                 node_mem.append(new_node)
 
@@ -193,7 +196,7 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # CBS helpers
     # ------------------------------------------------------------------
-    def _low_level_search(self, spec: AgentSpec, constraints: set[Constraint], grid_map:GridMap) -> Optional[List[GridPos]]:
+    def _low_level_search(self, spec: AgentSpec, constraints: set[Constraint], grid_map:GridMap, allow_backtrack=False) -> Optional[List[GridPos]]:
         """Run constrained A* for a single agent."""
 
         constraint_table = self._build_constraint_table(constraints, spec.agent_id)
@@ -246,6 +249,15 @@ class CBSPlanner:
 
                 if self._violates_constraints((x, y), (nx, ny), nt, constraint_table):
                     continue
+
+                # When preventing backtracking backtracking: disallow moving into any cell this agent has previously visited
+                # (except waiting in place). Reconstruct the path to the current state and check visited positions.
+                # current position is allowed to be waited on, but moving into any previously visited
+                # *different* cell is forbidden.
+                if not allow_backtrack and (dx, dy) != (0, 0):
+                    visited_positions = set(self._reconstruct_path(came_from, current))
+                    if (nx, ny) in visited_positions:
+                        continue
                     
                 neighbor = (nx, ny, nt)
                 tentative_g = g_scores[current] + 1

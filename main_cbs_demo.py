@@ -391,7 +391,7 @@ class CBSDemo:
             self.tasks_created.append(delivery_task)
 
     def _plan_and_assign_paths(self):
-        planner = CBSPlanner(max_time=400)
+        planner = CBSPlanner()
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
