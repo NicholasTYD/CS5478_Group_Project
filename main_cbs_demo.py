@@ -212,8 +212,9 @@ class CBSDemoBot:
 class CBSDemo:
     """Creates a lightweight simulator showcasing CBS collision avoidance."""
 
-    def __init__(self, num_robots: int = 10, step_duration: float = 0.2, steps_per_grid: int = 10,
-                metrics_file: str | None = None):
+    def __init__(self, layout:str = 'default', num_robots: int = 10, 
+                 step_duration: float = 0.2, steps_per_grid: int = 10,
+                 metrics_file: str | None = None):
         if num_robots < 2:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
@@ -224,7 +225,7 @@ class CBSDemo:
          self.cols,
          self.workstations_map,
          self.shelves_map,
-         self.endpoints_map) = utils.get_warehouse_params(layout='debug_mini')
+         self.endpoints_map) = utils.get_warehouse_params(layout=layout)
 
         (self.wall_pos,
          self.work_stn_pos,
@@ -568,6 +569,12 @@ class CBSDemo:
 def _parse_args():
     parser = argparse.ArgumentParser(description="Run the CBS warehouse demo")
     parser.add_argument(
+        "--layout",
+        type=str,
+        default='default', 
+        help="What layout to use for the warehouse. Accepts 'default', 'debug', and 'debug_mini'",
+    )
+    parser.add_argument(
         "--robots",
         type=int,
         default=12,
@@ -597,6 +604,7 @@ def _parse_args():
 if __name__ == "__main__":
     args = _parse_args()
     demo = CBSDemo(
+        layout=args.layout,
         num_robots=args.robots,
         steps_per_grid=args.steps_per_grid,
         step_duration=args.step_duration,

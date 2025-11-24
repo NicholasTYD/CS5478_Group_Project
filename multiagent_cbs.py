@@ -45,11 +45,14 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
-    def plan_paths(self, agent_specs: List[AgentSpec]) -> Dict[int, List[GridPos]]:
+    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=2) -> Dict[int, List[GridPos]]:
         """Plan conflict-free paths for the provided set of agents.
 
         Args:
             agent_specs: Planning request for each agent.
+            max_path_multiplier_cost: Highest path cost to accomodate based on the agent's shortest possible cost.
+            E.g. If agent's shortest path is 10 and multiplier is 2, the algo will never return a path of above
+            20 for that agent.
 
         Returns:
             Mapping from agent_id to a list of grid cells (per discrete timestep).
@@ -60,11 +63,14 @@ class CBSPlanner:
         root_paths: Dict[int, List[GridPos]] = {}
         self.conflicts_resolved = 0
 
+
+        shortest_agent_costs: dict[int, int] = {}
         for spec in agent_specs:
             path = self._low_level_search(spec, root_constraints, spec.grid_map)
             if path is None:
                 raise RuntimeError(f"No path found for agent {spec.agent_id} in root planning")
             root_paths[spec.agent_id] = path
+            shortest_agent_costs[spec.agent_id] = self._compute_path_cost(path)
 
         root_node = {
             "constraints": root_constraints,
@@ -78,6 +84,14 @@ class CBSPlanner:
         open_list: List[Tuple[float, int, Dict]] = []
         counter = 0
         heapq.heappush(open_list, (root_node["cost"], counter, root_node))
+
+        ## TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+        ## Set max cap distance to prevent the simulation from spam idling or looping forever idk
+
+        # Keep a memory of the nodes we've processed before. However since the actual node contains a dict of stuff
+        # its not hashable, so we track just the key stuff in the node.
+        # Aka just track the (constaints, paths) of the node
+        # node_mem = list()
 
         while open_list:
             _, _, node = heapq.heappop(open_list)
@@ -105,12 +119,25 @@ class CBSPlanner:
                 # Only add constraints into the constraint list if it doesn't already exist.
                 if constraint not in new_constraints:
                     new_constraints.append(constraint)
+                # If it already exist, that means we already tried pathfinding with that constraint, so no need recompute
+                else:
+                    continue
 
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
                 replanned = self._low_level_search(spec, new_constraints, spec.grid_map)
+
                 if replanned is None:
                     continue
+
+                if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
+                    continue
+
+                # new_node = (new_constraints, new_paths)
+                # if new_node in node_mem:
+                #     continue
+                # node_mem.append(new_node)
+
                 new_paths[agent] = replanned
                 counter += 1
                 heapq.heappush(
@@ -191,7 +218,7 @@ class CBSPlanner:
 
                 if self._violates_constraints((x, y), (nx, ny), nt, constraint_table):
                     continue
-
+                    
                 neighbor = (nx, ny, nt)
                 tentative_g = g_scores[current] + 1
 
@@ -322,7 +349,10 @@ class CBSPlanner:
         return path[-1]
 
     def _compute_cost(self, paths: Dict[int, List[GridPos]]) -> float:
-        return sum(len(path) for path in paths.values())
+        return sum(self._compute_path_cost(path) for path in paths.values())
+    
+    def _compute_path_cost(self, path:List[GridPos]) -> float:
+        return len(path)
 
     def _heuristic(self, node: GridPos, goal: GridPos) -> float:
         return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
