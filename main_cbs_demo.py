@@ -224,7 +224,7 @@ class CBSDemo:
          self.cols,
          self.workstations_map,
          self.shelves_map,
-         self.endpoints_map) = utils.get_warehouse_params(layout='default')
+         self.endpoints_map) = utils.get_warehouse_params(layout='debug_mini')
 
         (self.wall_pos,
          self.work_stn_pos,

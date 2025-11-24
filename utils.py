@@ -53,6 +53,7 @@ def get_warehouse_params(layout='default'):
       endpoints[4:-1:4,
                 1:-2:11] = 0
     
+    # Simple debug layout with a single chokepoint
     elif layout == 'debug':
       rows, cols = 8, 10
 
@@ -67,9 +68,30 @@ def get_warehouse_params(layout='default'):
       endpoints = np.zeros([rows, cols])
       endpoints[-1,
                 0:10] = 1
+    
+    # Tiny layout for congestion tests
+    elif layout == 'debug_mini':
+      rows, cols = 4, 4
+
+      work_stns = np.zeros([rows, cols])
+      work_stns[0,
+                0:4] = 1
+      
+      shelves = np.zeros([rows, cols])
+      shelves[2,
+              1:] = 1
+      
+      endpoints = np.zeros([rows, cols])
+      endpoints[-1,
+                0:4] = 1
 
     else:
         raise Exception("Warehouse params layout not valid!")
+    
+    # Remove this assert statement if GridMap bug is fixed
+    assert rows % 2 == 0 and cols % 2 == 0, \
+      "Hi, there's a bug here where the GridMap will be formatted wrongly for the simulation if the rows and cols for the warehouse " \
+      "are not in multiples of 2. Therefore, please specify multiples of 2 for custom layout instead :D"
     
     return rows, cols, work_stns, shelves, endpoints
 

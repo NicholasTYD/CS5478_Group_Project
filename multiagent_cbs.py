@@ -39,7 +39,6 @@ class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
     def __init__(self, max_time: int = 200):
-        # self.default_grid_map = default_grid_map
         self.max_time = max_time
         self.conflicts_resolved = 0
 
