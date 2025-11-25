@@ -596,7 +596,7 @@ class CBSDemo:
             current_clearance = self._pairwise_clearance()
             min_clearance = min(min_clearance, current_clearance)
 
-            if all(task.order_fufilled() for task in self.tasks_created):
+            if (len(self.tasks_created) == self.num_total_tasks) and all(task.order_fufilled() for task in self.tasks_created):
                 print("\n✓ All CBS orders delivered. Ending demo early.")
                 self._export_metrics(sim_time, min_clearance)
                 return

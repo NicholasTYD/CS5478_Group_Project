@@ -54,7 +54,7 @@ def get_warehouse_params(layout='default'):
                 1:-2:11] = 0
     
     elif layout == 'simple':
-      rows, cols = 18, 12
+      rows, cols = 18, 14
 
       work_stns = np.zeros([rows, cols])
       work_stns[1:-1:3,
@@ -66,9 +66,9 @@ def get_warehouse_params(layout='default'):
       # Shelves are purely DECORATIVE. See endpoints for the actual robot destination.
       shelves = np.zeros([rows, cols])
       shelves[:,
-              3:-4:4] = 1
+              4:-5:4] = 1
       shelves[:,
-              4:-3:4] = 1
+              5:-4:4] = 1
       
       # Leave center aisle empty
       shelves[rows//2 - 1: rows//2 + 1,
@@ -77,9 +77,9 @@ def get_warehouse_params(layout='default'):
       # Dense Endpoint configuration
       endpoints = np.zeros([rows, cols])
       endpoints[:,
-                2:-5:4] =1
+                3:-6:4] =1
       endpoints[:,
-                5:-2:4] = 1
+                6:-3:4] = 1
 
       # Leave center aisle empty
       endpoints[rows//2 -1: rows//2 + 1,
