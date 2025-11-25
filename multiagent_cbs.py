@@ -64,6 +64,7 @@ class CBSPlanner:
     def __init__(self, max_time: int = 200, allow_backtrack=True):
         self.max_time = max_time
         self.conflicts_resolved = 0
+        self.nodes_expanded = 0
         self.allow_backtrack = allow_backtrack
 
     # ------------------------------------------------------------------
@@ -85,8 +86,6 @@ class CBSPlanner:
         agent_map = {spec.agent_id: spec for spec in agent_specs}
         root_constraints: set[Constraint] = set()
         root_paths: Dict[int, List[GridPos]] = {}
-        self.conflicts_resolved = 0
-
 
         shortest_agent_costs: dict[int, int] = {}
         for spec in agent_specs:
@@ -116,6 +115,7 @@ class CBSPlanner:
 
         while open_list:
             _, _, node = heapq.heappop(open_list)
+            self.nodes_expanded += 1
             conflict = self._find_conflict(node["paths"])
             if not conflict:
                 self._find_conflict(node["paths"])
@@ -176,7 +176,6 @@ class CBSPlanner:
 
                 # new_node = (new_constraints, new_paths)
                 # if new_node in node_mem:
-                #     print("UWU")
                 #     continue
                 # node_mem.append(new_node)
 

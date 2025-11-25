@@ -268,6 +268,8 @@ class CBSDemo:
         # Number of collisions avoided had robots are allowed to execute their low level search directly without
         # any collision avoidance check. Accumulated everytime CBS is called.
         self.collisions_avoided = 0
+        # Number of pathfinding combinations considered by CBS
+        self.pathfind_nodes_expanded = 0
 
         logger.info("Initializing CBS demo with %s robots", self.num_active)
 
@@ -445,6 +447,7 @@ class CBSDemo:
         planned_paths = planner.plan_paths(agent_specs)
         path_conflicts = planner.conflicts_resolved
         self.collisions_avoided += path_conflicts
+        self.pathfind_nodes_expanded += planner.nodes_expanded
 
         idx_ptr = 0
         for bot in self.demo_bots:
@@ -461,10 +464,8 @@ class CBSDemo:
 
             idx_ptr += 1
 
-            # print(f" Planned - Robot {bot.body_id}: {schedule[0]} -> {schedule[-1]}")
-
         logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
-        logger.info("Collisions avoided by CBS: %s", self.collisions_avoided)
+        logger.info(f"Total collisions avoided by CBS: {self.collisions_avoided}, Path-combinations considered: {self.pathfind_nodes_expanded}")
 
     def _load_camera(self):
         p.resetDebugVisualizerCamera(
@@ -529,6 +530,7 @@ class CBSDemo:
                 "orders_completed": completed,
                 "orders_pending": pending,
                 "collisions_avoided": self.collisions_avoided,
+                "path_combinations_considered": self.pathfind_nodes_expanded,
                 "total_sim_steps_for_all_orders": round(total_duration, 4),
                 "avg_pickup_sim_steps": round(sum(pickups) / len(pickups), 4) if pickups else None,
                 "avg_delivery_sim_steps": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
