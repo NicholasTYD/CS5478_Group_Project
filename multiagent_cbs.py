@@ -70,11 +70,15 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
-    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=5) -> Dict[int, List[GridPos]]:
+    def plan_paths(self, agent_specs: List[AgentSpec]) -> Dict[int, List[GridPos]]:
         """Plan conflict-free paths for the provided set of agents.
 
         Args:
             agent_specs: Planning request for each agent.
+
+
+
+            DISABLED FEATURED BECAUSE BUGGY (If a node is close to a goal it might falsefully terminate):
             max_path_multiplier_cost: Highest path cost to accomodate based on the agent's shortest possible cost.
             E.g. If agent's shortest path is 10 and multiplier is 2, the algo will never return a path of above
             20 for that agent.
@@ -167,8 +171,8 @@ class CBSPlanner:
                 # if replanned == new_paths[agent]:
                 #     raise
 
-                if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
-                    continue
+                # if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
+                #     continue
 
                 # new_node = (new_constraints, new_paths)
                 # if new_node in node_mem:
@@ -339,8 +343,8 @@ class CBSPlanner:
                     pos_a = self._get_position_at_time(path_a, t)
                     pos_b = self._get_position_at_time(path_b, t)
 
-                    # if t >= len(path_a) + 1 or t >= len(path_b) + 1:
-                    #     continue
+                    if t >= len(path_a) + 1 or t >= len(path_b) + 1:
+                        continue
  
                     if pos_a == pos_b and (pos_a is not None) and (pos_b is not None):
                         return {"type": "vertex", "agents": (a_id, b_id), "time": t, "position": pos_a}
