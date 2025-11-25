@@ -1,4 +1,5 @@
-# TODO: Fix CBS deadlock
+
+# Create dynamic scheduled deliveries
 # TODO: Fix CBS pathfinding looping for some reason
 # TODO Add mechanism to discourage or even ban backtracking cuz it might loop forever?
 

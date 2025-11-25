@@ -132,7 +132,14 @@ class CBSDemoBot:
     def has_goal(self):
         return self.goal_pos is not None
     
+    def has_delivery_task(self):
+        return self.delivery_task is not None
+    
     def check_goal_reached(self, sim_time:float, sim_step:int):
+        # If no task the robot has no goal, we just don't do anything
+        if self.delivery_task is None:
+            return 
+        
         if np.array_equal(self.goal_pos, self.delivery_task.endpoint.get_world_pos_2d()) and self._goal_reached():
             self.schedule = None
             logger.info(
@@ -160,6 +167,7 @@ class CBSDemoBot:
             # Change endpoint marker to green
             self.delivery_task.endpoint.update_visual(state='completed')
             self.goal_pos = None
+            self.delivery_task = None
         
     def act(self, sim_step:int):
         # Don't do anything if there's no schedule
@@ -212,9 +220,13 @@ class CBSDemoBot:
 class CBSDemo:
     """Creates a lightweight simulator showcasing CBS collision avoidance."""
 
+    # Set a bound cuz python time.sleep() has a minimum value to sleep
+    MIN_STEP_DURATION = 0.0001
+
     def __init__(self, layout:str = 'default', num_robots: int = 10, 
-                 step_duration: float = 0.2, steps_per_grid: int = 10,
-                 metrics_file: str | None = None, allow_backtrack=True):
+                 step_duration: float = 0.005, steps_per_grid: int = 10,
+                 metrics_file: str | None = None, allow_backtrack=True,
+                 num_total_tasks:int = -1):
         if num_robots < 2:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
@@ -248,7 +260,7 @@ class CBSDemo:
             work_stns_pos=self.work_stn_pos,
         )
 
-        self.step_duration = step_duration
+        self.step_duration = max(step_duration, self.MIN_STEP_DURATION)
         self.steps_per_grid = steps_per_grid
         self.metrics_file = metrics_file
         self.num_active = min(num_robots, len(self.work_stn_pos))
@@ -269,12 +281,11 @@ class CBSDemo:
         self.collision_checker.add_obstacle_to_track(self.wall_struct_id)
         self.collision_checker.add_obstacle_to_track(self.shelves_struct_id)
 
+        self.num_total_tasks = num_total_tasks if num_total_tasks > 0 else self.num_active
         self.tasks_created: List[DeliveryTask] = []
 
         logger.info("Initialization Done, running pathfinding...")
         self._init_cbs_demobots()
-        self._allocate_tasks()
-        self._plan_and_assign_paths()
         self._load_camera()
 
     # ------------------------------------------------------------------
@@ -381,15 +392,29 @@ class CBSDemo:
             self.demo_bots.append(bot)
 
     def _allocate_tasks(self):
-        chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=self.num_active, replace=False)
-        endpoint_list:list[Endpoint] = [Endpoint(self.all_endpoints_pos[i]) for i in chosen_endpoints]
+        num_tasks_to_create = min(self.num_total_tasks - len(self.tasks_created),
+                                  self.num_active)
+        if num_tasks_to_create <= 0:
+            return
 
-        for i, bot in enumerate(self.demo_bots):
+        chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=num_tasks_to_create, replace=False)
+
+        idx_ptr = 0
+        for bot in self.demo_bots:
+            if idx_ptr >= len(chosen_endpoints):
+                break
+
+            if bot.has_delivery_task():
+                continue
+
+            endpoint = Endpoint(self.all_endpoints_pos[chosen_endpoints[idx_ptr]])
+            
             delivery_task = DeliveryTask(
-                order_id=i, endpoint=endpoint_list[i], workstation=bot.workstation, curr_sim_step=0
+                order_id=idx_ptr, endpoint=endpoint, workstation=bot.workstation, curr_sim_step=0
             )
             bot.allocate_new_task(delivery_task)
             self.tasks_created.append(delivery_task)
+            idx_ptr += 1
 
     def _plan_and_assign_paths(self):
         planner = CBSPlanner(allow_backtrack=self.allow_backtrack)
@@ -539,6 +564,10 @@ class CBSDemo:
         print("\nWatching collision-free trajectories...\n")
 
         min_clearance = math.inf
+
+        self._allocate_tasks()
+        self._plan_and_assign_paths()
+
         while sim_time < max_sim_duration:
             self.collision_checker.check_robot_collisions(sim_step)
 
@@ -546,11 +575,13 @@ class CBSDemo:
                 bot.check_goal_reached(sim_time, sim_step)
 
             if sim_step % self.steps_per_grid == 0:
+                self._allocate_tasks()
                 self._plan_and_assign_paths()
 
             for bot in self.demo_bots:
                 bot.act(sim_step)
             p.stepSimulation()
+
             time.sleep(self.step_duration)
             sim_time += self.step_duration
             sim_step += 1
@@ -584,13 +615,13 @@ def _parse_args():
     parser.add_argument(
         "--steps-per-grid",
         type=int,
-        default=60,
+        default=10,
         help="Number of time steps needed to travel 1 CBS Grid (Smaller = Faster)",
     )
     parser.add_argument(
         "--step-duration",
         type=float,
-        default=0.0005,
+        default=0.005,
         help="How long each time step lasts (Smaller = faster)",
     )
     parser.add_argument(
@@ -598,6 +629,12 @@ def _parse_args():
         action='store_true',
         default=False,
         help="Allow the pathfinding algorithm to generate backtracking paths",
+    )
+    parser.add_argument(
+        "--num-deliveries",
+        type=int,
+        default=0,
+        help="Total number of deliveries to create. If 0, defaults to the same number of robots.",
     )
     parser.add_argument(
         "--metrics-file",
@@ -617,5 +654,6 @@ if __name__ == "__main__":
         step_duration=args.step_duration,
         metrics_file=args.metrics_file,
         allow_backtrack=args.allow_backtrack,
+        num_total_tasks=args.num_deliveries,
     )
     demo.run()
