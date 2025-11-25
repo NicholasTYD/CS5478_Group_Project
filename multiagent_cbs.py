@@ -319,7 +319,12 @@ class CBSPlanner:
         current = current_state
         while current in came_from:
             path.append((current[0], current[1]))
+            
+            # if current == came_from[current]:
+            #     print(current, 'test')
+            
             current = came_from[current]
+
         path.append((current[0], current[1]))
         path.reverse()
         return path
