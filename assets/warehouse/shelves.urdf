@@ -28,7 +28,7 @@
   <joint name="joint_block_0_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_0_3"/>
-    <origin xyz="-2.5 8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -58,7 +58,7 @@
   <joint name="joint_block_0_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_0_4"/>
-    <origin xyz="-1.5 8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -88,7 +88,7 @@
   <joint name="joint_block_0_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_0_7"/>
-    <origin xyz="1.5 8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -118,7 +118,7 @@
   <joint name="joint_block_0_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_0_8"/>
-    <origin xyz="2.5 8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -148,7 +148,7 @@
   <joint name="joint_block_1_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_1_3"/>
-    <origin xyz="-2.5 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -178,7 +178,7 @@
   <joint name="joint_block_1_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_1_4"/>
-    <origin xyz="-1.5 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -208,7 +208,7 @@
   <joint name="joint_block_1_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_1_7"/>
-    <origin xyz="1.5 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -238,7 +238,7 @@
   <joint name="joint_block_1_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_1_8"/>
-    <origin xyz="2.5 7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -268,7 +268,7 @@
   <joint name="joint_block_2_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_3"/>
-    <origin xyz="-2.5 6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -298,7 +298,7 @@
   <joint name="joint_block_2_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_4"/>
-    <origin xyz="-1.5 6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -328,7 +328,7 @@
   <joint name="joint_block_2_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_7"/>
-    <origin xyz="1.5 6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -358,7 +358,7 @@
   <joint name="joint_block_2_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_2_8"/>
-    <origin xyz="2.5 6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -388,7 +388,7 @@
   <joint name="joint_block_3_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_3_3"/>
-    <origin xyz="-2.5 5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -418,7 +418,7 @@
   <joint name="joint_block_3_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_3_4"/>
-    <origin xyz="-1.5 5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -448,7 +448,7 @@
   <joint name="joint_block_3_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_3_7"/>
-    <origin xyz="1.5 5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -478,7 +478,7 @@
   <joint name="joint_block_3_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_3_8"/>
-    <origin xyz="2.5 5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -508,7 +508,7 @@
   <joint name="joint_block_4_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_4_3"/>
-    <origin xyz="-2.5 4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -538,7 +538,7 @@
   <joint name="joint_block_4_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_4_4"/>
-    <origin xyz="-1.5 4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -568,7 +568,7 @@
   <joint name="joint_block_4_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_4_7"/>
-    <origin xyz="1.5 4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -598,7 +598,7 @@
   <joint name="joint_block_4_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_4_8"/>
-    <origin xyz="2.5 4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -628,7 +628,7 @@
   <joint name="joint_block_5_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_5_3"/>
-    <origin xyz="-2.5 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -658,7 +658,7 @@
   <joint name="joint_block_5_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_5_4"/>
-    <origin xyz="-1.5 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -688,7 +688,7 @@
   <joint name="joint_block_5_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_5_7"/>
-    <origin xyz="1.5 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -718,7 +718,7 @@
   <joint name="joint_block_5_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_5_8"/>
-    <origin xyz="2.5 3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -748,7 +748,7 @@
   <joint name="joint_block_6_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_3"/>
-    <origin xyz="-2.5 2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -778,7 +778,7 @@
   <joint name="joint_block_6_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_4"/>
-    <origin xyz="-1.5 2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -808,7 +808,7 @@
   <joint name="joint_block_6_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_7"/>
-    <origin xyz="1.5 2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -838,7 +838,7 @@
   <joint name="joint_block_6_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_6_8"/>
-    <origin xyz="2.5 2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -868,7 +868,7 @@
   <joint name="joint_block_7_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_7_3"/>
-    <origin xyz="-2.5 1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -898,7 +898,7 @@
   <joint name="joint_block_7_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_7_4"/>
-    <origin xyz="-1.5 1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -928,7 +928,7 @@
   <joint name="joint_block_7_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_7_7"/>
-    <origin xyz="1.5 1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -958,7 +958,7 @@
   <joint name="joint_block_7_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_7_8"/>
-    <origin xyz="2.5 1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -988,7 +988,7 @@
   <joint name="joint_block_10_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_3"/>
-    <origin xyz="-2.5 -1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1018,7 +1018,7 @@
   <joint name="joint_block_10_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_4"/>
-    <origin xyz="-1.5 -1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1048,7 +1048,7 @@
   <joint name="joint_block_10_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_7"/>
-    <origin xyz="1.5 -1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1078,7 +1078,7 @@
   <joint name="joint_block_10_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_10_8"/>
-    <origin xyz="2.5 -1.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -1.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1108,7 +1108,7 @@
   <joint name="joint_block_11_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_11_3"/>
-    <origin xyz="-2.5 -2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1138,7 +1138,7 @@
   <joint name="joint_block_11_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_11_4"/>
-    <origin xyz="-1.5 -2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1168,7 +1168,7 @@
   <joint name="joint_block_11_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_11_7"/>
-    <origin xyz="1.5 -2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1198,7 +1198,7 @@
   <joint name="joint_block_11_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_11_8"/>
-    <origin xyz="2.5 -2.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -2.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1228,7 +1228,7 @@
   <joint name="joint_block_12_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_12_3"/>
-    <origin xyz="-2.5 -3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1258,7 +1258,7 @@
   <joint name="joint_block_12_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_12_4"/>
-    <origin xyz="-1.5 -3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1288,7 +1288,7 @@
   <joint name="joint_block_12_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_12_7"/>
-    <origin xyz="1.5 -3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1318,7 +1318,7 @@
   <joint name="joint_block_12_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_12_8"/>
-    <origin xyz="2.5 -3.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -3.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1348,7 +1348,7 @@
   <joint name="joint_block_13_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_13_3"/>
-    <origin xyz="-2.5 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1378,7 +1378,7 @@
   <joint name="joint_block_13_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_13_4"/>
-    <origin xyz="-1.5 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1408,7 +1408,7 @@
   <joint name="joint_block_13_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_13_7"/>
-    <origin xyz="1.5 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1438,7 +1438,7 @@
   <joint name="joint_block_13_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_13_8"/>
-    <origin xyz="2.5 -4.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -4.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1468,7 +1468,7 @@
   <joint name="joint_block_14_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_3"/>
-    <origin xyz="-2.5 -5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1498,7 +1498,7 @@
   <joint name="joint_block_14_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_4"/>
-    <origin xyz="-1.5 -5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1528,7 +1528,7 @@
   <joint name="joint_block_14_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_7"/>
-    <origin xyz="1.5 -5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1558,7 +1558,7 @@
   <joint name="joint_block_14_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_14_8"/>
-    <origin xyz="2.5 -5.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -5.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1588,7 +1588,7 @@
   <joint name="joint_block_15_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_15_3"/>
-    <origin xyz="-2.5 -6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1618,7 +1618,7 @@
   <joint name="joint_block_15_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_15_4"/>
-    <origin xyz="-1.5 -6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1648,7 +1648,7 @@
   <joint name="joint_block_15_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_15_7"/>
-    <origin xyz="1.5 -6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1678,7 +1678,7 @@
   <joint name="joint_block_15_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_15_8"/>
-    <origin xyz="2.5 -6.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -6.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1708,7 +1708,7 @@
   <joint name="joint_block_16_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_16_3"/>
-    <origin xyz="-2.5 -7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1738,7 +1738,7 @@
   <joint name="joint_block_16_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_16_4"/>
-    <origin xyz="-1.5 -7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1768,7 +1768,7 @@
   <joint name="joint_block_16_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_16_7"/>
-    <origin xyz="1.5 -7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1798,7 +1798,7 @@
   <joint name="joint_block_16_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_16_8"/>
-    <origin xyz="2.5 -7.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -7.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1828,7 +1828,7 @@
   <joint name="joint_block_17_3" type="fixed">
     <parent link="struct_base"/>
     <child link="block_17_3"/>
-    <origin xyz="-2.5 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-3.5 -8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1858,7 +1858,7 @@
   <joint name="joint_block_17_4" type="fixed">
     <parent link="struct_base"/>
     <child link="block_17_4"/>
-    <origin xyz="-1.5 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="-2.5 -8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1888,7 +1888,7 @@
   <joint name="joint_block_17_7" type="fixed">
     <parent link="struct_base"/>
     <child link="block_17_7"/>
-    <origin xyz="1.5 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="0.5 -8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 
@@ -1918,7 +1918,7 @@
   <joint name="joint_block_17_8" type="fixed">
     <parent link="struct_base"/>
     <child link="block_17_8"/>
-    <origin xyz="2.5 -8.5 0.5" rpy="0 0 0"/>
+    <origin xyz="1.5 -8.5 0.5" rpy="0 0 0"/>
   </joint>
 
 </robot>

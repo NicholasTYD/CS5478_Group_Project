@@ -108,11 +108,7 @@ class CBSPlanner:
         counter = 0
         heapq.heappush(open_list, (root_node["cost"], counter, root_node))
 
-        # Keep a memory of the nodes we've processed before. However since the actual node contains a dict of stuff
-        # its not hashable, so we track just the key stuff in the node.
-        # Aka just track the (constaints, paths) of the node
         # node_mem = list()
-
         while open_list:
             _, _, node = heapq.heappop(open_list)
             self.nodes_expanded += 1
@@ -176,6 +172,7 @@ class CBSPlanner:
 
                 # new_node = (new_constraints, new_paths)
                 # if new_node in node_mem:
+                #     print("TEST!!")
                 #     continue
                 # node_mem.append(new_node)
 

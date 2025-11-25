@@ -71,7 +71,7 @@ class Endpoint:
             raise Exception(f"State {state} not valid!")
         
     def destroy(self):
-        p.remove_body(self.obj_id)
+        p.removeBody(self.obj_id)
 
 class DeliveryTask:
     def __init__(self, order_id: int, endpoint:Endpoint, workstation:Tuple[float, float], curr_sim_step:int):
@@ -110,6 +110,7 @@ class CBSDemoBot:
         self.schedule_step_start:int = None
 
         self.delivery_task: DeliveryTask | None = None
+        self.prev_delivery_task: DeliveryTask | None = None
 
         self._set_pose(self.workstation)
 
@@ -118,6 +119,9 @@ class CBSDemoBot:
 
         self.goal_pos = delivery_task.endpoint.get_world_pos_2d()
         delivery_task.endpoint.update_visual('uncollected')
+
+        if self.prev_delivery_task is not None:
+            self.prev_delivery_task.endpoint.destroy()
 
     def set_schedule(self, schedule):
         self.schedule = schedule
@@ -167,6 +171,7 @@ class CBSDemoBot:
             # Change endpoint marker to green
             self.delivery_task.endpoint.update_visual(state='completed')
             self.goal_pos = None
+            self.prev_delivery_task = self.delivery_task
             self.delivery_task = None
         
     def act(self, sim_step:int):
