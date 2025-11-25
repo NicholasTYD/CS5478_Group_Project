@@ -69,7 +69,7 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
-    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=999) -> Dict[int, List[GridPos]]:
+    def plan_paths(self, agent_specs: List[AgentSpec], max_path_multiplier_cost:float=5) -> Dict[int, List[GridPos]]:
         """Plan conflict-free paths for the provided set of agents.
 
         Args:
@@ -118,6 +118,7 @@ class CBSPlanner:
             _, _, node = heapq.heappop(open_list)
             conflict = self._find_conflict(node["paths"])
             if not conflict:
+                self._find_conflict(node["paths"])
                 return node["paths"]
             agent_a, agent_b = conflict["agents"]
             time = conflict["time"]
@@ -338,14 +339,13 @@ class CBSPlanner:
                 path_a = paths[a_id]
                 path_b = paths[b_id]
 
-                # We need to consider a max_horizon, or else the pathfinding algo be stupid and assume 
                 for t in range(max_len):
                     pos_a = self._get_position_at_time(path_a, t)
                     pos_b = self._get_position_at_time(path_b, t)
 
-                    if t >= len(path_a) + 1 or t >= len(path_b) + 1:
-                        continue
-
+                    # if t >= len(path_a) + 1 or t >= len(path_b) + 1:
+                    #     continue
+ 
                     if pos_a == pos_b and (pos_a is not None) and (pos_b is not None):
                         return {"type": "vertex", "agents": (a_id, b_id), "time": t, "position": pos_a}
                     
