@@ -33,7 +33,7 @@ def get_warehouse_params(layout='default'):
 
       # Setup endpoints. The destination to collect a delivery is one of these endpoints.
       # Create SPARSE endpoints (scattered dots, not entire rows!)
-      endpoints = np.zeros([rows, cols])
+      # endpoints = np.zeros([rows, cols])
       # Place endpoints sparsely - every 4th row and every 6th column creates scattered dots
       # endpoints[1:-1:4,
       #           2:-2:6] = 1  # Very sparse: every 6th column
@@ -53,6 +53,39 @@ def get_warehouse_params(layout='default'):
       endpoints[4:-1:4,
                 1:-2:11] = 0
     
+    elif layout == 'simple':
+      rows, cols = 18, 12
+
+      work_stns = np.zeros([rows, cols])
+      work_stns[1:-1:3,
+                -1] = 1
+      work_stns[1:-1:3,
+                0] = 1
+
+      # Setup shelves
+      # Shelves are purely DECORATIVE. See endpoints for the actual robot destination.
+      shelves = np.zeros([rows, cols])
+      shelves[:,
+              3:-4:4] = 1
+      shelves[:,
+              4:-3:4] = 1
+      
+      # Leave center aisle empty
+      shelves[rows//2 - 1: rows//2 + 1,
+              :] = 0
+      
+      # Dense Endpoint configuration
+      endpoints = np.zeros([rows, cols])
+      endpoints[:,
+                2:-5:4] =1
+      endpoints[:,
+                5:-2:4] = 1
+
+      # Leave center aisle empty
+      endpoints[rows//2 -1: rows//2 + 1,
+                :] = 0
+       
+
     # Simple debug layout with a single chokepoint
     elif layout == 'debug':
       rows, cols = 8, 10
