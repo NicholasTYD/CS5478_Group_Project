@@ -5,6 +5,7 @@ from __future__ import annotations
 import heapq
 from collections import defaultdict
 from dataclasses import dataclass
+from pprint import pprint
 from typing import Dict, List, Optional, Tuple
 
 from pathfinding import GridMap
@@ -66,6 +67,9 @@ class CBSPlanner:
         Algo is either 'astar', 'cbs' or 'shy_cbs'
         '''
 
+        valid_algos = ('astar', 'cbs', 'shy_cbs')
+        assert algo in valid_algos, f'CBSPlanner received wrong argument for algo. Needs to be one of {valid_algos}, got {algo}'
+
         self.all_work_stn_grid_pos = all_work_stn_grid_pos
 
         self.max_time = max_time
@@ -104,7 +108,8 @@ class CBSPlanner:
         shortest_agent_costs: dict[int, int] = {}
         for spec in agent_specs:
             path = self._low_level_search(spec, root_constraints, spec.grid_map, 
-                                          allow_backtrack=self.allow_backtrack)
+                                          allow_backtrack=self.allow_backtrack,
+                                          discount_starting_idles=self.is_shy_cbs)
             if path is None:
                 raise RuntimeError(f"No path found for agent {spec.agent_id} in root planning")
             root_paths[spec.agent_id] = path
@@ -117,7 +122,7 @@ class CBSPlanner:
         root_node = {
             "constraints": root_constraints,
             "paths": root_paths,
-            "cost": self._compute_cost(root_paths, is_shy_cbs=self.is_shy_cbs),
+            "cost": self._compute_cost(root_paths),
         }
 
         # Count conflicts in independent planning (root node)
@@ -127,7 +132,6 @@ class CBSPlanner:
         counter = 0
         heapq.heappush(open_list, (root_node["cost"], counter, root_node))
 
-        # node_mem = list()
         nodes_expanded = 0
         while open_list:
             _, _, node = heapq.heappop(open_list)
@@ -166,7 +170,7 @@ class CBSPlanner:
                             constraint_type="vertex"
                         )
                         new_constraints.add(extra_constraint)
-                        break
+                        # break
 
                     constraint = Constraint(agent_id=agent, time=time, position=pos, constraint_type="vertex")
                     new_constraints.add(constraint)
@@ -185,26 +189,15 @@ class CBSPlanner:
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
                 replanned = self._low_level_search(spec, new_constraints, spec.grid_map, 
-                                                   allow_backtrack=self.allow_backtrack)
+                                                   allow_backtrack=self.allow_backtrack,
+                                                   discount_starting_idles=self.is_shy_cbs)
 
                 if replanned is None:
                     continue
 
-                # if replanned == new_paths[agent]:
-                #     raise
-
-                # if (self._compute_path_cost(replanned) > shortest_agent_costs[agent] * max_path_multiplier_cost):
-                #     continue
-
-                # new_node = (new_constraints, new_paths)
-                # if new_node in node_mem:
-                #     print("TEST!!")
-                #     continue
-                # node_mem.append(new_node)
-
                 new_paths[agent] = replanned
                 counter += 1
-                new_cost = self._compute_cost(new_paths, is_shy_cbs=self.is_shy_cbs)
+                new_cost = self._compute_cost(new_paths)
                 new_node = (
                     new_cost,
                     counter,
@@ -232,7 +225,7 @@ class CBSPlanner:
     # CBS helpers
     # ------------------------------------------------------------------
     def _low_level_search(self, spec: AgentSpec, constraints: set[Constraint], grid_map:GridMap, 
-                          allow_backtrack=False) -> Optional[List[GridPos]]:
+                          allow_backtrack, discount_starting_idles) -> Optional[List[GridPos]]:
         """
         Run constrained A* for a single agent.
         
@@ -309,12 +302,18 @@ class CBSPlanner:
                     
                 neighbor = (nx, ny, nt)
                 tentative_g = g_scores[current] + 1
+                
+                if discount_starting_idles and (dx, dy) == (0, 0) and ((x, y) in self.all_work_stn_grid_pos):
+                    DISCOUNT = 0.0001
+                    tentative_g -= DISCOUNT
+
 
                 if neighbor not in g_scores or tentative_g < g_scores[neighbor]:
                     g_scores[neighbor] = tentative_g
                     came_from[neighbor] = current
                     count += 1
                     priority = tentative_g + self._heuristic((nx, ny), goal)
+
                     heapq.heappush(open_list, (priority, count, neighbor))
 
         return None
@@ -355,9 +354,6 @@ class CBSPlanner:
         current = current_state
         while current in came_from:
             path.append((current[0], current[1]))
-            
-            # if current == came_from[current]:
-            #     print(current, 'test')
             
             current = came_from[current]
 
@@ -443,32 +439,15 @@ class CBSPlanner:
         if time_step < len(path):
             return path[time_step]
         
-
-        # if max_horizon != -1 and (time_step > max_horizon):
-        #     return None
         return path[-1]
-        
-        # post_linger_duration = 2
-        # if post_linger_duration == -1 or (len(path) + post_linger_duration < time_step):
-        #     return path[-1]
-        # return None
 
-    def _compute_cost(self, paths: Dict[int, List[GridPos]], is_shy_cbs=True) -> float:
+    def _compute_cost(self, paths: Dict[int, List[GridPos]]) -> float:
         total = 0
         for path in paths.values():
-            if not is_shy_cbs:
-                total += self._compute_path_cost(path, discount_starting_idles=False)
-            else:
-                starts_from_work_stn = path[0] in self.all_work_stn_grid_pos
-                total += self._compute_path_cost(path, starts_from_work_stn)
+            total += self._compute_path_cost(path)
         return total
     
-    def _compute_path_cost(self, path:List[GridPos], discount_starting_idles=True) -> float:
-        if discount_starting_idles:
-            # Just a tiny discount to make idle nodes just abit more worth to expand first.
-            eps = 0.0001
-            return len(path) - (eps * self._count_consecutive_idles_at_start(path))
-        else:
+    def _compute_path_cost(self, path:List[GridPos]) -> float:
             return len(path)
 
     def _heuristic(self, node: GridPos, goal: GridPos) -> float:

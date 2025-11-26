@@ -279,6 +279,7 @@ class CBSDemo:
         self.num_active = min(num_robots, len(self.work_stn_pos))
         self.allow_backtrack = allow_backtrack
         self.algo = algo
+        self.plans_triggered = 0
         # Number of collisions avoided had robots are allowed to execute their low level search directly without
         # any collision avoidance check. Accumulated everytime CBS is called.
         self.collisions_avoided = 0
@@ -433,7 +434,8 @@ class CBSDemo:
             idx_ptr += 1
 
     def _plan_and_assign_paths(self):
-        planner = CBSPlanner(self.all_work_stn_grid_pos, allow_backtrack=self.allow_backtrack, algo=self.algo)
+        self.plans_triggered += 1
+        planner = CBSPlanner(self.algo, self.all_work_stn_grid_pos, allow_backtrack=self.allow_backtrack)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
@@ -534,8 +536,8 @@ class CBSDemo:
         if not self.metrics_file:
             return
 
-        pickups = [task.pickup_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
-        deliveries = [task.delivered_sim_step for task in self.tasks_created if task.delivered_sim_step is not None]
+        pickups = [task.pickup_sim_step - task.creation_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
+        deliveries = [task.delivered_sim_step - task.creation_sim_step for task in self.tasks_created if task.delivered_sim_step is not None]
         total_orders = len(self.tasks_created)
         completed = len(deliveries)
         pending = total_orders - completed
@@ -565,9 +567,10 @@ class CBSDemo:
         json_metrics = {
             "summary": {
                 'total_grid_time': self._get_grid_time(sim_step, self.steps_per_grid),
-                'total_robot_path_actions': self._count_total_robot_path_actions(),
+                "total_plans_triggered": self.plans_triggered,
                 "collisions_avoided": self.collisions_avoided,
-                "path_combinations_considered": self.pathfind_nodes_expanded,
+                "total_path_combinations_considered": self.pathfind_nodes_expanded,
+                'total_robot_path_actions': self._count_total_robot_path_actions(),
                 "total_orders": total_orders,
                 "orders_completed": completed,
                 "orders_pending": pending,
@@ -631,9 +634,11 @@ class CBSDemo:
             if (len(self.tasks_created) == self.num_total_tasks) and all(task.order_fufilled() for task in self.tasks_created):
                 print("\n✓ All CBS orders delivered. Ending demo early.")
                 print(f'/// Total Grid Time (Sim Steps): {self._get_grid_time(sim_step, self.steps_per_grid)}, ({sim_step}) ///')
+                print(f'/// Total Plans Triggered: {self.plans_triggered} ///')
+                print(f'/// Collision Avoided: {self.collisions_avoided}, Path-Combinations Considered: {self.pathfind_nodes_expanded} ///')
                 print(f'/// Total path finding actions executed by all robots: {self._count_total_robot_path_actions()} ///')
 
-                self._export_metrics(sim_time, min_clearance)
+                self._export_metrics(sim_step, min_clearance)
                 return
             
             time.sleep(self.step_duration)
