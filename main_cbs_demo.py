@@ -110,6 +110,8 @@ class CBSDemoBot:
         self.delivery_task: DeliveryTask | None = None
         self.prev_delivery_task: DeliveryTask | None = None
 
+        self.steps_moved = 0
+
         self._set_pose(self.workstation)
 
     def allocate_new_task(self, delivery_task:DeliveryTask):
@@ -191,6 +193,8 @@ class CBSDemoBot:
         end = np.array(self.schedule[next_segment])
         interp = start + alpha * (end - start)
 
+        # self.steps_moved += alpha
+        # print(alpha)
         self._set_pose(tuple(interp))
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
@@ -231,7 +235,7 @@ class CBSDemo:
     def __init__(self, layout:str = 'default', num_robots: int = 10, 
                  step_duration: float = 0.005, steps_per_grid: int = 10,
                  metrics_file: str | None = None, allow_backtrack=True,
-                 num_total_tasks:int = -1, use_shy_algo=True, seed=42):
+                 num_total_tasks:int = -1, algo='shy_cbs', seed=42):
         if num_robots < 1:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
@@ -274,7 +278,7 @@ class CBSDemo:
         self.metrics_file = metrics_file
         self.num_active = min(num_robots, len(self.work_stn_pos))
         self.allow_backtrack = allow_backtrack
-        self.use_shy_algo = use_shy_algo
+        self.algo = algo
         # Number of collisions avoided had robots are allowed to execute their low level search directly without
         # any collision avoidance check. Accumulated everytime CBS is called.
         self.collisions_avoided = 0
@@ -429,7 +433,7 @@ class CBSDemo:
             idx_ptr += 1
 
     def _plan_and_assign_paths(self):
-        planner = CBSPlanner(self.all_work_stn_grid_pos, allow_backtrack=self.allow_backtrack, use_shy_algo=self.use_shy_algo)
+        planner = CBSPlanner(self.all_work_stn_grid_pos, allow_backtrack=self.allow_backtrack, algo=self.algo)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
@@ -603,6 +607,8 @@ class CBSDemo:
 
             if (len(self.tasks_created) == self.num_total_tasks) and all(task.order_fufilled() for task in self.tasks_created):
                 print("\n✓ All CBS orders delivered. Ending demo early.")
+                # for bot in self.demo_bots:
+                #     print(bot.steps_moved)
                 self._export_metrics(sim_time, min_clearance)
                 return
 
@@ -617,6 +623,12 @@ def _parse_args():
         type=str,
         default='default', 
         help="What layout to use for the warehouse. Accepts 'default', 'debug', 'debug_small' and 'debug_mini'",
+    )
+    parser.add_argument(
+        "--algo",
+        type=str,
+        default='shy_cbs',
+        help="What pathfinding algo to use. Accepts 'shy_cbs' (Default), 'cbs', or 'astar'",
     )
     parser.add_argument(
         "--seed",
@@ -643,16 +655,10 @@ def _parse_args():
         help="How long each time step lasts (Smaller = faster)",
     )
     parser.add_argument(
-        "--allow-backtrack",
+        "--disable-backtrack",
         action='store_true',
         default=False,
-        help="Allow the pathfinding algorithm to generate backtracking paths",
-    )
-    parser.add_argument(
-        "--use-shy-algo",
-        action='store_true',
-        default=False,
-        help="Prevents robots from idling once they make their first move.",
+        help="Disable backtracking - Warning: Mght cause algo to not find a solution",
     )
     parser.add_argument(
         "--num-deliveries",
@@ -677,9 +683,9 @@ if __name__ == "__main__":
         steps_per_grid=args.steps_per_grid,
         step_duration=args.step_duration,
         metrics_file=args.metrics_file,
-        allow_backtrack=args.allow_backtrack,
+        allow_backtrack=not args.disable_backtrack,
         num_total_tasks=args.num_deliveries,
-        use_shy_algo=args.use_shy_algo,
+        algo=args.algo,
         seed=args.seed
     )
     demo.run()

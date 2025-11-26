@@ -61,15 +61,17 @@ class Constraint:
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
-    def __init__(self, all_work_stn_grid_pos:set[GridPos], max_time: int = 200, allow_backtrack=True, use_shy_algo=True):
+    def __init__(self, all_work_stn_grid_pos:set[GridPos], max_time: int = 200, allow_backtrack=True, algo='shy_cbs'):
         self.all_work_stn_grid_pos = all_work_stn_grid_pos
 
         self.max_time = max_time
         self.total_conflicts_resolved = 0
         self.total_nodes_expanded = 0
+
         self.allow_backtrack = allow_backtrack
 
-        self.is_shy_cbs = use_shy_algo
+        self.algo = algo
+        self.is_shy_cbs = algo == 'shy_cbs'
 
     # ------------------------------------------------------------------
     # Public API
@@ -104,6 +106,10 @@ class CBSPlanner:
             root_paths[spec.agent_id] = path
             shortest_agent_costs[spec.agent_id] = self._compute_path_cost(path)
 
+        # Normal a*star doesn't take into account collisions
+        if self.algo == 'astar':
+            return root_paths
+
         root_node = {
             "constraints": root_constraints,
             "paths": root_paths,
@@ -128,7 +134,6 @@ class CBSPlanner:
 
             conflict = self._find_conflict(node["paths"])
             if not conflict:
-                self._find_conflict(node["paths"])
                 self.total_nodes_expanded += nodes_expanded
                 return node["paths"]
             agent_a, agent_b = conflict["agents"]
@@ -292,6 +297,8 @@ class CBSPlanner:
                 # current position is allowed to be waited on, but moving into any previously visited
                 # *different* cell is forbidden.
                 if not allow_backtrack and (dx, dy) != (0, 0):
+                    # This code should be optimized if need be, its quite inefficient,
+                    # but we usually get backtrack to true so thais wouldn't matter right now
                     visited_positions = set(self._reconstruct_path(came_from, current))
                     if (nx, ny) in visited_positions:
                         continue
