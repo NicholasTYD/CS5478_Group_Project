@@ -122,7 +122,7 @@ class CBSPlanner:
             _, _, node = heapq.heappop(open_list)
             nodes_expanded += 1
 
-            if nodes_expanded % 5000 == 0:
+            if nodes_expanded % 10000 == 0:
                 print(f'This iteration of CBS is taking a while... Current path combinations considered: {nodes_expanded}')
 
             conflict = self._find_conflict(node["paths"])
@@ -156,6 +156,7 @@ class CBSPlanner:
                             constraint_type="vertex"
                         )
                         new_constraints.add(extra_constraint)
+                        break
 
                     constraint = Constraint(agent_id=agent, time=time, position=pos, constraint_type="vertex")
                     new_constraints.add(constraint)
