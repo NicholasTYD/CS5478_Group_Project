@@ -231,7 +231,7 @@ class CBSDemo:
     def __init__(self, layout:str = 'default', num_robots: int = 10, 
                  step_duration: float = 0.005, steps_per_grid: int = 10,
                  metrics_file: str | None = None, allow_backtrack=True,
-                 num_total_tasks:int = -1):
+                 num_total_tasks:int = -1, use_shy_algo=True):
         if num_robots < 2:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
@@ -270,6 +270,7 @@ class CBSDemo:
         self.metrics_file = metrics_file
         self.num_active = min(num_robots, len(self.work_stn_pos))
         self.allow_backtrack = allow_backtrack
+        self.use_shy_algo = use_shy_algo
         # Number of collisions avoided had robots are allowed to execute their low level search directly without
         # any collision avoidance check. Accumulated everytime CBS is called.
         self.collisions_avoided = 0
@@ -423,8 +424,8 @@ class CBSDemo:
             self.tasks_created.append(delivery_task)
             idx_ptr += 1
 
-    def _plan_and_assign_paths(self):
-        planner = CBSPlanner(allow_backtrack=self.allow_backtrack)
+    def _plan_and_assign_paths(self, use_shy_algo):
+        planner = CBSPlanner(allow_backtrack=self.allow_backtrack, use_shy_algo=self.use_shy_algo)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
@@ -573,7 +574,7 @@ class CBSDemo:
         min_clearance = math.inf
 
         self._allocate_tasks()
-        self._plan_and_assign_paths()
+        self._plan_and_assign_paths(use_shy_algo=self.use_shy_algo)
 
         while sim_time < max_sim_duration:
             self.collision_checker.check_robot_collisions(sim_step)
@@ -583,7 +584,7 @@ class CBSDemo:
 
             if sim_step % self.steps_per_grid == 0:
                 self._allocate_tasks()
-                self._plan_and_assign_paths()
+                self._plan_and_assign_paths(use_shy_algo=self.use_shy_algo)
 
             for bot in self.demo_bots:
                 bot.act(sim_step)
@@ -638,6 +639,12 @@ def _parse_args():
         help="Allow the pathfinding algorithm to generate backtracking paths",
     )
     parser.add_argument(
+        "--use-shy-algo",
+        action='store_true',
+        default=False,
+        help="Prevents robots from idling once they make their first move.",
+    )
+    parser.add_argument(
         "--num-deliveries",
         type=int,
         default=0,
@@ -662,5 +669,6 @@ if __name__ == "__main__":
         metrics_file=args.metrics_file,
         allow_backtrack=args.allow_backtrack,
         num_total_tasks=args.num_deliveries,
+        use_shy_algo=args.use_shy_algo,
     )
     demo.run()

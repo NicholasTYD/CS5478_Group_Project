@@ -2,7 +2,7 @@
 <robot name="struct">
   <link name="struct_base"/>
 
-  <link name="block_3_0">
+  <link name="block_7_0">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -18,14 +18,14 @@
     </inertial>
 </link>
 
-  <joint name="joint_block_3_0" type="fixed">
+  <joint name="joint_block_7_0" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_3_0"/>
-    <origin xyz="-1.5 -1.5 0.15" rpy="0 0 0"/>
+    <child link="block_7_0"/>
+    <origin xyz="-4.5 -3.5 0.15" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_3_1">
+  <link name="block_7_1">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -41,14 +41,14 @@
     </inertial>
 </link>
 
-  <joint name="joint_block_3_1" type="fixed">
+  <joint name="joint_block_7_1" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_3_1"/>
-    <origin xyz="-0.5 -1.5 0.15" rpy="0 0 0"/>
+    <child link="block_7_1"/>
+    <origin xyz="-3.5 -3.5 0.15" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_3_2">
+  <link name="block_7_2">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -64,14 +64,14 @@
     </inertial>
 </link>
 
-  <joint name="joint_block_3_2" type="fixed">
+  <joint name="joint_block_7_2" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_3_2"/>
-    <origin xyz="0.5 -1.5 0.15" rpy="0 0 0"/>
+    <child link="block_7_2"/>
+    <origin xyz="-2.5 -3.5 0.15" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="block_3_3">
+  <link name="block_7_3">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
@@ -87,10 +87,148 @@
     </inertial>
 </link>
 
-  <joint name="joint_block_3_3" type="fixed">
+  <joint name="joint_block_7_3" type="fixed">
     <parent link="struct_base"/>
-    <child link="block_3_3"/>
-    <origin xyz="1.5 -1.5 0.15" rpy="0 0 0"/>
+    <child link="block_7_3"/>
+    <origin xyz="-1.5 -3.5 0.15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_7_4">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.3"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_7_4" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_4"/>
+    <origin xyz="-0.5 -3.5 0.15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_7_5">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.3"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_7_5" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_5"/>
+    <origin xyz="0.5 -3.5 0.15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_7_6">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.3"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_7_6" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_6"/>
+    <origin xyz="1.5 -3.5 0.15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_7_7">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.3"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_7_7" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_7"/>
+    <origin xyz="2.5 -3.5 0.15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_7_8">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.3"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_7_8" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_8"/>
+    <origin xyz="3.5 -3.5 0.15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="block_7_9">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.3"/>
+      </geometry>
+      <material name="wall">
+        <color rgba="0 0 1 0.1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0"/> <!-- static -->
+      <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+</link>
+
+  <joint name="joint_block_7_9" type="fixed">
+    <parent link="struct_base"/>
+    <child link="block_7_9"/>
+    <origin xyz="4.5 -3.5 0.15" rpy="0 0 0"/>
   </joint>
 
 </robot>

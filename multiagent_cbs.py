@@ -61,11 +61,16 @@ class Constraint:
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
-    def __init__(self, max_time: int = 200, allow_backtrack=True):
+    def __init__(self, max_time: int = 200, allow_backtrack=True, use_shy_algo=True):
         self.max_time = max_time
         self.conflicts_resolved = 0
         self.nodes_expanded = 0
         self.allow_backtrack = allow_backtrack
+        self.use_shy_algo = use_shy_algo
+
+
+        self.allow_idle_after_movement = not use_shy_algo
+        self.reduce_idle_cost = use_shy_algo
 
     # ------------------------------------------------------------------
     # Public API
@@ -93,7 +98,9 @@ class CBSPlanner:
 
         shortest_agent_costs: dict[int, int] = {}
         for spec in agent_specs:
-            path = self._low_level_search(spec, root_constraints, spec.grid_map, self.allow_backtrack)
+            path = self._low_level_search(spec, root_constraints, spec.grid_map, 
+                                          allow_backtrack=self.allow_backtrack, 
+                                          allow_idle_after_movement=self.allow_idle_after_movement)
             if path is None:
                 raise RuntimeError(f"No path found for agent {spec.agent_id} in root planning")
             root_paths[spec.agent_id] = path
@@ -102,7 +109,7 @@ class CBSPlanner:
         root_node = {
             "constraints": root_constraints,
             "paths": root_paths,
-            "cost": self._compute_cost(root_paths),
+            "cost": self._compute_cost(root_paths, reduce_idle_cost=self.reduce_idle_cost),
         }
 
         # Count conflicts in independent planning (root node)
@@ -163,7 +170,9 @@ class CBSPlanner:
 
                 new_paths = dict(node["paths"])
                 spec = agent_map[agent]
-                replanned = self._low_level_search(spec, new_constraints, spec.grid_map, self.allow_backtrack)
+                replanned = self._low_level_search(spec, new_constraints, spec.grid_map, 
+                                                   allow_backtrack=self.allow_backtrack,
+                                                   allow_idle_after_movement=self.allow_idle_after_movement)
 
                 if replanned is None:
                     continue
@@ -182,13 +191,14 @@ class CBSPlanner:
 
                 new_paths[agent] = replanned
                 counter += 1
+                new_cost = self._compute_cost(new_paths, reduce_idle_cost=self.reduce_idle_cost)
                 new_node = (
-                    self._compute_cost(new_paths),
+                    new_cost,
                     counter,
                     {
                         "constraints": new_constraints,
                         "paths": new_paths,
-                        "cost": self._compute_cost(new_paths),
+                        "cost": new_cost,
                     },
                 )
                 if new_node not in open_list:
@@ -208,8 +218,14 @@ class CBSPlanner:
     # ------------------------------------------------------------------
     # CBS helpers
     # ------------------------------------------------------------------
-    def _low_level_search(self, spec: AgentSpec, constraints: set[Constraint], grid_map:GridMap, allow_backtrack=False) -> Optional[List[GridPos]]:
-        """Run constrained A* for a single agent."""
+    def _low_level_search(self, spec: AgentSpec, constraints: set[Constraint], grid_map:GridMap, 
+                          allow_backtrack=False, allow_idle_after_movement=False) -> Optional[List[GridPos]]:
+        """
+        Run constrained A* for a single agent.
+        
+        allow_backtrack: Allows the robot to go back to where it belongs.
+        allow_idle_after_movement: If a agent starts moving, it cannot idle anymore.
+        """
 
         constraint_table = self._build_constraint_table(constraints, spec.agent_id)
 
@@ -247,6 +263,11 @@ class CBSPlanner:
                 return path
 
             for dx, dy in directions:
+                # If argument is set:
+                # Don't allow idling aka (0,0) after agent makes a move that is not (0, 0)
+                if (not allow_idle_after_movement) and (dx, dy) == (0, 0) and (current in came_from):
+                    continue
+                
                 nx, ny = x + dx, y + dy
                 nt = t + 1
 
@@ -417,11 +438,28 @@ class CBSPlanner:
         #     return path[-1]
         # return None
 
-    def _compute_cost(self, paths: Dict[int, List[GridPos]]) -> float:
-        return sum(self._compute_path_cost(path) for path in paths.values())
+    def _compute_cost(self, paths: Dict[int, List[GridPos]], reduce_idle_cost=True) -> float:
+        return sum(self._compute_path_cost(path, reduce_idle_cost) for path in paths.values())
     
-    def _compute_path_cost(self, path:List[GridPos]) -> float:
-        return len(path)
+    def _compute_path_cost(self, path:List[GridPos], reduce_idle_cost=True) -> float:
+        if reduce_idle_cost:
+            # Just a tiny discount to make idle nodes just abit more worth to expand first.
+            eps = 0.0001
+            idle_counts = len(path) - len(set(path))
+            return len(path) - (eps * idle_counts)
+        else:
+            return len(path)
 
     def _heuristic(self, node: GridPos, goal: GridPos) -> float:
         return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
+    
+    def _count_consecutive_idles_at_start(self, lst):
+        if not lst:
+            return 0
+
+        first_element = lst[0]
+        for i, element in enumerate(lst):
+            if first_element != element:
+                return i - 1
+            
+        return len(lst) - 1
