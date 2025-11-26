@@ -61,14 +61,15 @@ class Constraint:
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
-    def __init__(self, max_time: int = 200, allow_backtrack=True, use_shy_algo=True):
+    def __init__(self, all_work_stn_grid_pos:set[GridPos], max_time: int = 200, allow_backtrack=True, use_shy_algo=True):
+        self.all_work_stn_grid_pos = all_work_stn_grid_pos
+
         self.max_time = max_time
         self.total_conflicts_resolved = 0
         self.total_nodes_expanded = 0
         self.allow_backtrack = allow_backtrack
-        self.use_shy_algo = use_shy_algo
 
-        self.discount_starting_idles = use_shy_algo
+        self.is_shy_cbs = use_shy_algo
 
     # ------------------------------------------------------------------
     # Public API
@@ -106,7 +107,7 @@ class CBSPlanner:
         root_node = {
             "constraints": root_constraints,
             "paths": root_paths,
-            "cost": self._compute_cost(root_paths, discount_starting_idles=self.discount_starting_idles),
+            "cost": self._compute_cost(root_paths, is_shy_cbs=self.is_shy_cbs),
         }
 
         # Count conflicts in independent planning (root node)
@@ -194,7 +195,7 @@ class CBSPlanner:
 
                 new_paths[agent] = replanned
                 counter += 1
-                new_cost = self._compute_cost(new_paths, discount_starting_idles=self.discount_starting_idles)
+                new_cost = self._compute_cost(new_paths, is_shy_cbs=self.is_shy_cbs)
                 new_node = (
                     new_cost,
                     counter,
@@ -441,8 +442,15 @@ class CBSPlanner:
         #     return path[-1]
         # return None
 
-    def _compute_cost(self, paths: Dict[int, List[GridPos]], discount_starting_idles=True) -> float:
-        return sum(self._compute_path_cost(path, discount_starting_idles) for path in paths.values())
+    def _compute_cost(self, paths: Dict[int, List[GridPos]], is_shy_cbs=True) -> float:
+        total = 0
+        for path in paths.values():
+            if not is_shy_cbs:
+                total += self._compute_path_cost(path, discount_starting_idles=False)
+            else:
+                starts_from_work_stn = path[0] in self.all_work_stn_grid_pos
+                total += self._compute_path_cost(path, starts_from_work_stn)
+        return total
     
     def _compute_path_cost(self, path:List[GridPos], discount_starting_idles=True) -> float:
         if discount_starting_idles:

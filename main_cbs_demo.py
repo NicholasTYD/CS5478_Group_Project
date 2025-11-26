@@ -264,6 +264,9 @@ class CBSDemo:
             endpoints_pos=self.all_endpoints_pos,
             work_stns_pos=self.work_stn_pos,
         )
+        self.all_work_stn_grid_pos = set([
+            self.default_grid_map.world_to_grid(pos[0], pos[1]) for pos in self.work_stn_pos
+        ])
 
         self.task_rng = np.random.default_rng(seed=seed)
         self.step_duration = max(step_duration, self.MIN_STEP_DURATION)
@@ -426,7 +429,7 @@ class CBSDemo:
             idx_ptr += 1
 
     def _plan_and_assign_paths(self):
-        planner = CBSPlanner(allow_backtrack=self.allow_backtrack, use_shy_algo=self.use_shy_algo)
+        planner = CBSPlanner(self.all_work_stn_grid_pos, allow_backtrack=self.allow_backtrack, use_shy_algo=self.use_shy_algo)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
         if not pathfinding_needed:
