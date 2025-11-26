@@ -61,7 +61,11 @@ class Constraint:
 class CBSPlanner:
     """Simple implementation of the standard CBS algorithm."""
 
-    def __init__(self, all_work_stn_grid_pos:set[GridPos], max_time: int = 200, allow_backtrack=True, algo='shy_cbs'):
+    def __init__(self, algo, all_work_stn_grid_pos:set[GridPos], max_time: int = 200, allow_backtrack=True):
+        '''
+        Algo is either 'astar', 'cbs' or 'shy_cbs'
+        '''
+
         self.all_work_stn_grid_pos = all_work_stn_grid_pos
 
         self.max_time = max_time
@@ -462,7 +466,7 @@ class CBSPlanner:
     def _compute_path_cost(self, path:List[GridPos], discount_starting_idles=True) -> float:
         if discount_starting_idles:
             # Just a tiny discount to make idle nodes just abit more worth to expand first.
-            eps = 0.00001
+            eps = 0.0001
             return len(path) - (eps * self._count_consecutive_idles_at_start(path))
         else:
             return len(path)

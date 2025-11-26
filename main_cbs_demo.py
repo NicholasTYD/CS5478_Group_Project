@@ -110,7 +110,7 @@ class CBSDemoBot:
         self.delivery_task: DeliveryTask | None = None
         self.prev_delivery_task: DeliveryTask | None = None
 
-        self.steps_moved = 0
+        self.steps_acted = 0
 
         self._set_pose(self.workstation)
 
@@ -193,8 +193,8 @@ class CBSDemoBot:
         end = np.array(self.schedule[next_segment])
         interp = start + alpha * (end - start)
 
-        # self.steps_moved += alpha
-        # print(alpha)
+        self.steps_acted += 1
+
         self._set_pose(tuple(interp))
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
@@ -426,7 +426,7 @@ class CBSDemo:
             endpoint = Endpoint(self.all_endpoints_pos[chosen_endpoints[idx_ptr]])
             
             delivery_task = DeliveryTask(
-                order_id=idx_ptr, endpoint=endpoint, workstation=bot.workstation, curr_sim_step=0
+                order_id=len(self.tasks_created) + 1, endpoint=endpoint, workstation=bot.workstation, curr_sim_step=0
             )
             bot.allocate_new_task(delivery_task)
             self.tasks_created.append(delivery_task)
@@ -505,8 +505,32 @@ class CBSDemo:
     
     def from_sim_step_to_time(self, sim_step:int, step_duration:float):
         return sim_step * step_duration
-
-    def _export_metrics(self, total_duration: float, min_clearance: float):
+    
+    def _count_path_actions(self, bot:CBSDemoBot):
+        '''
+        Count number of actual path actions a robot has executed 
+        (Sometimes a robot might not fully finish its scheudle before having allocated 
+        a new schedule due to algorithm replans)
+        '''
+        return round(bot.steps_acted / self.steps_per_grid)
+    
+    def _count_total_robot_path_actions(self):
+        '''
+        Count number of actual path actions all robots has executed
+        (Sometimes a robot might not fully finish its scheudle before having allocated 
+        a new schedule due to algorithm replans)
+        '''
+        return sum([self._count_path_actions(bot) for bot in self.demo_bots])
+    
+    def _get_grid_time(self, sim_step: int, steps_per_grid:int):
+        '''
+        Count the time in terms of grid time - The maximum number of tiles a robot 
+        can travel. This provides a standardized frame of measurement that is not affected
+        by 'steps-per-grid' or 'step-duration'
+        '''
+        return round(sim_step / steps_per_grid)
+    
+    def _export_metrics(self, sim_step: int, min_clearance: float):
         if not self.metrics_file:
             return
 
@@ -540,12 +564,14 @@ class CBSDemo:
 
         json_metrics = {
             "summary": {
+                'total_grid_time': self._get_grid_time(sim_step, self.steps_per_grid),
+                'total_robot_path_actions': self._count_total_robot_path_actions(),
+                "collisions_avoided": self.collisions_avoided,
+                "path_combinations_considered": self.pathfind_nodes_expanded,
                 "total_orders": total_orders,
                 "orders_completed": completed,
                 "orders_pending": pending,
-                "collisions_avoided": self.collisions_avoided,
-                "path_combinations_considered": self.pathfind_nodes_expanded,
-                "total_sim_steps_for_all_orders": round(total_duration, 4),
+                "total_sim_steps": sim_step,
                 "avg_pickup_sim_steps": round(sum(pickups) / len(pickups), 4) if pickups else None,
                 "avg_delivery_sim_steps": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
                 "min_clearance": round(min_clearance, 4) if not math.isinf(min_clearance) else None,
@@ -554,6 +580,7 @@ class CBSDemo:
                 "num_robot_robot_collisions": len(rr_collisions),
                 "num_robot_obstacle_collisions": len(ro_collisions),
             },
+            "tiles_moved_by_robot_id": {bot.body_id: self._count_path_actions(bot) for bot in self.demo_bots},
             "orders": order_details,
             "robot_robot_collisions": rr_collisions,
             "robot_obstacle_collisions": ro_collisions,
@@ -598,19 +625,20 @@ class CBSDemo:
                 bot.act(sim_step)
             p.stepSimulation()
 
-            time.sleep(self.step_duration)
-            sim_time += self.step_duration
-            sim_step += 1
-
             current_clearance = self._pairwise_clearance()
             min_clearance = min(min_clearance, current_clearance)
 
             if (len(self.tasks_created) == self.num_total_tasks) and all(task.order_fufilled() for task in self.tasks_created):
                 print("\n✓ All CBS orders delivered. Ending demo early.")
-                # for bot in self.demo_bots:
-                #     print(bot.steps_moved)
+                print(f'/// Total Grid Time (Sim Steps): {self._get_grid_time(sim_step, self.steps_per_grid)}, ({sim_step}) ///')
+                print(f'/// Total path finding actions executed by all robots: {self._count_total_robot_path_actions()} ///')
+
                 self._export_metrics(sim_time, min_clearance)
                 return
+            
+            time.sleep(self.step_duration)
+            sim_time += self.step_duration
+            sim_step += 1
 
         print("\n✓ CBS demonstration finished. Close the PyBullet window to exit.")
         self._export_metrics(sim_time, min_clearance)
