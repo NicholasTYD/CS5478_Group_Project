@@ -177,8 +177,10 @@ class CBSDemoBot:
         if self.schedule is None:
             return
         
+        # If you don't do this the robot will idle for 1 step before moving according to its schedule
+        # Will cause collisions if that happens.
         if self.schedule_step_start is None:
-            self.schedule_step_start = sim_step
+            self.schedule_step_start = sim_step - 1
         sim_steps_since_schedule_start = sim_step - self.schedule_step_start 
         
         segment = sim_steps_since_schedule_start // self.steps_per_grid
@@ -572,8 +574,8 @@ class CBSDemo:
 
         min_clearance = math.inf
 
-        self._allocate_tasks()
-        self._plan_and_assign_paths()
+        # self._allocate_tasks()
+        # self._plan_and_assign_paths()
 
         while sim_time < max_sim_duration:
             self.collision_checker.check_robot_collisions(sim_step)
