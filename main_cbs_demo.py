@@ -60,13 +60,13 @@ class Endpoint:
             p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0])
         elif state == 'uncollected':
             # Orange
-            p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 0.6, 0.0, 0.9])
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 0.6, 0.0, 0.7])
         elif state == 'collected':
             # Yellow
-            p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 1, 0, 0.9])
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[1, 1, 0, 0.7])
         elif state == 'completed':
             # Green
-            p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0.9])
+            p.changeVisualShape(self.obj_id, -1, rgbaColor=[0, 1, 0, 0.7])
         else:
             raise Exception(f"State {state} not valid!")
         
@@ -424,7 +424,7 @@ class CBSDemo:
             self.tasks_created.append(delivery_task)
             idx_ptr += 1
 
-    def _plan_and_assign_paths(self, use_shy_algo):
+    def _plan_and_assign_paths(self):
         planner = CBSPlanner(allow_backtrack=self.allow_backtrack, use_shy_algo=self.use_shy_algo)
 
         pathfinding_needed = any(bot.requires_pathfinding_schedule() for bot in self.demo_bots)
@@ -451,9 +451,9 @@ class CBSDemo:
 
 
         planned_paths = planner.plan_paths(agent_specs)
-        path_conflicts = planner.conflicts_resolved
+        path_conflicts = planner.total_conflicts_resolved
         self.collisions_avoided += path_conflicts
-        self.pathfind_nodes_expanded += planner.nodes_expanded
+        self.pathfind_nodes_expanded += planner.total_nodes_expanded
 
         idx_ptr = 0
         for bot in self.demo_bots:
@@ -574,7 +574,7 @@ class CBSDemo:
         min_clearance = math.inf
 
         self._allocate_tasks()
-        self._plan_and_assign_paths(use_shy_algo=self.use_shy_algo)
+        self._plan_and_assign_paths()
 
         while sim_time < max_sim_duration:
             self.collision_checker.check_robot_collisions(sim_step)
@@ -584,7 +584,7 @@ class CBSDemo:
 
             if sim_step % self.steps_per_grid == 0:
                 self._allocate_tasks()
-                self._plan_and_assign_paths(use_shy_algo=self.use_shy_algo)
+                self._plan_and_assign_paths()
 
             for bot in self.demo_bots:
                 bot.act(sim_step)

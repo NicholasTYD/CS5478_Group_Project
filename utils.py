@@ -125,6 +125,8 @@ def get_warehouse_params(layout='default'):
       work_stns = np.zeros([rows, cols])
       work_stns[0,
                 0:2] = 1
+      # work_stns[1,
+      #           2] = 1
       
       shelves = np.zeros([rows, cols])
       shelves[2,
