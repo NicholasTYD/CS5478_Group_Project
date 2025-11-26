@@ -23,8 +23,6 @@ from collisions import CBSCollisionsTracker
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-rng = np.random.default_rng(seed=7)
-
 class Endpoint:
     def __init__(self, position:Tuple[float, float, float], state='hidden'):
         self.obj_id = self._create_endpoint_marker(position)
@@ -231,8 +229,8 @@ class CBSDemo:
     def __init__(self, layout:str = 'default', num_robots: int = 10, 
                  step_duration: float = 0.005, steps_per_grid: int = 10,
                  metrics_file: str | None = None, allow_backtrack=True,
-                 num_total_tasks:int = -1, use_shy_algo=True):
-        if num_robots < 2:
+                 num_total_tasks:int = -1, use_shy_algo=True, seed=42):
+        if num_robots < 1:
             raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
         self.physics_client = p.connect(p.GUI)
@@ -265,6 +263,7 @@ class CBSDemo:
             work_stns_pos=self.work_stn_pos,
         )
 
+        self.task_rng = np.random.default_rng(seed=seed)
         self.step_duration = max(step_duration, self.MIN_STEP_DURATION)
         self.steps_per_grid = steps_per_grid
         self.metrics_file = metrics_file
@@ -405,7 +404,7 @@ class CBSDemo:
         if num_tasks_to_create <= 0:
             return
 
-        chosen_endpoints = rng.choice(len(self.all_endpoints_pos), size=num_tasks_to_create, replace=False)
+        chosen_endpoints = self.task_rng.choice(len(self.all_endpoints_pos), size=num_tasks_to_create, replace=True)
 
         idx_ptr = 0
         for bot in self.demo_bots:
@@ -615,6 +614,12 @@ def _parse_args():
         help="What layout to use for the warehouse. Accepts 'default', 'debug', 'debug_small' and 'debug_mini'",
     )
     parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Seed for delivery task creation.",
+    )
+    parser.add_argument(
         "--robots",
         type=int,
         default=12,
@@ -670,5 +675,6 @@ if __name__ == "__main__":
         allow_backtrack=args.allow_backtrack,
         num_total_tasks=args.num_deliveries,
         use_shy_algo=args.use_shy_algo,
+        seed=args.seed
     )
     demo.run()

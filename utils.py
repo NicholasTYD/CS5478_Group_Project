@@ -137,6 +137,47 @@ def get_warehouse_params(layout='default'):
       endpoints = np.zeros([rows, cols])
       endpoints[-1,
                 0:4] = 1
+      
+    elif layout == 'tiny':
+      rows, cols = 4, 4
+
+      work_stns = np.zeros([rows, cols])
+      work_stns[0,
+                0:4] = 1
+      
+      shelves = np.zeros([rows, cols])
+      shelves[2,
+              0:4] = 1
+      
+      endpoints = np.zeros([rows, cols])
+      endpoints[1,
+                0:4] = 1
+      
+    elif layout == 'twirl':
+      rows, cols = 4, 4
+
+      work_stns = np.zeros([rows, cols])
+      work_stns[0, 1] = 1
+      work_stns[1, 3] = 1
+      work_stns[2, 0] = 1
+      work_stns[3, 2] = 1
+      
+      shelves = np.zeros([rows, cols])
+      shelves[0, 0] = 1
+      shelves[0, 3] = 1
+      shelves[3, 0] = 1
+      shelves[3, 3] = 1
+
+      shelves[0, 2] = 1
+      shelves[1, 0] = 1
+      shelves[2, 3] = 1
+      shelves[3, 1] = 1
+      
+      endpoints = np.zeros([rows, cols])
+      endpoints[1, 1] = 1
+      endpoints[1, 2] = 1
+      endpoints[2, 1] = 1
+      endpoints[2, 2] = 1
 
     else:
         raise Exception("Warehouse params layout not valid!")
