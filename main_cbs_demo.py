@@ -147,7 +147,7 @@ class CBSDemoBot:
         if np.array_equal(self.goal_pos, self.delivery_task.endpoint.get_world_pos_2d()) and self._goal_reached():
             self.schedule = None
             logger.info(
-                "COLLECTED (CBS): order %s picked up by at %s (t=%.2fs), sim step=%i",
+                "COLLECTED: order %s picked up by at %s (t=%.2fs), sim step=%i",
                 self.delivery_task.order_id,
                 np.round(self.delivery_task.endpoint.get_world_pos_2d(), 2),
                 sim_time,
@@ -162,7 +162,7 @@ class CBSDemoBot:
         if np.array_equal(self.goal_pos, self.workstation) and self._goal_reached():
             self.schedule = None
             logger.info(
-                "DELIVERED (CBS): order %s returned to workstation at t=%.2fs, sim step=%i",
+                "DELIVERED: order %s returned to workstation at t=%.2fs, sim step=%i",
                 self.delivery_task.order_id,
                 sim_time,
                 sim_step
@@ -236,8 +236,8 @@ class CBSDemo:
                  step_duration: float = 0.005, steps_per_grid: int = 10,
                  metrics_file: str | None = None, allow_backtrack=True,
                  num_total_tasks:int = -1, algo='shy_cbs', seed=42):
-        if num_robots < 1:
-            raise ValueError("CBS demo needs at least two robots to illustrate coordination")
+        # if num_robots < 1:
+        #     raise ValueError("CBS demo needs at least two robots to illustrate coordination")
 
         self.physics_client = p.connect(p.GUI)
         p.setGravity(0, 0, -10)
@@ -286,7 +286,7 @@ class CBSDemo:
         # Number of pathfinding combinations considered by CBS
         self.pathfind_nodes_expanded = 0
 
-        logger.info("Initializing CBS demo with %s robots", self.num_active)
+        logger.info(f"Initializing {self.algo} demo with %s robots", self.num_active)
 
         self.active_robot_indices = list(range(self.num_active))
         self.body_ids = self._spawn_bodies()
@@ -480,8 +480,8 @@ class CBSDemo:
 
             idx_ptr += 1
 
-        logger.info("CBS plans generated successfully for %s robots", len(self.demo_bots))
-        logger.info(f"Total collisions avoided by CBS: {self.collisions_avoided}, Path-combinations considered: {self.pathfind_nodes_expanded}")
+        logger.info(f"{self.algo} plans generated successfully for %s robots", len(self.demo_bots))
+        logger.info(f"Total collisions avoided by {self.algo}: {self.collisions_avoided}, Path-combinations considered: {self.pathfind_nodes_expanded}")
 
     def _load_camera(self):
         p.resetDebugVisualizerCamera(
@@ -602,10 +602,10 @@ class CBSDemo:
         sim_step: int = 0
 
         print("\n" + "🏭 " * 10)
-        print("CBS DEMO - SMALL ROBOT FLEET")
+        print(f"{self.algo} DEMO - SMALL ROBOT FLEET")
         print("🏭 " * 10 + "\n")
         print(f"Robots participating: {self.num_active}")
-        print(f"CBS step duration: {self.step_duration:.2f}s")
+        print(f"{self.algo} step duration: {self.step_duration:.2f}s")
         print("Orders:")
         print("\nWatching collision-free trajectories...\n")
 
@@ -632,7 +632,7 @@ class CBSDemo:
             min_clearance = min(min_clearance, current_clearance)
 
             if (len(self.tasks_created) == self.num_total_tasks) and all(task.order_fufilled() for task in self.tasks_created):
-                print("\n✓ All CBS orders delivered. Ending demo early.")
+                print(f"\n✓ All {self.algo} orders delivered. Ending demo early.")
                 print(f'/// Total Grid Time (Sim Steps): {self._get_grid_time(sim_step, self.steps_per_grid)}, ({sim_step}) ///')
                 print(f'/// Total Plans Triggered: {self.plans_triggered} ///')
                 print(f'/// Collision Avoided: {self.collisions_avoided}, Path-Combinations Considered: {self.pathfind_nodes_expanded} ///')
@@ -645,12 +645,12 @@ class CBSDemo:
             sim_time += self.step_duration
             sim_step += 1
 
-        print("\n✓ CBS demonstration finished. Close the PyBullet window to exit.")
+        print(f"\n✓ {self.algo} demonstration finished. Close the PyBullet window to exit.")
         self._export_metrics(sim_time, min_clearance)
 
 
 def _parse_args():
-    parser = argparse.ArgumentParser(description="Run the CBS warehouse demo")
+    parser = argparse.ArgumentParser(description="Run the warehouse demo")
     parser.add_argument(
         "--layout",
         type=str,

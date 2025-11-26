@@ -138,7 +138,7 @@ class CBSPlanner:
             nodes_expanded += 1
 
             if nodes_expanded % 10000 == 0:
-                print(f'This iteration of CBS is taking a while... Current path combinations considered: {nodes_expanded}')
+                print(f'This iteration of {self.algo} is taking a while... Current path combinations considered: {nodes_expanded}')
 
             conflict = self._find_conflict(node["paths"])
             if not conflict:
@@ -212,7 +212,7 @@ class CBSPlanner:
                 else:
                     pass
 
-        raise RuntimeError("CBS failed to find a conflict-free solution")
+        raise RuntimeError(f"{self.algo} failed to find a conflict-free solution")
 
     def grid_path_to_world(self, path: List[GridPos], grid_map:GridMap) -> List[Tuple[float, float]]:
         """Helper to convert grid indices back into world coordinates."""
