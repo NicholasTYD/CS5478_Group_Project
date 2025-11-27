@@ -118,27 +118,28 @@ def get_warehouse_params(layout='default'):
       endpoints[-1,
                 0:4] = 1
       
-    # Super small layout (2 robots max) for really simple tests
-    elif layout == 'debug_mini':
+    elif layout == 'swirl':
       rows, cols = 4, 4
 
       work_stns = np.zeros([rows, cols])
       work_stns[0,
                 0:2] = 1
-      # work_stns[1,
-      #           2] = 1
+      work_stns[1,
+                2] = 1
       
       shelves = np.zeros([rows, cols])
+      shelves[0,3] = 1
+      shelves[1,3] = 1
       shelves[2,
               1:] = 1
-      shelves[0:2,
+      shelves[0:1,
               2] = 1
       
       endpoints = np.zeros([rows, cols])
       endpoints[-1,
-                0:4] = 1
+                0:3] = 1
       
-    elif layout == 'tiny':
+    elif layout == 'line':
       rows, cols = 4, 4
 
       work_stns = np.zeros([rows, cols])
@@ -180,7 +181,7 @@ def get_warehouse_params(layout='default'):
       endpoints[2, 2] = 1
 
     # Like twirl but with 8 workstations instead
-    elif layout == 'twirl_congested':
+    elif layout == 'circle':
       rows, cols = 4, 4
 
       work_stns = np.zeros([rows, cols])

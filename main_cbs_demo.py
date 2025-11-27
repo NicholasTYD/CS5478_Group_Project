@@ -344,7 +344,7 @@ class CBSDemo:
             self.endpoints_map,
             "assets/warehouse/endpoints.urdf",
             grid_z=0.3,
-            box_color=(0, 0, 1, 0.1),
+            box_color=(0, 0, 1, 0.2),
             has_collison=False,
         )
 
@@ -655,7 +655,7 @@ def _parse_args():
         "--layout",
         type=str,
         default='default', 
-        help="What layout to use for the warehouse. Accepts 'default', 'debug', 'debug_small' and 'debug_mini'",
+        help="What layout to use for the warehouse. Accepts 'default', 'simple', 'twirl', 'circle', 'debug', 'debug_small', 'swirl', 'line'",
     )
     parser.add_argument(
         "--algo",
@@ -672,8 +672,8 @@ def _parse_args():
     parser.add_argument(
         "--robots",
         type=int,
-        default=12,
-        help="Number of robots to include in the demo (default: 6)",
+        default=999,
+        help="Number of robots to include in the demo",
     )
     parser.add_argument(
         "--steps-per-grid",
