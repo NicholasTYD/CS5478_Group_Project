@@ -111,8 +111,11 @@ class CBSDemoBot:
         self.prev_delivery_task: DeliveryTask | None = None
 
         self.steps_acted = 0
+        self.steps_acted_idle_in_work_stn = 0
 
-        self._set_pose(self.workstation)
+        self.curr_interp = self.workstation
+
+        self._set_pose(self.curr_interp)
 
     def allocate_new_task(self, delivery_task:DeliveryTask):
         self.delivery_task = delivery_task
@@ -189,13 +192,20 @@ class CBSDemoBot:
         alpha = (sim_steps_since_schedule_start % self.steps_per_grid) / self.steps_per_grid
 
         start = np.array(self.schedule[segment])
-        next_segment = min(segment + 1, len(self.schedule) - 1) # Prevent index out of bounds
-        end = np.array(self.schedule[next_segment])
+        next_segment = segment + 1
+        end = np.array(self.schedule[min(segment + 1, len(self.schedule) - 1)]) # Prevent index out of bounds
         interp = start + alpha * (end - start)
 
         self.steps_acted += 1
 
-        self._set_pose(tuple(interp))
+        # If the schedule specifies idling in workstation. This code is a rough fix for some off by one related interp counting.
+        if alpha == 0 and \
+                np.allclose(self.schedule[segment - 1], self.workstation) \
+                and np.allclose(self.schedule[next_segment - 1], self.workstation):
+            self.steps_acted_idle_in_work_stn += self.steps_per_grid
+
+        self.curr_interp = tuple(interp)
+        self._set_pose(self.curr_interp)
 
     def _set_pose(self, xy_pos: Tuple[float, float]):
         p.resetBasePositionAndOrientation(
@@ -212,18 +222,8 @@ class CBSDemoBot:
         return pos_3d[:2]
     
     def _goal_reached(self):
-        # Target reached if robot is within 0.01 cell (1cm) of goal (Same as default course project)
-        # This is for dealing with rounding errors when comparing grid pos and robot world pos.
-        # Technically can pass in the grid map but 
-        GOAL_TOLERANCE = 0.01
-
-
-        robot_xy_pos = np.array(self.get_world_pos_2d())
-        goal_xy_pos = self.goal_pos[0], self.goal_pos[1]
-    
-        diff = robot_xy_pos - goal_xy_pos
-        dist_diff_squared = np.dot(diff, diff)
-        return dist_diff_squared < (GOAL_TOLERANCE * GOAL_TOLERANCE) 
+        # Cannot compare robot world pos because will have rounding error
+        return np.array_equal(self.curr_interp, self.goal_pos)
 
 
 class CBSDemo:
@@ -514,8 +514,22 @@ class CBSDemo:
         (Sometimes a robot might not fully finish its scheudle before having allocated 
         a new schedule due to algorithm replans)
         '''
+        assert bot.steps_acted % self.steps_per_grid == 0, \
+            f"Check DemoBot steps_acted code, got steps: {bot.steps_acted} not in multiples of grid. Prob some off by one erorr"
+
         return round(bot.steps_acted / self.steps_per_grid)
     
+    def _count_sched_idle_acts_in_work_stn(self, bot:CBSDemoBot):
+        '''
+        Count number of actual scheduled idles a robot has executed 
+        (Sometimes a robot might not fully finish its scheudle before having allocated 
+        a new schedule due to algorithm replans)
+        '''
+        assert bot.steps_acted_idle_in_work_stn % self.steps_per_grid == 0, \
+            f"Check DemoBot steps_acted code, got {bot.steps_acted_idle_in_work_stn} not in multiples of grid" \
+            f"Prob some off by one error"
+        return round(bot.steps_acted_idle_in_work_stn / self.steps_per_grid)
+
     def _count_total_robot_path_actions(self):
         '''
         Count number of actual path actions all robots has executed
@@ -523,24 +537,32 @@ class CBSDemo:
         a new schedule due to algorithm replans)
         '''
         return sum([self._count_path_actions(bot) for bot in self.demo_bots])
-    
-    def _get_grid_time(self, sim_step: int, steps_per_grid:int):
+
+    def _count_total_sched_idle_acts_in_work_stn(self):
         '''
-        Count the time in terms of grid time - The maximum number of tiles a robot 
-        can travel. This provides a standardized frame of measurement that is not affected
+        Count number of actual scheduled idles a robot has executed 
+        (Sometimes a robot might not fully finish its scheudle before having allocated 
+        a new schedule due to algorithm replans)
+        '''
+        return sum([self._count_sched_idle_acts_in_work_stn(bot) for bot in self.demo_bots])
+    
+    
+    def _get_grid_unit(self, step: int, steps_per_grid:int):
+        '''
+        Count the in terms of grid units - This provides a standardized frame of measurement that is not affected
         by 'steps-per-grid' or 'step-duration'
         '''
-        return round(sim_step / steps_per_grid)
+        return round(step / steps_per_grid)
     
     def _export_metrics(self, sim_step: int, min_clearance: float):
         if not self.metrics_file:
             return
 
         order_to_pickups = [task.pickup_sim_step - task.creation_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
-        order_to_pickups_grid_times = [self._get_grid_time(steps, self.steps_per_grid) for steps in  order_to_pickups]
+        order_to_pickups_grid_times = [self._get_grid_unit(steps, self.steps_per_grid) for steps in  order_to_pickups]
             
         order_to_deliverys = [task.delivered_sim_step - task.creation_sim_step for task in self.tasks_created if task.delivered_sim_step is not None]
-        order_to_deliverys_grid_times = [self._get_grid_time(steps, self.steps_per_grid) for steps in  order_to_deliverys]
+        order_to_deliverys_grid_times = [self._get_grid_unit(steps, self.steps_per_grid) for steps in  order_to_deliverys]
 
         total_orders = len(self.tasks_created)
         completed = len(order_to_deliverys)
@@ -570,11 +592,12 @@ class CBSDemo:
 
         json_metrics = {
             "summary": {
-                'total_grid_time': self._get_grid_time(sim_step, self.steps_per_grid),
+                'total_grid_time': self._get_grid_unit(sim_step, self.steps_per_grid),
                 "total_plans_triggered": self.plans_triggered,
                 "collisions_avoided": self.collisions_avoided,
                 "total_path_combinations_considered": self.pathfind_nodes_expanded,
                 'total_robot_path_actions': self._count_total_robot_path_actions(),
+                'total_path_sched_idle_actions_in_work_stn': self._count_total_sched_idle_acts_in_work_stn(),
                 "total_orders": total_orders,
                 "orders_completed": completed,
                 "orders_pending": pending,
@@ -588,10 +611,12 @@ class CBSDemo:
                 "num_robot_obstacle_collisions": len(ro_collisions),
             },
             "tiles_moved_by_robot_id": {bot.body_id: self._count_path_actions(bot) for bot in self.demo_bots},
+            "tiles_sched_idle_actions_in_work_stn_by_robot_id": {
+                bot.body_id: self._count_sched_idle_acts_in_work_stn(bot) for bot in self.demo_bots
+            },
             "orders": order_details,
             "robot_robot_collisions": rr_collisions,
             "robot_obstacle_collisions": ro_collisions,
-
         }
 
         with open(self.metrics_file, "w") as jsonfile:
@@ -637,10 +662,11 @@ class CBSDemo:
 
             if (len(self.tasks_created) == self.num_total_tasks) and all(task.order_fufilled() for task in self.tasks_created):
                 print(f"\n✓ All {self.algo} orders delivered. Ending demo early.")
-                print(f'/// Total Grid Time (Sim Steps): {self._get_grid_time(sim_step, self.steps_per_grid)}, ({sim_step}) ///')
+                print(f'/// Total Grid Time (Sim Steps): {self._get_grid_unit(sim_step, self.steps_per_grid)}, ({sim_step}) ///')
                 print(f'/// Total Plans Triggered: {self.plans_triggered} ///')
                 print(f'/// Collision Avoided: {self.collisions_avoided}, Path-Combinations Considered: {self.pathfind_nodes_expanded} ///')
                 print(f'/// Total path finding actions executed by all robots: {self._count_total_robot_path_actions()} ///')
+                print(f'/// Total scheduled idle actions in workstation executed by all robots: {self._count_total_sched_idle_acts_in_work_stn()} ///')
 
                 self._export_metrics(sim_step, min_clearance)
                 return
