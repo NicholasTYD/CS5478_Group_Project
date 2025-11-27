@@ -536,10 +536,14 @@ class CBSDemo:
         if not self.metrics_file:
             return
 
-        pickups = [task.pickup_sim_step - task.creation_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
-        deliveries = [task.delivered_sim_step - task.creation_sim_step for task in self.tasks_created if task.delivered_sim_step is not None]
+        order_to_pickups = [task.pickup_sim_step - task.creation_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
+        order_to_pickups_grid_times = [self._get_grid_time(steps, self.steps_per_grid) for steps in  order_to_pickups]
+            
+        order_to_deliverys = [task.delivered_sim_step - task.creation_sim_step for task in self.tasks_created if task.delivered_sim_step is not None]
+        order_to_deliverys_grid_times = [self._get_grid_time(steps, self.steps_per_grid) for steps in  order_to_deliverys]
+
         total_orders = len(self.tasks_created)
-        completed = len(deliveries)
+        completed = len(order_to_deliverys)
         pending = total_orders - completed
 
         rr_collisions = self.collision_checker.get_rr_collision_records(as_list_of_dicts=True)
@@ -575,8 +579,8 @@ class CBSDemo:
                 "orders_completed": completed,
                 "orders_pending": pending,
                 "total_sim_steps": sim_step,
-                "avg_pickup_sim_steps": round(sum(pickups) / len(pickups), 4) if pickups else None,
-                "avg_delivery_sim_steps": round(sum(deliveries) / len(deliveries), 4) if deliveries else None,
+                "avg_pickup_grid_time": round(sum(order_to_pickups_grid_times) / len(order_to_pickups_grid_times), 4),
+                "avg_delivery_grid_time": round(sum(order_to_deliverys_grid_times) / len(order_to_deliverys_grid_times), 4),
                 "min_clearance": round(min_clearance, 4) if not math.isinf(min_clearance) else None,
                 "num_robots": self.num_active,
                 "step_duration": self.step_duration,
