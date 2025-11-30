@@ -2,7 +2,18 @@
 
 A simulation of a autonomous warehouse with multiple robot agents and continuously streaming deliveries, to simulate the Multi-Agent Pickup and Delivery (MAPD) problem.
 
-This simulation implements Conflict-Based Search (CBS) and customized variant of CBS (Shy-CBS).
+This simulation implements Conflict-Based Search (CBS) and customized variant of CBS (Shy-CBS), offering collision avoidance that work in a MAPD setting.
+
+# Pathfinding in action:
+
+Successful collision avoidance in chokepoints, even when many agents are present:
+
+https://github.com/user-attachments/assets/1bc50e76-50d7-424f-b59a-7ca348a96edb
+
+Algorithm works for long, narrow corridors as well:
+
+https://github.com/user-attachments/assets/312b803b-10f8-41bb-8ce5-6def446c0c6a
+
 
 # Setup
 
