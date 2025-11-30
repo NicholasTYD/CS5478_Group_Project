@@ -11,6 +11,7 @@ import math
 import time
 from dataclasses import dataclass
 from typing import List, Tuple
+from pathlib import Path
 
 import numpy as np
 import pybullet as p
@@ -557,6 +558,10 @@ class CBSDemo:
     def _export_metrics(self, sim_step: int, min_clearance: float):
         if not self.metrics_file:
             return
+        
+        if "/" in self.metrics_file:
+            file_dir = self.metrics_file.rsplit('/', 1)[0]
+            Path(file_dir).mkdir(parents=True, exist_ok=True)
 
         order_to_pickups = [task.pickup_sim_step - task.creation_sim_step for task in self.tasks_created if task.pickup_sim_step is not None]
         order_to_pickups_grid_times = [self._get_grid_unit(steps, self.steps_per_grid) for steps in  order_to_pickups]
