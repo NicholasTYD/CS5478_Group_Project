@@ -58,7 +58,7 @@ As previously mentioned, the entire simulation is discretized into *tiles*. This
 
 ### Walls and Shelves
 
-*Walls* and *shelves* act as rigid, unmoving obstacles that *agents* must avoid. They are functionally identical, and serve no other additional functions (*Agents* do not interact with shelves, see~Section \ref{ap:spec_endpoints}). Running into said obstacles will result in a collision.
+*Walls* and *shelves* act as rigid, unmoving obstacles that *agents* must avoid. They are functionally identical, and serve no other additional functions (*Agents* do not interact with shelves). Running into said obstacles will result in a collision.
 
 ### Endpoints
 
