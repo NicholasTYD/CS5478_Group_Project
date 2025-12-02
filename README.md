@@ -14,7 +14,7 @@ Successful collision avoidance in chokepoints, even when many agents are present
 
 https://github.com/user-attachments/assets/1bc50e76-50d7-424f-b59a-7ca348a96edb
 
-Algorithm works for long, narrow corridors as well:
+Both algorithms works for long, narrow corridors as well:
 
 https://github.com/user-attachments/assets/312b803b-10f8-41bb-8ce5-6def446c0c6a
 
