@@ -56,7 +56,7 @@ As previously mentioned, the entire simulation is discretized into *tiles*. This
 
 *Walls* and *shelves* act as rigid, unmoving obstacles that *agents* must avoid. They are functionally identical, and serve no other additional functions (*Agents* do not interact with shelves, see~Section \ref{ap:spec_endpoints}). Running into said obstacles will result in a collision.
 
-### Endpoints {#ap:spec_endpoints}
+### Endpoints
 
 *Endpoints* act as intermediate goals for *agents* during the process of fulfilling a *delivery task*. They are represented as collision-free environmental structures that simulate the action of agent 'picking up' a package from a shelf in real-life. As such, the positions of endpoints in the simulation are mostly placed adjacent to *shelves*, and *agents* must enter the *endpoint* tile to pick up an order.
 
