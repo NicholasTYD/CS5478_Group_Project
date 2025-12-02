@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/312b803b-10f8-41bb-8ce5-6def446c0c6a
 First install all dependencies:
 
 ```
-pip install -r /path/to/requirements.txt
+pip install -r requirements.txt
 ```
 
 After installation, switch to the source directory and run the follow command to start the simulation:
