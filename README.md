@@ -4,6 +4,10 @@ A simulation of a autonomous warehouse with multiple robot agents and continuous
 
 This simulation implements Conflict-Based Search (CBS) and customized variant of CBS (Shy-CBS), offering collision avoidance that work in a MAPD setting.
 
+Shy-CBS is our custom implementation of CBS. It functions mostly identically to CBS, with the minor modification to the low-level A* search algorithm, to provide a extremely small discount to path cost if an agent chooses to idle in a workstation. This discount is so small that it virtually makes no difference to the outcome of the pathfinding algorithm for majority of cases, except during the case when the low-level algorithm is presented with two paths that would otherwise have the same path cost, where it'll preferentially pick the path that idles more often in a workstation. 
+
+The rationale behind Shy-CBS is that by allowing agents to remain idle at their assigned workstations more often, overall congestion can be reduced. Since each workstation is a protected cell accessible only to its designated agent, waiting there effectively removes the agent from the shared navigation space. This leaves more room for other agents to successfully propose shorter paths with potentially less conflicts, which would hopefully improve the overall efficiency and speed of the system.
+
 # Pathfinding in action:
 
 Successful collision avoidance in chokepoints, even when many agents are present:
